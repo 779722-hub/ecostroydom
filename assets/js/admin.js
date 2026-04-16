@@ -51,7 +51,7 @@ function defs(){return{
   heroSlides:[], // [{type:'img'|'video'|'youtube', src:'...', badge:'', badgeOn:true}]
   heroSlideInterval:5, // seconds
   heroBadgeGlobal:true, // show badges on media
-  heroPriceLabel:'Цена от',heroPriceVal:'35 000',heroPriceNote:'фиксируется на 3 дня',
+  heroPriceLabel:'Цены от',heroPriceVal:'37 000',heroPriceNote:'фиксируется до отгрузки',
   menuItems:[
     {text:'Каталог',href:'#catalog',children:[]},
     {text:'Доставка',href:'#delivery',children:[]},
@@ -879,9 +879,12 @@ function renderHeroSlides(){
   } else if(S.heroMedia){
     slides=[{type:S.heroMediaType||'img',src:S.heroMedia,badge:'',badgeOn:true}];
   } else {
-    // Default — existing hero image
-    var imgEl=heroMedia.querySelector('img.hero__img');
-    slides=[{type:'img',src:imgEl?imgEl.src:'assets/img/hero-house.jpg',badge:'',badgeOn:true}];
+    // Default — 3-slide showcase (autoclave → bricklayer → pallets)
+    slides=[
+      {type:'img',src:'assets/img/hero-autoclave.jpg',badge:'',badgeOn:true},
+      {type:'img',src:'assets/img/hero-bricklayer.jpg',badge:'',badgeOn:true},
+      {type:'img',src:'assets/img/hero-pallets.webp',badge:'',badgeOn:true}
+    ];
   }
 
   heroMedia.innerHTML='';
