@@ -47,12 +47,35 @@
     }, {passive:true});
   }
 
-  // Burger toggle
+  // Burger toggle + close button
   var burger = document.getElementById('burger');
   var nav = document.querySelector('.nav');
   if(burger && nav){
+    // Inject close button once
+    if(!nav.querySelector('.nav__close')){
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'nav__close';
+      closeBtn.setAttribute('aria-label','Закрыть меню');
+      closeBtn.innerHTML = '&times;';
+      nav.insertBefore(closeBtn, nav.firstChild);
+      closeBtn.addEventListener('click', function(){ nav.classList.remove('nav--open'); });
+    }
     burger.addEventListener('click', function(){
       nav.classList.toggle('nav--open');
+    });
+    // Close on link click
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ nav.classList.remove('nav--open'); });
+    });
+    // Close on Escape
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') nav.classList.remove('nav--open');
+    });
+    // Close on outside click
+    document.addEventListener('click', function(e){
+      if(nav.classList.contains('nav--open') && !nav.contains(e.target) && !burger.contains(e.target)){
+        nav.classList.remove('nav--open');
+      }
     });
   }
 })();

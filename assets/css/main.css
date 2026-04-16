@@ -1223,6 +1223,9 @@ section.hero[data-block]::before{display:none}
   .hero__visual{width:100%!important;max-width:100%!important;display:block!important}
   .hero__inner{grid-template-columns:1fr!important;gap:24px;padding-left:0!important;padding-right:0!important}
   .hero__media img,.hero__slide img{width:100%!important;height:100%!important;object-fit:cover!important}
+  .nav__close{position:absolute;top:16px;right:16px;width:44px;height:44px;background:transparent;border:0;color:var(--text);font-size:32px;line-height:1;cursor:pointer;z-index:10;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:300}
+  .nav__close:hover{background:rgba(45,219,133,.12)}
+  .nav:not(.nav--open) .nav__close{display:none}
   .form{padding:24px 16px}
   .newsletter__text{font-size:22px}
   .cart-panel{width:100%}
