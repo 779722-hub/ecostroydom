@@ -3,6 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
+
+<!-- Google Tag Manager — замени GTM-XXXXXXX на свой ID после регистрации на tagmanager.google.com -->
+<!--
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+-->
+<!-- End Google Tag Manager -->
+
+<!-- Yandex.Metrika counter — замени YOUR_ID после регистрации на metrika.yandex.ru -->
+<!--
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+ym(YOUR_ID, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/YOUR_ID" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+-->
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -153,23 +175,56 @@
 }
 </script>
 
-<!-- JSON-LD: LocalBusiness -->
+<!-- JSON-LD: LocalBusiness (Store) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Ecostroydom",
-  "image": "https://ecostroydom.kz/assets/img/og-cover.jpg",
+  "@type": "Store",
+  "@id": "https://ecostroydom.kz/#store",
+  "name": "Ecostroydom — газоблок в Астане",
+  "image": [
+    "https://ecostroydom.kz/assets/img/og-cover.jpg",
+    "https://ecostroydom.kz/assets/img/hero-house.jpg"
+  ],
   "telephone": "+7 775 786 25 15",
+  "email": "info@ecostroydom.kz",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "ул. Женис, д. 17",
     "addressLocality": "Астана",
+    "addressRegion": "Астана",
+    "postalCode": "010000",
     "addressCountry": "KZ"
   },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 51.1694,
+    "longitude": 71.4491
+  },
   "url": "https://ecostroydom.kz/",
-  "openingHours": "Mo-Sa 09:00-19:00",
-  "priceRange": "₸₸"
+  "priceRange": "₸₸",
+  "currenciesAccepted": "KZT",
+  "paymentAccepted": "Cash, Bank transfer, Kaspi",
+  "openingHoursSpecification": [
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "09:00", "closes": "19:00"}
+  ],
+  "areaServed": [
+    {"@type": "City", "name": "Астана"},
+    {"@type": "AdministrativeArea", "name": "Акмолинская область"}
+  ],
+  "hasMap": "https://2gis.kz/astana"
+}
+</script>
+
+<!-- JSON-LD: BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ecostroydom.kz/"},
+    {"@type": "ListItem", "position": 2, "name": "Газоблок D600", "item": "https://ecostroydom.kz/#catalog"}
+  ]
 }
 </script>
 
@@ -188,6 +243,14 @@
 </head>
 
 <body>
+
+<!-- Google Tag Manager (noscript) — активируй вместе с <head> скриптом -->
+<!--
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+-->
+<!-- End GTM (noscript) -->
+
 <script>
 // Theme controller — runs immediately, independent of admin.js
 (function(){
