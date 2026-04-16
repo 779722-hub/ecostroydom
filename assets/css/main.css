@@ -1211,9 +1211,16 @@ section.hero[data-block]::before{display:none}
   .container{padding:0 16px}
   .stat{padding:20px 14px}
   .stat b{font-size:40px!important}
-  .promo__title,.promo--banner .promo__title,.promo--classic .promo__title,.promo--split .promo__title{font-size:20px!important;word-break:break-word!important;overflow-wrap:anywhere!important;hyphens:auto!important;max-width:100%!important;line-height:1.25!important;padding:0 4px}
-  .promo__card,.promo--banner .promo__card,.promo--classic .promo__card,.promo--split .promo__card{padding:20px 12px!important;box-sizing:border-box;max-width:100%}
+  .promo__title,.promo--banner .promo__title,.promo--classic .promo__title,.promo--split .promo__title{font-size:18px!important;word-break:break-word!important;overflow-wrap:anywhere!important;hyphens:auto!important;max-width:100%!important;line-height:1.25!important;padding:0 4px}
+  .promo__card,.promo--banner .promo__card,.promo--classic .promo__card,.promo--split .promo__card{padding:16px 10px!important;box-sizing:border-box;max-width:100%;overflow:hidden}
   .promo,.promo__card *{max-width:100%;box-sizing:border-box}
+  .promo .container{padding:0 10px!important}
+  .timer{gap:4px!important;flex-wrap:nowrap!important;justify-content:space-between!important;width:100%!important}
+  .timer__cell{min-width:0!important;padding:10px 4px!important;flex:1 1 0!important}
+  .timer__cell span{font-size:22px!important}
+  .timer__cell small{font-size:9px!important;margin-top:2px!important}
+  .timer__sep{font-size:14px!important;padding:0 1px}
+  #promoBtn{box-shadow:0 0 0 2px rgba(255,255,255,.9),0 8px 24px rgba(0,0,0,.25)!important;border:2px solid #fff!important}
   .calc{padding:20px 14px!important;max-width:100%;overflow:hidden}
   .calc__row{grid-template-columns:1fr!important}
   .calc__result{padding:20px 14px!important;max-width:100%}
