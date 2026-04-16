@@ -1,0 +1,119 @@
+/* ============================================================
+   ECOSTROYDOM — Animations & Reveal Effects
+   Premium easing: cubic-bezier(0.22, 1, 0.36, 1)
+   ============================================================ */
+
+:root{
+  --ease-out-expo:cubic-bezier(0.22,1,0.36,1);
+  --ease-out-back:cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ===== CORE KEYFRAMES ===== */
+@keyframes float{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(20px,-30px) scale(1.05)}
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(42,122,95,.6)}
+  70%{box-shadow:0 0 0 14px rgba(42,122,95,0)}
+  100%{box-shadow:0 0 0 0 rgba(42,122,95,0)}
+}
+@keyframes marquee{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(32px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeScale{
+  from{opacity:0;transform:scale(.94)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes fadeLeft{
+  from{opacity:0;transform:translateX(-36px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes fadeRight{
+  from{opacity:0;transform:translateX(36px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes blurIn{
+  from{opacity:0;filter:blur(14px);transform:translateY(20px)}
+  to{opacity:1;filter:blur(0);transform:translateY(0)}
+}
+@keyframes shimmer{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 20px rgba(42,122,95,.3), 0 0 40px rgba(42,122,95,.15)}
+  50%{box-shadow:0 0 30px rgba(42,122,95,.5), 0 0 60px rgba(42,122,95,.25)}
+}
+@keyframes tilt{
+  0%,100%{transform:rotate(-.5deg)}
+  50%{transform:rotate(.5deg)}
+}
+
+/* ===== REVEAL — default fade-up ===== */
+.reveal{
+  opacity:0;transform:translateY(32px);
+  transition:opacity .9s var(--ease-out-expo), transform .9s var(--ease-out-expo), filter .9s var(--ease-out-expo);
+  will-change:opacity, transform;
+}
+.reveal.in-view{opacity:1;transform:translateY(0)}
+
+/* Variants */
+.reveal--scale{transform:translateY(24px) scale(.94)}
+.reveal--scale.in-view{transform:translateY(0) scale(1)}
+
+.reveal--left{transform:translateX(-40px)}
+.reveal--left.in-view{transform:translateX(0)}
+
+.reveal--right{transform:translateX(40px)}
+.reveal--right.in-view{transform:translateX(0)}
+
+.reveal--blur{opacity:0;filter:blur(14px);transform:translateY(20px)}
+.reveal--blur.in-view{opacity:1;filter:blur(0);transform:translateY(0)}
+
+.reveal--slow{transition-duration:1.4s}
+.reveal--fast{transition-duration:.6s}
+
+/* Reveal delays (usable as .reveal.delay-1 etc.) */
+.delay-1{transition-delay:80ms}
+.delay-2{transition-delay:160ms}
+.delay-3{transition-delay:240ms}
+.delay-4{transition-delay:320ms}
+.delay-5{transition-delay:400ms}
+.delay-6{transition-delay:480ms}
+
+/* ===== STAGGER — applied to parent ===== */
+.stagger-children > *{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .85s var(--ease-out-expo), transform .85s var(--ease-out-expo);
+}
+.stagger-children.in-view > *{opacity:1;transform:translateY(0)}
+.stagger-children.in-view > *:nth-child(1){transition-delay:0ms}
+.stagger-children.in-view > *:nth-child(2){transition-delay:90ms}
+.stagger-children.in-view > *:nth-child(3){transition-delay:180ms}
+.stagger-children.in-view > *:nth-child(4){transition-delay:270ms}
+.stagger-children.in-view > *:nth-child(5){transition-delay:360ms}
+.stagger-children.in-view > *:nth-child(6){transition-delay:450ms}
+.stagger-children.in-view > *:nth-child(7){transition-delay:540ms}
+.stagger-children.in-view > *:nth-child(8){transition-delay:630ms}
+.stagger-children.in-view > *:nth-child(9){transition-delay:720ms}
+
+/* ===== HOVER UTILITY — subtle lift ===== */
+.hover-lift{transition:transform .4s var(--ease-out-expo), box-shadow .4s var(--ease-out-expo)}
+.hover-lift:hover{transform:translateY(-4px)}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+  .reveal,.reveal--scale,.reveal--left,.reveal--right,.reveal--blur,
+  .stagger-children > *{opacity:1;transform:none;filter:none}
+}

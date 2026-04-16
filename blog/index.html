@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Блог о строительстве из газоблока — статьи и советы | EcoStroyDom</title>
+<meta name="description" content="Полезные статьи о строительстве из газоблока: выбор материалов, расчёт кубатуры, сравнение марок D500 и D600, обзор клея. Советы от EcoStroyDom, Астана.">
+<meta name="keywords" content="блог газоблок, строительство из газобетона, статьи газоблок, советы строительство дома, газоблок Астана">
+<link rel="canonical" href="https://ecostroydom.kz/blog/">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Блог о строительстве из газоблока — EcoStroyDom">
+<meta property="og:description" content="Полезные статьи: выбор газоблока, расчёт на дом, обзор клея, советы по строительству.">
+<meta property="og:image" content="https://ecostroydom.kz/assets/img/og-cover.jpg">
+<meta property="og:url" content="https://ecostroydom.kz/blog/">
+<meta property="og:locale" content="ru_KZ">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/reset.css">
+<link rel="stylesheet" href="../assets/css/main.css?v=8">
+<link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Blog","name":"Блог EcoStroyDom","description":"Статьи о строительстве из газоблока","url":"https://ecostroydom.kz/blog/","publisher":{"@type":"Organization","name":"EcoStroyDom"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://ecostroydom.kz/"},{"@type":"ListItem","position":2,"name":"Блог"}]}
+</script>
+
+<style>
+.blog-header{background:var(--bg,#fff);border-bottom:1px solid var(--border,rgba(0,0,0,.08));padding:16px 0}
+.blog-header__inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.blog-header__logo{font-family:'Manrope';font-size:20px;font-weight:800}
+.blog-header__logo b{color:var(--accent,#2A7A5F)}
+.blog-header__nav{display:flex;gap:24px;font-size:14px;font-weight:500}
+.blog-header__nav a{color:var(--text-secondary,#6B6B6B);transition:.2s}
+.blog-header__nav a:hover{color:var(--text,#1A1A1A)}
+
+.blog-page{max-width:1100px;margin:0 auto;padding:48px 24px 80px}
+.blog-page__head{margin-bottom:40px}
+.blog-page__head h1{font-family:'Manrope';font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px}
+.blog-page__head p{font-size:16px;color:var(--text-secondary,#6B6B6B);max-width:600px;line-height:1.7}
+
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.blog-card{background:var(--bg,#fff);border-radius:16px;border:1px solid var(--border,rgba(0,0,0,.08));overflow:hidden;transition:.3s;display:flex;flex-direction:column}
+.blog-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.blog-card__img{aspect-ratio:16/10;overflow:hidden;position:relative}
+.blog-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.blog-card:hover .blog-card__img img{transform:scale(1.04)}
+.blog-card__cat{position:absolute;top:12px;left:12px;background:var(--accent,#2A7A5F);color:#fff;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600}
+.blog-card__body{padding:20px;display:flex;flex-direction:column;flex:1}
+.blog-card__date{font-size:12px;color:var(--muted,#999);margin-bottom:10px}
+.blog-card__title{font-family:'Manrope';font-size:18px;font-weight:700;color:var(--text,#1A1A1A);margin-bottom:10px;line-height:1.3}
+.blog-card__excerpt{font-size:14px;color:var(--text-secondary,#6B6B6B);line-height:1.6;margin-bottom:16px;flex:1}
+.blog-card__link{font-size:13px;font-weight:600;color:var(--accent,#2A7A5F);display:inline-flex;align-items:center;gap:6px;transition:.2s}
+.blog-card__link:hover{gap:10px;text-decoration:none}
+.blog-card__link::after{content:'→';font-size:15px}
+
+.blog-empty{text-align:center;padding:60px 0;color:var(--muted,#999);font-size:16px}
+
+.blog-footer{max-width:1100px;margin:0 auto;padding:40px 24px;text-align:center}
+.blog-footer a{color:var(--accent,#2A7A5F);font-weight:600;font-size:15px}
+
+@media(max-width:768px){.blog-grid{grid-template-columns:1fr}.blog-header__nav{display:none}}
+@media(max-width:1024px){.blog-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<script>
+(function(){
+  function p(){return localStorage.getItem('eco_theme_pref')||'auto';}
+  function actual(x){if(x==='dark')return 'dark';if(x==='light')return 'light';var h=new Date().getHours();return(h>=19||h<7)?'dark':'light';}
+  function apply(){
+    var c=p(),a=actual(c);
+    document.body.classList.remove('theme-dark','theme-light');
+    document.body.classList.add(a==='dark'?'theme-dark':'theme-light');
+    var b=document.getElementById('themeBtn');
+    if(b){var ic=c==='dark'?'\u263E':c==='light'?'\u2600':'\u25D0';var el=b.querySelector('.theme-btn__ic');if(el)el.textContent=ic;b.title='Тема: '+(c==='auto'?'авто':c==='dark'?'тёмная':'светлая');}
+  }
+  apply();
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.getElementById('themeBtn');
+    if(b)b.addEventListener('click',function(){
+      var c=p(),n=c==='auto'?'dark':c==='dark'?'light':'auto';
+      if(n==='auto')localStorage.removeItem('eco_theme_pref');else localStorage.setItem('eco_theme_pref',n);
+      apply();
+    });
+    apply();
+  });
+})();
+</script>
+
+<header class="blog-header">
+  <div class="blog-header__inner">
+    <a href="../index.html" class="blog-header__logo" id="blogLogo">Eco<b>StroyDom</b></a>
+    <nav class="blog-header__nav">
+      <a href="../index.html">Главная</a>
+      <a href="../index.html#catalog">Каталог</a>
+      <a href="../index.html#calc">Калькулятор</a>
+      <a href="../index.html#contacts">Контакты</a>
+      <button type="button" class="theme-btn" id="themeBtn" title="Тема: авто" aria-label="Переключить тему" style="margin-left:12px"><span class="theme-btn__ic">◐</span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="blog-page">
+  <div class="blog-page__head">
+    <h1>Блог</h1>
+    <p>Полезные статьи о строительстве из газоблока: выбор материалов, расчёты, советы и обзоры.</p>
+  </div>
+
+  <div class="blog-grid" id="blogGrid">
+    <!-- Static fallback — will be replaced by JS if localStorage has posts -->
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="../assets/img/block-200.jpg" alt="D500 vs D600" loading="lazy">
+        <span class="blog-card__cat">Материалы</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">12 апреля 2026</div>
+        <h3 class="blog-card__title">Как выбрать газоблок: D500 vs D600 — полное сравнение</h3>
+        <p class="blog-card__excerpt">Разбираем ключевые отличия двух популярных марок газобетона: прочность, теплопроводность, применение.</p>
+        <a href="d500-vs-d600.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="../assets/img/hero-house.jpg" alt="Расчёт газоблока на 100 м²" loading="lazy">
+        <span class="blog-card__cat">Расчёты</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">8 апреля 2026</div>
+        <h3 class="blog-card__title">Сколько газоблока нужно на дом 100 м² — пошаговый расчёт</h3>
+        <p class="blog-card__excerpt">Считаем кубатуру стен и перегородок, количество блоков, расход клея и итоговый бюджет.</p>
+        <a href="skolko-gazobloka-na-dom-100m2.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="../assets/img/glue-expert.jpg" alt="Обзор клея для газоблока" loading="lazy">
+        <span class="blog-card__cat">Советы</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">2 апреля 2026</div>
+        <h3 class="blog-card__title">Какой клей для газоблока лучше — обзор 5 марок в Казахстане</h3>
+        <p class="blog-card__excerpt">Сравниваем клеи Expert, Гарант, Ceresit, Knauf и USTA — расход, прочность сцепления, цена за м².</p>
+        <a href="klej-dlya-gazobloka-obzor.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="../assets/img/block-400.jpg" alt="Толщина стены из газоблока" loading="lazy">
+        <span class="blog-card__cat">Советы</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">28 марта 2026</div>
+        <h3 class="blog-card__title">Какой толщины должна быть стена из газоблока — 200, 300 или 400 мм</h3>
+        <p class="blog-card__excerpt">Оптимальная толщина для Казахстана: расчёты теплопроводности, СНиП, рекомендации для Астаны и Алматы.</p>
+        <a href="tolschina-steny-gazoblok.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="../assets/img/autoclave.jpg" alt="Плюсы и минусы газоблока" loading="lazy">
+        <span class="blog-card__cat">Материалы</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">20 марта 2026</div>
+        <h3 class="blog-card__title">Плюсы и минусы газоблока — честный обзор газобетона</h3>
+        <p class="blog-card__excerpt">Все достоинства и недостатки, сравнение с кирпичом и деревом, ответы на частые вопросы.</p>
+        <a href="plyusy-i-minusy-gazobloka.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=500&fit=crop" alt="Газоблок или кирпич" loading="lazy">
+        <span class="blog-card__cat">Сравнение</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">5 апреля 2026</div>
+        <h3 class="blog-card__title">Газоблок или кирпич — что лучше для дома в 2026</h3>
+        <p class="blog-card__excerpt">Детальное сравнение по цене, теплу, скорости и прочности. Разница в стоимости дома 100 м² — до 5 млн тенге.</p>
+        <a href="gazoblok-ili-kirpich.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="https://images.unsplash.com/photo-1483354483454-4cd359948304?w=800&h=500&fit=crop" alt="Строительство из газоблока зимой" loading="lazy">
+        <span class="blog-card__cat">Советы</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">15 марта 2026</div>
+        <h3 class="blog-card__title">Можно ли строить из газоблока зимой в Казахстане</h3>
+        <p class="blog-card__excerpt">До какой температуры безопасно класть, какой клей выбрать, защита кладки от снега. Правила зимней кладки.</p>
+        <a href="stroitelstvo-gazobloka-zimoj.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=500&fit=crop" alt="Марки газоблока D400 D500 D600 D700" loading="lazy">
+        <span class="blog-card__cat">Материалы</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">22 марта 2026</div>
+        <h3 class="blog-card__title">Марки газоблока D400, D500, D600, D700 — полное сравнение</h3>
+        <p class="blog-card__excerpt">Какую марку выбрать для стен, перегородок, утепления. Таблица сравнения плотности, прочности, тепла и цены.</p>
+        <a href="marki-gazobloka-d400-d500-d600-d700.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+    <article class="blog-card">
+      <div class="blog-card__img">
+        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=500&fit=crop&sat=-30" alt="Армирование газоблока" loading="lazy">
+        <span class="blog-card__cat">Технология</span>
+      </div>
+      <div class="blog-card__body">
+        <div class="blog-card__date">10 марта 2026</div>
+        <h3 class="blog-card__title">Армирование газоблока — правила, схема, арматура</h3>
+        <p class="blog-card__excerpt">Где, чем и как армировать стены из газобетона. Штроба, арматура, армопояс. Пошаговая инструкция.</p>
+        <a href="armirovanie-gazobloka.html" class="blog-card__link">Читать статью</a>
+      </div>
+    </article>
+  </div>
+</div>
+
+<div class="blog-footer">
+  <a href="../index.html">← На главную</a>
+</div>
+
+<script>
+(function(){
+  try{
+    var s=JSON.parse(localStorage.getItem('ecostroydom_admin')||'{}');
+
+    // Logo
+    var n=s.companyName||'EcoStroyDom';
+    var el=document.getElementById('blogLogo');
+    if(el&&n.length>3) el.innerHTML=n.substring(0,3)+'<b>'+n.substring(3)+'</b>';
+
+    // ALL 9 default posts
+    var DEFAULT_POSTS=[
+      {title:'Как выбрать газоблок: D500 vs D600',cat:'Материалы',date:'12 апреля 2026',img:'../assets/img/block-200.jpg',excerpt:'Разбираем ключевые отличия двух популярных марок газобетона.',url:'d500-vs-d600.html'},
+      {title:'Сколько газоблока нужно на дом 100 м²',cat:'Расчёты',date:'8 апреля 2026',img:'../assets/img/hero-house.jpg',excerpt:'Считаем кубатуру стен и перегородок, блоки, клей.',url:'skolko-gazobloka-na-dom-100m2.html'},
+      {title:'Какой клей для газоблока лучше — обзор 5 марок',cat:'Советы',date:'2 апреля 2026',img:'../assets/img/glue-expert.jpg',excerpt:'Сравниваем Expert, Гарант, Ceresit, Knauf и USTA.',url:'klej-dlya-gazobloka-obzor.html'},
+      {title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'28 марта 2026',img:'../assets/img/block-400.jpg',excerpt:'200, 300 или 400 мм — оптимум для Казахстана.',url:'tolschina-steny-gazoblok.html'},
+      {title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'20 марта 2026',img:'../assets/img/autoclave.jpg',excerpt:'Все достоинства и недостатки, сравнение с кирпичом и деревом.',url:'plyusy-i-minusy-gazobloka.html'},
+      {title:'Газоблок или кирпич — что лучше для дома в 2026',cat:'Сравнение',date:'5 апреля 2026',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=500&fit=crop',excerpt:'Сравнение по цене, теплу, скорости и прочности.',url:'gazoblok-ili-kirpich.html'},
+      {title:'Можно ли строить из газоблока зимой в Казахстане',cat:'Советы',date:'15 марта 2026',img:'https://images.unsplash.com/photo-1483354483454-4cd359948304?w=800&h=500&fit=crop',excerpt:'Правила зимней кладки, морозостойкий клей, защита от снега.',url:'stroitelstvo-gazobloka-zimoj.html'},
+      {title:'Марки газоблока D400, D500, D600, D700 — сравнение',cat:'Материалы',date:'22 марта 2026',img:'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=500&fit=crop',excerpt:'Какую марку выбрать для стен, перегородок, утепления.',url:'marki-gazobloka-d400-d500-d600-d700.html'},
+      {title:'Армирование газоблока — правила, схема, арматура',cat:'Технология',date:'10 марта 2026',img:'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=500&fit=crop&sat=-30',excerpt:'Где, чем и как армировать стены из газобетона.',url:'armirovanie-gazobloka.html'}
+    ];
+
+    // If admin has added/modified posts in localStorage, merge them with defaults
+    // But always show all 9 defaults as baseline
+    var savedPosts=(s.blogPosts&&Array.isArray(s.blogPosts))?s.blogPosts:[];
+
+    // Build final list: use saved posts by URL, fallback to defaults
+    var shown=[];
+    var seenUrls={};
+    savedPosts.forEach(function(p){
+      if(!p||!p.title)return;
+      var url=p.url||'';
+      if(url.indexOf('blog/')===0) url=url.substring(5);
+      if(url) seenUrls[url]=true;
+      shown.push({
+        title:p.title,cat:p.cat||'',date:p.date||'',
+        img:p.img&&p.img.startsWith('data:')?p.img:(p.img&&p.img.startsWith('http')?p.img:(p.img?'../'+p.img:'')),
+        excerpt:p.excerpt||'',url:url||'#'
+      });
+    });
+    // Add defaults not yet in shown
+    DEFAULT_POSTS.forEach(function(p){
+      if(!seenUrls[p.url]) shown.push(p);
+    });
+
+    if(!shown.length) return; // keep static HTML
+
+    var grid=document.getElementById('blogGrid');
+    grid.innerHTML='';
+
+    shown.forEach(function(p){
+      var card=document.createElement('article');
+      card.className='blog-card';
+      card.innerHTML=
+        '<div class="blog-card__img">'+
+          '<img src="'+esc(p.img)+'" alt="'+esc(p.title)+'" loading="lazy">'+
+          '<span class="blog-card__cat">'+esc(p.cat)+'</span>'+
+        '</div>'+
+        '<div class="blog-card__body">'+
+          '<div class="blog-card__date">'+esc(p.date)+'</div>'+
+          '<h3 class="blog-card__title">'+esc(p.title)+'</h3>'+
+          '<p class="blog-card__excerpt">'+esc(p.excerpt)+'</p>'+
+          '<a href="'+esc(p.url)+'" class="blog-card__link">Читать статью</a>'+
+        '</div>';
+      grid.appendChild(card);
+    });
+
+  }catch(e){console.error(e);}
+
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+})();
+</script>
+</body>
+</html>

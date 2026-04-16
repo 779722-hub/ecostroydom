@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://ecostroydom.kz/</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/og-cover.jpg</image:loc>
+      <image:title>Газоблок автоклавный D600 в Астане — EcoStroyDom</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/hero-house.jpg</image:loc>
+      <image:title>Частный дом из газоблока D600</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/d500-vs-d600.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/block-200.jpg</image:loc>
+      <image:title>Газоблок D500 vs D600 — сравнение марок</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/skolko-gazobloka-na-dom-100m2.html</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/hero-house.jpg</image:loc>
+      <image:title>Расчёт газоблока на дом 100 м²</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/klej-dlya-gazobloka-obzor.html</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/glue-expert.jpg</image:loc>
+      <image:title>Обзор клея для газоблока</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/tolschina-steny-gazoblok.html</loc>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/block-400.jpg</image:loc>
+      <image:title>Толщина стены из газоблока</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/plyusy-i-minusy-gazobloka.html</loc>
+    <lastmod>2026-03-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ecostroydom.kz/assets/img/autoclave.jpg</image:loc>
+      <image:title>Плюсы и минусы газоблока</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/gazoblok-ili-kirpich.html</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/stroitelstvo-gazobloka-zimoj.html</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/marki-gazobloka-d400-d500-d600-d700.html</loc>
+    <lastmod>2026-03-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ecostroydom.kz/blog/armirovanie-gazobloka.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
