@@ -204,20 +204,10 @@ function $$(sel,ctx){return Array.from((ctx||document).querySelectorAll(sel));}
 // APPLY STATE
 // ============================================================
 function apply(){
-  // Logo — sync across header and footer
+  // Logo — sync static img with custom upload (if any)
   $$('.logo').forEach(function(logo){
-    var ei=logo.querySelector('.logo__custom-img');
-    if(S.logo){
-      if(!ei){
-        ei=document.createElement('img');ei.className='logo__custom-img';
-        ei.style.cssText='height:36px;width:auto;object-fit:contain;margin-right:6px';
-        logo.prepend(ei);
-      }
-      ei.src=S.logo;
-    } else {
-      if(ei) ei.remove();
-    }
-    // Always show text
+    var staticImg=logo.querySelector('.logo__static');
+    if(staticImg) staticImg.src=S.logo||'assets/img/logo.png';
     var txt=logo.querySelector('.logo__text');if(txt)txt.style.display='';
   });
   // Name
