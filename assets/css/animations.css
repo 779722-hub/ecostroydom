@@ -63,6 +63,13 @@
 }
 .reveal.in-view{opacity:1;transform:translateY(0)}
 
+/* Disable reveal animations on mobile — content always visible, no scroll glitches */
+@media(max-width:768px){
+  .reveal,.reveal--scale,.reveal--left,.reveal--right,.reveal--blur{
+    opacity:1!important;transform:none!important;filter:none!important;transition:none!important;
+  }
+}
+
 /* Variants */
 .reveal--scale{transform:translateY(24px) scale(.94)}
 .reveal--scale.in-view{transform:translateY(0) scale(1)}
