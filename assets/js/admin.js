@@ -83,10 +83,10 @@ function defs(){return{
   removedBlocks:[],
   blockStyles:{},elementStyles:{},
   blogPosts:[
-    {id:1,title:'Как выбрать газоблок: D500 vs D600',cat:'Материалы',date:'2026-04-12',img:'assets/img/block-200.jpg',excerpt:'Разбираем ключевые отличия двух популярных марок газобетона.',body:'',url:'blog/d500-vs-d600.html'},
+    {id:1,title:'Как выбрать газоблок: D500 vs D600',cat:'Материалы',date:'2026-04-12',img:'assets/img/block-200.png',excerpt:'Разбираем ключевые отличия двух популярных марок газобетона.',body:'',url:'blog/d500-vs-d600.html'},
     {id:2,title:'Сколько газоблока нужно на дом 100 м²',cat:'Расчёты',date:'2026-04-08',img:'assets/img/hero-house.jpg',excerpt:'Считаем кубатуру стен и перегородок.',body:'',url:'blog/skolko-gazobloka-na-dom-100m2.html'},
     {id:3,title:'Какой клей для газоблока лучше',cat:'Советы',date:'2026-04-02',img:'assets/img/glue-expert.jpg',excerpt:'Сравниваем 5 марок клея в Казахстане.',body:'',url:'blog/klej-dlya-gazobloka-obzor.html'},
-    {id:4,title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'2026-03-28',img:'assets/img/block-400.jpg',excerpt:'Оптимальная толщина для Казахстана: 200, 300 или 400 мм. Расчёты, СНиП, рекомендации.',body:'',url:'blog/tolschina-steny-gazoblok.html'},
+    {id:4,title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'2026-03-28',img:'assets/img/block-400.png',excerpt:'Оптимальная толщина для Казахстана: 200, 300 или 400 мм. Расчёты, СНиП, рекомендации.',body:'',url:'blog/tolschina-steny-gazoblok.html'},
     {id:5,title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'2026-03-20',img:'assets/img/autoclave.jpg',excerpt:'Все достоинства и недостатки газобетона, сравнение с кирпичом и деревом.',body:'',url:'blog/plyusy-i-minusy-gazobloka.html'},
     {id:6,title:'Газоблок или кирпич — что лучше для дома в 2026',cat:'Сравнение',date:'2026-04-05',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=375&fit=crop',excerpt:'Сравнение по цене, теплу, скорости. Разница до 5 млн тенге на доме 100 м².',body:'',url:'blog/gazoblok-ili-kirpich.html'},
     {id:7,title:'Можно ли строить из газоблока зимой в Казахстане',cat:'Советы',date:'2026-03-15',img:'https://images.unsplash.com/photo-1483354483454-4cd359948304?w=600&h=375&fit=crop',excerpt:'Правила зимней кладки, морозостойкий клей, защита от снега.',body:'',url:'blog/stroitelstvo-gazobloka-zimoj.html'},
@@ -174,7 +174,7 @@ if(S.blogPosts&&S.blogPosts.length){
   // Add missing 4th article if users have old 3-post localStorage
   var hasTolschina=S.blogPosts.some(function(p){return p.title&&p.title.indexOf('толщин')>=0;});
   if(!hasTolschina){
-    S.blogPosts.push({id:4,title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'2026-03-28',img:'assets/img/block-400.jpg',excerpt:'Оптимальная толщина для Казахстана: 200, 300 или 400 мм.',body:'',url:'blog/tolschina-steny-gazoblok.html'});
+    S.blogPosts.push({id:4,title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'2026-03-28',img:'assets/img/block-400.png',excerpt:'Оптимальная толщина для Казахстана: 200, 300 или 400 мм.',body:'',url:'blog/tolschina-steny-gazoblok.html'});
     migrated=true;
   }
   // Add 5th article
@@ -956,7 +956,7 @@ function renderBlogOnSite(){
   grid.innerHTML='';
   S.blogPosts.forEach(function(p){
     grid.innerHTML+=
-      '<article class="blog-card reveal in-view"><div class="blog-card__img"><img src="'+esc(p.img||'assets/img/block-200.jpg')+'" alt="'+esc(p.title)+'" loading="lazy"><span class="blog-card__cat">'+esc(p.cat)+'</span></div>'+
+      '<article class="blog-card reveal in-view"><div class="blog-card__img"><img src="'+esc(p.img||'assets/img/block-200.png')+'" alt="'+esc(p.title)+'" loading="lazy"><span class="blog-card__cat">'+esc(p.cat)+'</span></div>'+
       '<div class="blog-card__body"><div class="blog-card__date">'+esc(p.date)+'</div>'+
       '<h3 class="blog-card__title">'+esc(p.title)+'</h3>'+
       '<p class="blog-card__excerpt">'+esc(p.excerpt)+'</p>'+
@@ -2499,7 +2499,7 @@ function updateCard(c,d){
 function addCard(d){
   var g=$('#catalog .cards');if(!g)return;
   var a=document.createElement('article');a.className='card reveal in-view';
-  a.innerHTML='<div class="card__img"><img src="'+esc(d.img||'assets/img/block-200.jpg')+'" alt="" loading="lazy" width="600" height="400"></div>'+
+  a.innerHTML='<div class="card__img"><img src="'+esc(d.img||'assets/img/block-200.png')+'" alt="" loading="lazy" width="600" height="400"></div>'+
     '<div class="card__body">'+(d.tag?'<div class="card__tag">'+esc(d.tag)+'</div>':'')+
     '<h3>'+esc(d.title)+'</h3><div class="card__size">'+esc(d.size)+'</div>'+
     '<ul class="card__specs">'+d.specs.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul>'+
