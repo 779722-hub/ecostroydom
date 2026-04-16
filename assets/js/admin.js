@@ -87,7 +87,7 @@ function defs(){return{
     {id:2,title:'Сколько газоблока нужно на дом 100 м²',cat:'Расчёты',date:'2026-04-08',img:'assets/img/hero-house.jpg',excerpt:'Считаем кубатуру стен и перегородок.',body:'',url:'blog/skolko-gazobloka-na-dom-100m2.html'},
     {id:3,title:'Какой клей для газоблока лучше',cat:'Советы',date:'2026-04-02',img:'assets/img/glue-expert.jpg',excerpt:'Сравниваем 5 марок клея в Казахстане.',body:'',url:'blog/klej-dlya-gazobloka-obzor.html'},
     {id:4,title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'2026-03-28',img:'assets/img/block-400.png',excerpt:'Оптимальная толщина для Казахстана: 200, 300 или 400 мм. Расчёты, СНиП, рекомендации.',body:'',url:'blog/tolschina-steny-gazoblok.html'},
-    {id:5,title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'2026-03-20',img:'assets/img/autoclave.jpg',excerpt:'Все достоинства и недостатки газобетона, сравнение с кирпичом и деревом.',body:'',url:'blog/plyusy-i-minusy-gazobloka.html'},
+    {id:5,title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'2026-03-20',img:'assets/img/hero-autoclave.jpg',excerpt:'Все достоинства и недостатки газобетона, сравнение с кирпичом и деревом.',body:'',url:'blog/plyusy-i-minusy-gazobloka.html'},
     {id:6,title:'Газоблок или кирпич — что лучше для дома в 2026',cat:'Сравнение',date:'2026-04-05',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=375&fit=crop',excerpt:'Сравнение по цене, теплу, скорости. Разница до 5 млн тенге на доме 100 м².',body:'',url:'blog/gazoblok-ili-kirpich.html'},
     {id:7,title:'Можно ли строить из газоблока зимой в Казахстане',cat:'Советы',date:'2026-03-15',img:'https://images.unsplash.com/photo-1483354483454-4cd359948304?w=600&h=375&fit=crop',excerpt:'Правила зимней кладки, морозостойкий клей, защита от снега.',body:'',url:'blog/stroitelstvo-gazobloka-zimoj.html'},
     {id:8,title:'Марки газоблока D400, D500, D600, D700 — сравнение',cat:'Материалы',date:'2026-03-22',img:'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&h=375&fit=crop',excerpt:'Какую марку выбрать для стен, перегородок, утепления.',body:'',url:'blog/marki-gazobloka-d400-d500-d600-d700.html'},
@@ -180,7 +180,7 @@ if(S.blogPosts&&S.blogPosts.length){
   // Add 5th article
   var hasPlyusy=S.blogPosts.some(function(p){return p.title&&p.title.indexOf('Плюсы')>=0;});
   if(!hasPlyusy){
-    S.blogPosts.push({id:5,title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'2026-03-20',img:'assets/img/autoclave.jpg',excerpt:'Все достоинства и недостатки газобетона, сравнение с кирпичом и деревом.',body:'',url:'blog/plyusy-i-minusy-gazobloka.html'});
+    S.blogPosts.push({id:5,title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'2026-03-20',img:'assets/img/hero-autoclave.jpg',excerpt:'Все достоинства и недостатки газобетона, сравнение с кирпичом и деревом.',body:'',url:'blog/plyusy-i-minusy-gazobloka.html'});
     migrated=true;
   }
   if(migrated) save(S);
