@@ -1215,6 +1215,12 @@ section.hero[data-block]::before{display:none}
   .promo__card{padding:24px 18px!important}
   .calc{padding:20px 14px!important;max-width:100%;overflow:hidden}
   .calc__row{grid-template-columns:1fr!important}
+  .calc__result{padding:20px 14px!important;max-width:100%}
+  .calc__result>div{flex-wrap:wrap;gap:6px}
+  .calc__result b{font-size:16px!important;word-break:break-word;overflow-wrap:anywhere;max-width:100%}
+  #rCost,#rGlue,#rDeposit,#rTotalVol{font-size:15px!important}
+  .hero__media{aspect-ratio:4/3;width:100%;max-width:100%;margin:0}
+  .hero__inner{grid-template-columns:1fr!important;gap:24px}
   .form{padding:24px 16px}
   .newsletter__text{font-size:22px}
   .cart-panel{width:100%}
