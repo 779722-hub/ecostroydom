@@ -1860,13 +1860,13 @@ function tabFooter(){
   });
   hmHtml+='</div><button class="admin-btn admin-btn--ghost admin-btn--sm" id="ftHMAdd">+ Добавить в шапку</button>';
 
-  return grp('Описание компании (тэглайн)','<textarea class="admin-textarea" id="ftTagline" rows="2">'+esc(S.footerTagline||'Газоблок автоклавный D600 от завода-изготовителя. Доставка по Астане и Казахстану.')+'</textarea>')+
+  return grp('Описание компании (тэглайн)','<textarea class="admin-textarea" id="ftTagline" rows="2">'+esc(S.footerTagline||'Газоблок автоклавный D600 — отгрузка от завода-изготовителя.')+'</textarea>')+
     grp('Заголовок столбца ссылок','<input class="admin-input" id="ftLinksTitle" value="'+esc(S.footerLinksTitle||'Каталог')+'">')+
     grp('Ссылки в подвале',linksHtml)+
     grp('Заголовок столбца контактов','<input class="admin-input" id="ftContactsTitle" value="'+esc(S.footerContactsTitle||'Контакты')+'">')+
     grp('Телефон','<label style="flex-direction:row;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="ftShowPhone" '+(S.footerShowPhone!==false?'checked':'')+' style="width:auto"> Показывать телефон в подвале</label><p style="font-size:11px;color:#999;margin-top:4px">Номер берётся из «Главная → Шапка — справа от меню»</p>')+
-    grp('Адрес','<input class="admin-input" id="ftAddress" value="'+esc(S.footerAddress||'г. Астана, ул. Женис, 17')+'">')+
-    grp('Режим работы','<input class="admin-input" id="ftHours1" value="'+esc(S.footerHours1||'Пн–Сб: 09:00 – 19:00')+'" placeholder="Будни"><input class="admin-input" id="ftHours2" value="'+esc(S.footerHours2||'Вс: выходной')+'" placeholder="Выходные" style="margin-top:6px"><input class="admin-input" id="ftHours3" value="'+esc(S.footerHours3||'')+'" placeholder="Доп. строка (напр. Приём заявок 24/7)" style="margin-top:6px">')+
+    grp('Адрес','<input class="admin-input" id="ftAddress" value="'+esc(S.footerAddress||'г. Астана, ул. Женис, 19')+'">')+
+    grp('Режим работы','<input class="admin-input" id="ftHours1" value="'+esc(S.footerHours1||'Пн–Пт: 09:00 – 18:00')+'" placeholder="Будни"><input class="admin-input" id="ftHours2" value="'+esc(S.footerHours2||'Сб: 10:00 – 14:00')+'" placeholder="Суббота" style="margin-top:6px"><input class="admin-input" id="ftHours3" value="'+esc(S.footerHours3||'Вс: выходной')+'" placeholder="Воскресенье" style="margin-top:6px">')+
     grp('Мессенджеры в подвале',msgHtml)+
     grp('Мессенджеры в шапке',hmHtml)+
     grp('Текст копирайта','<input class="admin-input" id="ftText" value="'+esc(S.footerText||'© 2026 Ecostroydom. Все права защищены.')+'">')+
