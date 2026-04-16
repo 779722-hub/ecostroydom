@@ -246,7 +246,7 @@ function apply(){
         // Custom text — still clickable as tel: link
         hInfo.innerHTML='<a href="tel:'+cleanPhone+'" class="header__phone">'+esc(S.headerInfoText)+'</a>';
       } else {
-        hInfo.innerHTML='<a href="tel:'+cleanPhone+'" class="header__phone">'+esc(S.phone||'+7 775 786 25 15')+'</a>';
+        hInfo.innerHTML='<a href="tel:'+cleanPhone+'" class="header__phone">Позвонить нам</a>';
       }
     }
   }
