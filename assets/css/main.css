@@ -1062,8 +1062,9 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
   .timer__sep{font-size:24px}
   .cards,.features,.steps,.reviews,.delivery__grid{grid-template-columns:1fr}
   .hero__hooks{grid-template-columns:1fr;gap:10px}
-  .price-badge{bottom:16px;right:16px;padding:16px 20px;min-width:0}
+  .price-badge{position:static;display:inline-block;margin:16px auto 0;padding:16px 20px;min-width:0;bottom:auto;right:auto}
   .price-badge__value{font-size:28px}
+  .promo__card h1,.promo__card h2,.promo__card h3,.promo h1,.promo h2{word-break:break-word;overflow-wrap:anywhere;hyphens:auto}
   .footer__grid{grid-template-columns:1fr}
   .sticky-cta{display:flex}
   body{padding-bottom:72px}
@@ -1209,7 +1210,7 @@ section.hero[data-block]::before{display:none}
   .container{padding:0 16px}
   .stat{padding:20px 14px}
   .stat b{font-size:40px!important}
-  .promo__title{font-size:26px!important}
+  .promo__title{font-size:24px!important;word-break:break-word;overflow-wrap:anywhere;hyphens:auto}
   .form{padding:24px 16px}
   .newsletter__text{font-size:22px}
   .cart-panel{width:100%}
