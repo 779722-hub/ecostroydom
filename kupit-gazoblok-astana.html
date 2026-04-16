@@ -181,6 +181,8 @@ document.getElementById('lpForm').addEventListener('submit',function(e){
   var p=document.getElementById('lpPhone').value.trim();
   var a=document.getElementById('lpAddr').value.trim();
   if(!n||!p){alert('Заполните имя и телефон');return;}
+  window.dataLayer=window.dataLayer||[];
+  window.dataLayer.push({event:'lp_form_submit',form_name:'landing_kupit_gazoblok'});
   var msg='Заявка с landing: купить газоблок D600%0A%0A👤 '+encodeURIComponent(n)+'%0A📞 '+encodeURIComponent(p)+(a?'%0A📍 '+encodeURIComponent(a):'');
   window.open('https://wa.me/77757862515?text='+msg,'_blank');
 });
