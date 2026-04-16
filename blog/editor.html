@@ -27,19 +27,19 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
 
 /* List */
 .post-list{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
-.post-item{display:flex;align-items:center;gap:16px;padding:16px;background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,.06);cursor:pointer;transition:.2s}
+.post-item{display:flex;align-items:center;gap:16px;padding:16px;background:#fff;border-radius:3px;border:1px solid rgba(0,0,0,.06);cursor:pointer;transition:.2s}
 .post-item:hover{border-color:#2A7A5F;box-shadow:0 4px 16px rgba(0,0,0,.06)}
-.post-item img{width:80px;height:56px;object-fit:cover;border-radius:8px;background:#eee}
+.post-item img{width:80px;height:56px;object-fit:cover;border-radius:3px;background:#eee}
 .post-item__info{flex:1;min-width:0}
 .post-item__info h3{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .post-item__info p{font-size:12px;color:#999;margin-top:2px}
 .post-item__actions{display:flex;gap:6px}
-.post-item__actions button{padding:8px 14px;border:1px solid #e0e0e0;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:600;transition:.15s}
+.post-item__actions button{padding:8px 14px;border:1px solid #e0e0e0;border-radius:3px;background:#fff;cursor:pointer;font-size:12px;font-weight:600;transition:.15s}
 .post-item__actions button:hover{background:#f5f5f5}
 .post-item__actions .del{color:#e74c3c;border-color:#fdd}
 .post-item__actions .del:hover{background:#fee}
 
-.btn{padding:12px 24px;border:0;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
+.btn{padding:12px 24px;border:0;border-radius:4px;font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
 .btn-primary{background:#1A1A1A;color:#fff}
 .btn-primary:hover{background:#333}
 .btn-accent{background:#2A7A5F;color:#fff}
@@ -49,12 +49,12 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
 .btn-block{width:100%}
 
 /* Editor */
-.editor{display:none;background:#fff;border-radius:10px;padding:32px;border:1px solid rgba(0,0,0,.06);margin-top:24px}
+.editor{display:none;background:#fff;border-radius:4px;padding:32px;border:1px solid rgba(0,0,0,.06);margin-top:24px}
 .editor.active{display:block}
 .editor h2{font-family:'Manrope';font-size:22px;margin-bottom:20px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
-.field input,.field textarea,.field select{width:100%;padding:12px 16px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:inherit;transition:.2s}
+.field input,.field textarea,.field select{width:100%;padding:12px 16px;border:1.5px solid #e0e0e0;border-radius:4px;font-size:14px;font-family:inherit;transition:.2s}
 .field input:focus,.field textarea:focus{border-color:#2A7A5F;outline:none}
 .field textarea{min-height:120px;resize:vertical}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -62,32 +62,32 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
 /* Photo manager */
 .photos{margin:16px 0}
 .photos__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:12px}
-.photos__item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:#f5f5f5}
+.photos__item{position:relative;border-radius:4px;overflow:hidden;aspect-ratio:4/3;background:#f5f5f5}
 .photos__item img{width:100%;height:100%;object-fit:cover}
 .photos__item button{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:0;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
 .photos__item button:hover{background:#e74c3c}
 .photos__add{display:flex;gap:8px;align-items:center}
 .photos__add input[type="file"]{display:none}
-.photos__add-btn{padding:10px 16px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#999;transition:.15s;background:#fff}
+.photos__add-btn{padding:10px 16px;border:2px dashed #ddd;border-radius:4px;cursor:pointer;font-size:13px;color:#999;transition:.15s;background:#fff}
 .photos__add-btn:hover{border-color:#2A7A5F;color:#2A7A5F}
 
 /* Toolbar */
-.toolbar{display:flex;gap:8px;margin-top:10px;padding:8px;background:#f8f8f8;border-radius:8px;flex-wrap:wrap}
+.toolbar{display:flex;gap:8px;margin-top:10px;padding:8px;background:#f8f8f8;border-radius:3px;flex-wrap:wrap}
 .toolbar button{padding:6px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;transition:.15s}
 .toolbar button:hover{background:#eee}
 
 /* Preview */
-.preview{margin-top:20px;padding:24px;border:1px solid #eee;border-radius:8px;background:#fafafa}
+.preview{margin-top:20px;padding:24px;border:1px solid #eee;border-radius:3px;background:#fafafa}
 .preview h3{font-size:16px;margin-bottom:12px;color:#999}
 .preview__content{font-size:15px;line-height:1.8;color:#333}
 .preview__content h2,.preview__content h3{margin:20px 0 10px;color:#1A1A1A}
-.preview__content img{max-width:100%;border-radius:8px;margin:12px 0}
+.preview__content img{max-width:100%;border-radius:3px;margin:12px 0}
 .preview__content p{margin-bottom:12px}
 .preview__content ul,.preview__content ol{padding-left:20px;margin-bottom:12px}
 .preview__content table{width:100%;border-collapse:collapse;margin:12px 0}
 .preview__content th,.preview__content td{padding:8px 12px;border:1px solid #eee;text-align:left;font-size:13px}
 
-.toast{position:fixed;bottom:24px;right:24px;background:#1A1A1A;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;display:none;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.toast{position:fixed;bottom:24px;right:24px;background:#1A1A1A;color:#fff;padding:12px 24px;border-radius:4px;font-size:14px;font-weight:600;display:none;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.15)}
 .toast.show{display:block}
 
 @media(max-width:768px){
@@ -132,7 +132,7 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
         <div class="photos__add">
           <input type="file" accept="image/*" id="coverFile">
           <button type="button" class="photos__add-btn" id="coverBtn">Загрузить обложку</button>
-          <input id="coverUrl" placeholder="или URL изображения" style="flex:1;padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px">
+          <input id="coverUrl" placeholder="или URL изображения" style="flex:1;padding:8px 12px;border:1px solid #e0e0e0;border-radius:3px;font-size:13px">
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
         <div class="photos__add">
           <input type="file" accept="image/*" id="photoFile" multiple>
           <button type="button" class="photos__add-btn" id="photoBtn">+ Добавить фото</button>
-          <input id="photoUrl" placeholder="или URL" style="flex:1;padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px">
+          <input id="photoUrl" placeholder="или URL" style="flex:1;padding:8px 12px;border:1px solid #e0e0e0;border-radius:3px;font-size:13px">
           <button type="button" class="btn btn-ghost" id="photoUrlAdd" style="font-size:12px">Добавить</button>
         </div>
       </div>
@@ -372,7 +372,7 @@ document.querySelectorAll('[data-insert]').forEach(function(b){
   b.addEventListener('click',function(){
     var ta=document.getElementById('eBody');var pos=ta.selectionStart;
     var snippet='';
-    if(b.dataset.insert==='img') snippet='\n<img src="URL_ФОТО" alt="Описание" style="width:100%;border-radius:8px;margin:16px 0">\n';
+    if(b.dataset.insert==='img') snippet='\n<img src="URL_ФОТО" alt="Описание" style="width:100%;border-radius:3px;margin:16px 0">\n';
     else if(b.dataset.insert==='table') snippet='\n<table>\n<thead><tr><th>Параметр</th><th>Значение</th></tr></thead>\n<tbody><tr><td>Пример</td><td>Данные</td></tr></tbody>\n</table>\n';
     ta.value=ta.value.substring(0,pos)+snippet+ta.value.substring(pos);
     ta.focus();updatePreview();
