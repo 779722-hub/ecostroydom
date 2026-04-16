@@ -27,7 +27,7 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
 
 /* List */
 .post-list{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
-.post-item{display:flex;align-items:center;gap:16px;padding:16px;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.06);cursor:pointer;transition:.2s}
+.post-item{display:flex;align-items:center;gap:16px;padding:16px;background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,.06);cursor:pointer;transition:.2s}
 .post-item:hover{border-color:#2A7A5F;box-shadow:0 4px 16px rgba(0,0,0,.06)}
 .post-item img{width:80px;height:56px;object-fit:cover;border-radius:8px;background:#eee}
 .post-item__info{flex:1;min-width:0}
@@ -49,7 +49,7 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
 .btn-block{width:100%}
 
 /* Editor */
-.editor{display:none;background:#fff;border-radius:16px;padding:32px;border:1px solid rgba(0,0,0,.06);margin-top:24px}
+.editor{display:none;background:#fff;border-radius:10px;padding:32px;border:1px solid rgba(0,0,0,.06);margin-top:24px}
 .editor.active{display:block}
 .editor h2{font-family:'Manrope';font-size:22px;margin-bottom:20px}
 .field{margin-bottom:16px}
@@ -77,7 +77,7 @@ h1{font-family:'Manrope';font-size:28px;font-weight:800;margin-bottom:24px}
 .toolbar button:hover{background:#eee}
 
 /* Preview */
-.preview{margin-top:20px;padding:24px;border:1px solid #eee;border-radius:12px;background:#fafafa}
+.preview{margin-top:20px;padding:24px;border:1px solid #eee;border-radius:8px;background:#fafafa}
 .preview h3{font-size:16px;margin-bottom:12px;color:#999}
 .preview__content{font-size:15px;line-height:1.8;color:#333}
 .preview__content h2,.preview__content h3{margin:20px 0 10px;color:#1A1A1A}
@@ -372,7 +372,7 @@ document.querySelectorAll('[data-insert]').forEach(function(b){
   b.addEventListener('click',function(){
     var ta=document.getElementById('eBody');var pos=ta.selectionStart;
     var snippet='';
-    if(b.dataset.insert==='img') snippet='\n<img src="URL_ФОТО" alt="Описание" style="width:100%;border-radius:12px;margin:16px 0">\n';
+    if(b.dataset.insert==='img') snippet='\n<img src="URL_ФОТО" alt="Описание" style="width:100%;border-radius:8px;margin:16px 0">\n';
     else if(b.dataset.insert==='table') snippet='\n<table>\n<thead><tr><th>Параметр</th><th>Значение</th></tr></thead>\n<tbody><tr><td>Пример</td><td>Данные</td></tr></tbody>\n</table>\n';
     ta.value=ta.value.substring(0,pos)+snippet+ta.value.substring(pos);
     ta.focus();updatePreview();

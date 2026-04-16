@@ -48,9 +48,9 @@
   --white:#fff;
   --orange-soft:var(--orange);
 
-  --radius:10px;
-  --radius-lg:18px;
-  --radius-xl:24px;
+  --radius:6px;
+  --radius-lg:10px;
+  --radius-xl:14px;
   --radius-full:999px;
   --shadow:0 4px 16px rgba(0,0,0,.4);
   --shadow-md:0 10px 30px rgba(0,0,0,.45);
