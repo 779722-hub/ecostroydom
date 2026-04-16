@@ -5,6 +5,8 @@ Disallow: /blog/editor.html
 Disallow: /screenshots/
 Disallow: /node_modules/
 Disallow: /*.json$
+Disallow: /*.md$
+Disallow: /ads-campaign.md
 
 # Yandex specific
 User-agent: Yandex
