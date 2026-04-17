@@ -1045,7 +1045,7 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
   .nav.nav--open a{
     color:var(--text,#fff)!important;
     padding:14px 16px;font-size:16px;
-    border-radius:10px;background:transparent;
+    border-radius:3px;background:transparent;
   }
   .nav.nav--open a:hover{background:var(--surface,rgba(255,255,255,.06))!important}
   body.theme-light .nav.nav--open{background:#fff!important;box-shadow:0 20px 40px rgba(0,0,0,.1)}
