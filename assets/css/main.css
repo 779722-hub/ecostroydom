@@ -573,7 +573,9 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 .eyebrow--neon{color:var(--orange);background:rgba(255,140,66,.12);border-color:rgba(255,140,66,.25)}
 .eyebrow--neon::before{background:var(--orange);box-shadow:0 0 6px var(--orange)}
 
-.section__head h2{font-family:'Manrope',sans-serif;font-weight:800;line-height:1;letter-spacing:-.04em;margin-bottom:0}
+.section__head h2{font-family:'Manrope',sans-serif;font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:12px;white-space:nowrap}
+.section__head p{text-align:left;margin:0;font-size:clamp(14px,1.2vw,16px);color:var(--text-dim);max-width:720px}
+@media(max-width:900px){.section__head h2{white-space:normal}}
 .section__head h2 em,.section__head h2 i{font-style:normal;font-weight:800;color:var(--mint)}
 
 /* ========== STATS ========== */
