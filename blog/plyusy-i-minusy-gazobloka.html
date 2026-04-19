@@ -410,8 +410,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     // Replace "Gemini 3.1 Flash Live" text inside the widget with brand label.
     // Works only if widget is not sandboxed (iframe / closed shadow DOM).
-    var BRAND = 'Голосовой помощник EcoStroyDom';
-    var PATTERNS = [/Gemini\s*3\.1\s*Flash\s*Live/gi, /Gemini\s*3\.1/gi, /\bGemini\b/gi];
+    var BRAND = 'Голосовой менеджер EcoStroyDom';
+    var PATTERNS = [/Голосовой помощник EcoStroyDom/gi, /Gemini\s*3\.1\s*Flash\s*Live/gi, /Gemini\s*3\.1/gi, /\bGemini\b/gi];
     function rewriteTextNodes(root){
       if (!root) return;
       try {
