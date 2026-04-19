@@ -160,7 +160,14 @@ body.theme-dark .newsletter__form input{color:#0B0F12!important}
 body.theme-dark .gallery__item,body .about__media{border-color:rgba(255,255,255,.08)}
 
 /* ===== Light theme — bg luminance >= .5 ===== */
-body.theme-light{color:#1A1A1A!important;background:var(--bg,#fff)!important}
+body.theme-light{
+  --bg:#FFFFFF;--bg-2:#F6F5F2;--surface:#FFFFFF;--surface-2:#F6F5F2;--surface-3:#ECECEC;
+  --text:#1A1A1A;--text-dim:rgba(0,0,0,.7);--text-muted:rgba(0,0,0,.5);
+  --line:rgba(0,0,0,.08);--line-soft:rgba(0,0,0,.05);
+  color:#1A1A1A!important;background:#FFFFFF!important;
+}
+body.theme-light .section,body.theme-light main,body.theme-light .marquee-section{background:#FFFFFF!important}
+body.theme-light .section--light{background:#F6F5F2!important}
 body.theme-light h1,body.theme-light h2,body.theme-light h3,body.theme-light h4,body.theme-light h5{color:var(--dark,#1A1A1A)!important}
 body.theme-light .hero__title{color:var(--dark)!important}
 body.theme-light .hero__title .accent{color:var(--accent)!important}
@@ -500,9 +507,12 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 }
 .card__img{border-radius:var(--radius-xl) var(--radius-xl) 0 0}
 .blog-card__img{border-radius:0}
-.btn,.btn__inner,.eyebrow,.hero__badge,.header__phone,.hero__hooks li,.newsletter__form,.newsletter__form input,.newsletter__form button,.card__tag,.blog-card__cat,.seo-block__badge,.about__badge,.promo__tag,.reviews-nav button,.scroll-top,.cart-badge,.delivery__icon,.feature__ic,.steps b,.dot{
+/* Small pill / badge / icon elements — keep rounded */
+.eyebrow,.hero__badge,.hero__hooks li,.card__tag,.blog-card__cat,.seo-block__badge,.about__badge,.promo__tag,.reviews-nav button,.scroll-top,.cart-badge,.delivery__icon,.feature__ic,.steps b,.dot{
   border-radius:var(--radius-full);
 }
+/* Action buttons + header phone — use site's subtle radius */
+.btn,.btn__inner,.header__phone{border-radius:var(--radius-lg)!important}
 .hero__caption{font-size:13px;color:var(--text-muted);text-align:center;margin-top:14px;font-family:'Manrope',sans-serif;letter-spacing:-.01em;text-transform:none}
 
 .price-badge{
