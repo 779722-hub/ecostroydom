@@ -73,7 +73,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/reset.css">
-<link rel="stylesheet" href="assets/css/main.css?v=59">
+<link rel="stylesheet" href="assets/css/main.css?v=61">
 <link rel="stylesheet" href="assets/css/animations.css?v=2">
 <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
@@ -1196,9 +1196,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '.gemini-31-widget-button'
       );
     }
+
+    // Replace "Gemini 3.1 Flash Live" text inside the widget with brand label.
+    // Works only if widget is not sandboxed (iframe / closed shadow DOM).
+    var BRAND = 'Голосовой помощник EcoStroyDom';
+    var PATTERNS = [/Gemini\s*3\.1\s*Flash\s*Live/gi, /Gemini\s*3\.1/gi, /\bGemini\b/gi];
+    function rewriteTextNodes(root){
+      if (!root) return;
+      try {
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        var node;
+        while ((node = walker.nextNode())) {
+          var t = node.nodeValue;
+          if (!t) continue;
+          var changed = t;
+          for (var i = 0; i < PATTERNS.length; i++){
+            if (PATTERNS[i].test(changed)) changed = changed.replace(PATTERNS[i], BRAND);
+          }
+          if (changed !== t) node.nodeValue = changed;
+        }
+        if (root.querySelectorAll){
+          root.querySelectorAll('*').forEach(function(el){
+            if (el.shadowRoot) rewriteTextNodes(el.shadowRoot);
+          });
+        }
+      } catch (_){}
+    }
+    function rewriteAll(){ rewriteTextNodes(document.body); }
+
+    var mo = new MutationObserver(function(){ rewriteAll(); });
+    mo.observe(document.body, {childList:true, subtree:true, characterData:true});
+
     var tries = 0;
     var iv = setInterval(function(){
       tries++;
+      rewriteAll();
       if (findWidgetBtn()){
         label.classList.add('is-visible');
         clearInterval(iv);
