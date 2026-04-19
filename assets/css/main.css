@@ -1376,7 +1376,11 @@ body.theme-light .gemini-31-widget-button{
 [id*="voicyfy" i] [aria-label*="close" i],
 [id*="voicyfy" i] [aria-label*="Закрыть" i],
 [class*="voicyfy" i] [aria-label*="close" i],
-[class*="voicyfy" i] [aria-label*="Закрыть" i]{
+[class*="voicyfy" i] [aria-label*="Закрыть" i],
+[id*="voicyfy" i] button[title*="close" i],
+[id*="voicyfy" i] button[title*="Закрыть" i],
+[class*="voicyfy" i] button[title*="close" i],
+[class*="voicyfy" i] button[title*="Закрыть" i]{
   color:#fff !important;
 }
 [id*="voicyfy" i] [class*="close" i] svg,
@@ -1386,10 +1390,23 @@ body.theme-light .gemini-31-widget-button{
 [id*="voicyfy" i] [aria-label*="close" i] svg,
 [id*="voicyfy" i] [aria-label*="close" i] svg *,
 [id*="voicyfy" i] [aria-label*="Закрыть" i] svg,
-[id*="voicyfy" i] [aria-label*="Закрыть" i] svg *{
+[id*="voicyfy" i] [aria-label*="Закрыть" i] svg *,
+[id*="voicyfy" i] button[title*="close" i] svg,
+[id*="voicyfy" i] button[title*="close" i] svg *,
+[class*="voicyfy" i] button[title*="close" i] svg,
+[class*="voicyfy" i] button[title*="close" i] svg *{
   stroke:#fff !important;
   fill:#fff !important;
   color:#fff !important;
+}
+/* Force white on the widget's forced inline styles too (override inline color) */
+.voicyfy-close-force,
+.voicyfy-close-force *,
+.voicyfy-close-force svg,
+.voicyfy-close-force svg *{
+  color:#fff !important;
+  stroke:#fff !important;
+  fill:#fff !important;
 }
 
 /* Floating label "Голосовой менеджер" — adapts to site theme */

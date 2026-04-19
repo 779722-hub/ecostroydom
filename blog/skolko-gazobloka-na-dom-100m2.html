@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/reset.css">
-<link rel="stylesheet" href="../assets/css/main.css?v=61">
+<link rel="stylesheet" href="../assets/css/main.css?v=62">
 <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
 
 <script type="application/ld+json">
@@ -267,6 +267,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     script.async = true;
     document.head.appendChild(script);
 
+    // Show floating "Голосовой менеджер" label once the widget button appears.
     var label = document.createElement('div');
     label.className = 'voicyfy-label';
     label.textContent = 'Голосовой менеджер';
@@ -281,6 +282,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       );
     }
 
+    // Replace "Gemini 3.1 Flash Live" text inside the widget with brand label.
+    // Works only if widget is not sandboxed (iframe / closed shadow DOM).
     var BRAND = 'Голосовой помощник EcoStroyDom';
     var PATTERNS = [/Gemini\s*3\.1\s*Flash\s*Live/gi, /Gemini\s*3\.1/gi, /\bGemini\b/gi];
     function rewriteTextNodes(root){
@@ -306,18 +309,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     function rewriteAll(){ rewriteTextNodes(document.body); }
 
-    var mo = new MutationObserver(function(){ rewriteAll(); });
-    mo.observe(document.body, {childList:true, subtree:true, characterData:true});
+    // Force-color the close (×) button inside an opened widget panel — always white.
+    function forceWhiteClose(root){
+      if (!root) return;
+      try {
+        var scopes = root.querySelectorAll(
+          '[id*="voicyfy" i], [class*="voicyfy" i], [id*="gemini-widget" i], [class*="gemini-widget" i]'
+        );
+        var selectors = [
+          '[class*="close" i]',
+          '[aria-label*="close" i]',
+          '[aria-label*="Закрыть" i]',
+          'button[title*="close" i]',
+          'button[title*="Закрыть" i]'
+        ];
+        scopes.forEach(function(scope){
+          selectors.forEach(function(sel){
+            scope.querySelectorAll(sel).forEach(function(el){
+              el.classList.add('voicyfy-close-force');
+              el.style.setProperty('color','#fff','important');
+              el.querySelectorAll('*').forEach(function(child){
+                child.style.setProperty('color','#fff','important');
+                child.style.setProperty('stroke','#fff','important');
+                child.style.setProperty('fill','#fff','important');
+              });
+            });
+          });
+        });
+        if (root.querySelectorAll){
+          root.querySelectorAll('*').forEach(function(el){
+            if (el.shadowRoot) forceWhiteClose(el.shadowRoot);
+          });
+        }
+      } catch (_){}
+    }
+
+    var mo = new MutationObserver(function(){
+      rewriteAll();
+      forceWhiteClose(document.body);
+    });
+    mo.observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true});
 
     var tries = 0;
     var iv = setInterval(function(){
       tries++;
       rewriteAll();
+      forceWhiteClose(document.body);
       if (findWidgetBtn()){
         label.classList.add('is-visible');
         clearInterval(iv);
       } else if (tries > 40){
-        clearInterval(iv);
+        clearInterval(iv); // give up silently after ~10s
       }
     }, 250);
   })();
