@@ -595,6 +595,9 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 .card__tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
 .card__tag--promo{background:linear-gradient(135deg,var(--orange) 0%,#ff5a1f 100%)!important;color:#fff!important;text-decoration:none;text-transform:uppercase;letter-spacing:.02em;font-weight:800!important;box-shadow:0 4px 12px rgba(255,140,66,.35);transition:all .25s ease;animation:promoPulse 2.4s ease-in-out infinite}
 .card__tag--promo:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,140,66,.5)}
+/* Orange badges always have white text regardless of theme */
+body.theme-dark .promo__tag,body.theme-light .promo__tag,
+body.theme-dark .card__tag--promo,body.theme-light .card__tag--promo{color:#fff!important}
 @keyframes promoPulse{0%,100%{box-shadow:0 4px 12px rgba(255,140,66,.35)}50%{box-shadow:0 4px 18px rgba(255,140,66,.65)}}
 .section__head h2 em,.section__head h2 i{font-style:normal;font-weight:800;color:var(--mint)}
 
