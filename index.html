@@ -73,7 +73,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/reset.css">
-<link rel="stylesheet" href="assets/css/main.css?v=58">
+<link rel="stylesheet" href="assets/css/main.css?v=59">
 <link rel="stylesheet" href="assets/css/animations.css?v=2">
 <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
@@ -1167,5 +1167,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="assets/js/calculator.js?v=16"></script>
 <script src="assets/js/form.js"></script>
 <script src="assets/js/cart.js"></script>
+
+<!-- Gemini 3.1 Flash Live Widget (voicyfy.ru) -->
+<script>
+  (function() {
+    var script = document.createElement('script');
+    script.src = 'https://voicyfy.ru/static/gemini-31-widget.js';
+    script.dataset.assistantId = '8700b90f-f4cf-46a9-8e08-ebc8bb80308d';
+    script.dataset.server = 'https://voicyfy.ru';
+    script.dataset.position = 'bottom-right';
+    script.dataset.label = 'Голосовой менеджер';
+    script.dataset.title = 'Голосовой менеджер';
+    script.dataset.buttonColor = '#2563EB';
+    script.async = true;
+    document.head.appendChild(script);
+
+    // Show floating "Голосовой менеджер" label once the widget button appears.
+    var label = document.createElement('div');
+    label.className = 'voicyfy-label';
+    label.textContent = 'Голосовой менеджер';
+    document.body.appendChild(label);
+
+    function findWidgetBtn(){
+      return document.querySelector(
+        '[id*="voicyfy" i] button, [class*="voicyfy" i] button,' +
+        '[id*="gemini-widget" i] button, [class*="gemini-widget" i] button,' +
+        '#voicyfy-widget-button, #voicyfy-launcher, .voicyfy-launcher,' +
+        '.gemini-31-widget-button'
+      );
+    }
+    var tries = 0;
+    var iv = setInterval(function(){
+      tries++;
+      if (findWidgetBtn()){
+        label.classList.add('is-visible');
+        clearInterval(iv);
+      } else if (tries > 40){
+        clearInterval(iv); // give up silently after ~10s
+      }
+    }, 250);
+  })();
+</script>
+<!-- End Gemini 3.1 Flash Live Widget -->
 </body>
 </html>

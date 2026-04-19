@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/reset.css">
-<link rel="stylesheet" href="../assets/css/main.css?v=58">
+<link rel="stylesheet" href="../assets/css/main.css?v=59">
 <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
 
 <script type="application/ld+json">
@@ -271,6 +271,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <a href="index.html" class="article__back">← Все статьи</a>
 </article>
+
+
+<!-- Gemini 3.1 Flash Live Widget (voicyfy.ru) -->
+<script>
+  (function() {
+    var script = document.createElement('script');
+    script.src = 'https://voicyfy.ru/static/gemini-31-widget.js';
+    script.dataset.assistantId = '8700b90f-f4cf-46a9-8e08-ebc8bb80308d';
+    script.dataset.server = 'https://voicyfy.ru';
+    script.dataset.position = 'bottom-right';
+    script.dataset.label = 'Голосовой менеджер';
+    script.dataset.title = 'Голосовой менеджер';
+    script.dataset.buttonColor = '#2563EB';
+    script.async = true;
+    document.head.appendChild(script);
+
+    var label = document.createElement('div');
+    label.className = 'voicyfy-label';
+    label.textContent = 'Голосовой менеджер';
+    document.body.appendChild(label);
+
+    function findWidgetBtn(){
+      return document.querySelector(
+        '[id*="voicyfy" i] button, [class*="voicyfy" i] button,' +
+        '[id*="gemini-widget" i] button, [class*="gemini-widget" i] button,' +
+        '#voicyfy-widget-button, #voicyfy-launcher, .voicyfy-launcher,' +
+        '.gemini-31-widget-button'
+      );
+    }
+    var tries = 0;
+    var iv = setInterval(function(){
+      tries++;
+      if (findWidgetBtn()){
+        label.classList.add('is-visible');
+        clearInterval(iv);
+      } else if (tries > 40){
+        clearInterval(iv);
+      }
+    }, 250);
+  })();
+</script>
+<!-- End Gemini 3.1 Flash Live Widget -->
 
 </body>
 </html>
