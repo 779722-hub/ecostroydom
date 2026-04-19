@@ -148,7 +148,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="blog-grid" id="blogGrid">
-    <!-- Static fallback — will be replaced by JS if localStorage has posts -->
     <article class="blog-card">
       <div class="blog-card__img">
         <img src="../assets/img/o-tovare.webp" alt="D500 vs D600" loading="lazy">
@@ -264,78 +263,5 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="../index.html">← На главную</a>
 </div>
 
-<script>
-(function(){
-  try{
-    var s=JSON.parse(localStorage.getItem('ecostroydom_admin')||'{}');
-
-    // Logo
-    var n=s.companyName||'EcoStroyDom';
-    var el=document.getElementById('blogLogo');
-    if(el&&n.length>3) el.innerHTML=n.substring(0,3)+'<b>'+n.substring(3)+'</b>';
-
-    // ALL 9 default posts
-    var DEFAULT_POSTS=[
-      {title:'Как выбрать газоблок: D500 vs D600',cat:'Материалы',date:'12 апреля 2026',img:'../assets/img/o-tovare.webp',excerpt:'Разбираем ключевые отличия двух популярных марок газобетона.',url:'d500-vs-d600.html'},
-      {title:'Сколько газоблока нужно на дом 100 м²',cat:'Расчёты',date:'8 апреля 2026',img:'../assets/img/hero-house.jpg',excerpt:'Считаем кубатуру стен и перегородок, блоки, клей.',url:'skolko-gazobloka-na-dom-100m2.html'},
-      {title:'Какой клей для газоблока лучше — обзор 5 марок',cat:'Советы',date:'2 апреля 2026',img:'../assets/img/kley-dlya-gazobloka.png',excerpt:'Сравниваем Expert, Гарант, Ceresit, Knauf и USTA.',url:'klej-dlya-gazobloka-obzor.html'},
-      {title:'Какой толщины должна быть стена из газоблока',cat:'Советы',date:'28 марта 2026',img:'../assets/img/block-400.png',excerpt:'200, 300 или 400 мм — оптимум для Казахстана.',url:'tolschina-steny-gazoblok.html'},
-      {title:'Плюсы и минусы газоблока — честный обзор',cat:'Материалы',date:'20 марта 2026',img:'../assets/img/hero-autoclave.jpg',excerpt:'Все достоинства и недостатки, сравнение с кирпичом и деревом.',url:'plyusy-i-minusy-gazobloka.html'},
-      {title:'Газоблок или кирпич — что лучше для дома в 2026',cat:'Сравнение',date:'5 апреля 2026',img:'../assets/img/g-kirpich-zabutovka-2.jpg',excerpt:'Сравнение по цене, теплу, скорости и прочности.',url:'gazoblok-ili-kirpich.html'},
-      {title:'Можно ли строить из газоблока зимой в Казахстане',cat:'Советы',date:'15 марта 2026',img:'../assets/img/g-gazoblok-astana_5.webp',excerpt:'Правила зимней кладки, морозостойкий клей, защита от снега.',url:'stroitelstvo-gazobloka-zimoj.html'},
-      {title:'Марки газоблока D400, D500, D600, D700 — сравнение',cat:'Материалы',date:'22 марта 2026',img:'../assets/img/g-gazoblok-astana_2.webp',excerpt:'Какую марку выбрать для стен, перегородок, утепления.',url:'marki-gazobloka-d400-d500-d600-d700.html'},
-      {title:'Армирование газоблока — правила, схема, арматура',cat:'Технология',date:'10 марта 2026',img:'../assets/img/hero-bricklayer.jpg',excerpt:'Где, чем и как армировать стены из газобетона.',url:'armirovanie-gazobloka.html'}
-    ];
-
-    // If admin has added/modified posts in localStorage, merge them with defaults
-    // But always show all 9 defaults as baseline
-    var savedPosts=(s.blogPosts&&Array.isArray(s.blogPosts))?s.blogPosts:[];
-
-    // Build final list: use saved posts by URL, fallback to defaults
-    var shown=[];
-    var seenUrls={};
-    savedPosts.forEach(function(p){
-      if(!p||!p.title)return;
-      var url=p.url||'';
-      if(url.indexOf('blog/')===0) url=url.substring(5);
-      if(url) seenUrls[url]=true;
-      shown.push({
-        title:p.title,cat:p.cat||'',date:p.date||'',
-        img:p.img&&p.img.startsWith('data:')?p.img:(p.img&&p.img.startsWith('http')?p.img:(p.img?'../'+p.img:'')),
-        excerpt:p.excerpt||'',url:url||'#'
-      });
-    });
-    // Add defaults not yet in shown
-    DEFAULT_POSTS.forEach(function(p){
-      if(!seenUrls[p.url]) shown.push(p);
-    });
-
-    if(!shown.length) return; // keep static HTML
-
-    var grid=document.getElementById('blogGrid');
-    grid.innerHTML='';
-
-    shown.forEach(function(p){
-      var card=document.createElement('article');
-      card.className='blog-card';
-      card.innerHTML=
-        '<div class="blog-card__img">'+
-          '<img src="'+esc(p.img)+'" alt="'+esc(p.title)+'" loading="lazy">'+
-          '<span class="blog-card__cat">'+esc(p.cat)+'</span>'+
-        '</div>'+
-        '<div class="blog-card__body">'+
-          '<div class="blog-card__date">'+esc(p.date)+'</div>'+
-          '<h3 class="blog-card__title">'+esc(p.title)+'</h3>'+
-          '<p class="blog-card__excerpt">'+esc(p.excerpt)+'</p>'+
-          '<a href="'+esc(p.url)+'" class="blog-card__link">Читать статью</a>'+
-        '</div>';
-      grid.appendChild(card);
-    });
-
-  }catch(e){console.error(e);}
-
-  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-})();
-</script>
 </body>
 </html>

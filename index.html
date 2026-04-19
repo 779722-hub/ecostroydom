@@ -72,9 +72,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/reset.css">
-<link rel="stylesheet" href="assets/css/main.css?v=35">
+<link rel="stylesheet" href="assets/css/main.css?v=36">
 <link rel="stylesheet" href="assets/css/animations.css?v=2">
-<link rel="stylesheet" href="assets/css/admin.css?v=10">
 <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
 <!-- SVG ICON SPRITE -->
@@ -262,7 +261,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <script>
-// Theme controller — runs immediately, independent of admin.js
+// Theme controller
 (function(){
   function pref(){return localStorage.getItem('eco_theme_pref')||'auto';}
   function actualTheme(p){
@@ -378,7 +377,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="price-badge__note" id="heroPriceNote">фиксируется до отгрузки</span>
       </div>
       <div class="hero__media" id="heroMedia">
-        <img src="assets/img/hero-autoclave.jpg" alt="Автоклав для производства газоблока D600" class="hero__img" loading="eager" width="640" height="720">
+        <div style="position:absolute;inset:0">
+          <div class="hero__slide active"><img src="assets/img/hero-autoclave.jpg" alt="Автоклав для производства газоблока D600" loading="eager"></div>
+          <div class="hero__slide"><img src="assets/img/hero-bricklayer.jpg" alt="Кладка газоблока на объекте" loading="lazy"></div>
+          <div class="hero__slide"><img src="assets/img/hero-pallets.webp" alt="Поддоны газоблока D600 на складе" loading="lazy"></div>
+        </div>
+        <div class="hero__dots">
+          <button type="button" class="active" data-slide="0" aria-label="Слайд 1"></button>
+          <button type="button" data-slide="1" aria-label="Слайд 2"></button>
+          <button type="button" data-slide="2" aria-label="Слайд 3"></button>
+        </div>
+        <div class="hero__arrows">
+          <button type="button" class="prev" aria-label="Предыдущий">‹</button>
+          <button type="button" class="next" aria-label="Следующий">›</button>
+        </div>
       </div>
       <p class="hero__caption" id="heroCaption"></p>
     </div>
@@ -1130,7 +1142,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="container footer__bottom">
     © 2026 Ecostroydom. Все права защищены.
-    <a href="javascript:void(0)" id="adminBtn" style="margin-left:16px;opacity:.35;font-size:11px;transition:.2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.35'">Админ</a>
+    
   </div>
 </footer>
 
@@ -1164,10 +1176,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/timer.js"></script>
-<script src="assets/js/animations.js?v=10"></script>
+<script src="assets/js/animations.js?v=11"></script>
 <script src="assets/js/calculator.js?v=16"></script>
 <script src="assets/js/form.js"></script>
 <script src="assets/js/cart.js"></script>
-<script src="assets/js/admin.js?v=18"></script>
 </body>
 </html>

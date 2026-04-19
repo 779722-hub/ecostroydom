@@ -78,4 +78,22 @@
       }
     });
   }
+
+  // Hero slideshow — cycles through .hero__slide elements
+  var slides = document.querySelectorAll('.hero__slide');
+  var dots = document.querySelectorAll('.hero__dots button');
+  if (slides.length > 1) {
+    var cur = 0;
+    function show(i) {
+      cur = (i + slides.length) % slides.length;
+      slides.forEach(function(s, j) { s.classList.toggle('active', j === cur); });
+      dots.forEach(function(d, j) { d.classList.toggle('active', j === cur); });
+    }
+    dots.forEach(function(d, j) { d.addEventListener('click', function(){ show(j); }); });
+    var prev = document.querySelector('.hero__arrows .prev');
+    var next = document.querySelector('.hero__arrows .next');
+    if (prev) prev.addEventListener('click', function(){ show(cur - 1); });
+    if (next) next.addEventListener('click', function(){ show(cur + 1); });
+    setInterval(function(){ show(cur + 1); }, 5000);
+  }
 })();
