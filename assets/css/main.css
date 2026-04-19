@@ -587,9 +587,9 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 .section__head h2{font-family:'Manrope',sans-serif;font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:12px;text-wrap:balance}
 .section__head p{text-align:left;margin:0;font-size:clamp(14px,1.2vw,16px);color:var(--text-dim);max-width:720px}
 .faq{max-width:880px;margin-left:0}
-/* Promo link in subheaders */
-.link-promo{display:inline-block;margin-left:8px;padding:4px 12px;background:linear-gradient(135deg,var(--orange) 0%,#ff5a1f 100%);color:#fff!important;font-weight:800;border-radius:var(--radius-lg);text-decoration:none;font-size:13px;letter-spacing:.02em;box-shadow:0 4px 12px rgba(255,140,66,.35);transition:all .25s ease;text-transform:uppercase}
-.link-promo:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,140,66,.5)}
+/* Soft text link — subtle gray with underline */
+.link-soft{color:var(--text-muted)!important;text-decoration:underline;text-decoration-color:rgba(120,120,120,.4);text-underline-offset:3px;font-weight:600;transition:color .2s ease}
+.link-soft:hover{color:var(--mint)!important;text-decoration-color:var(--mint)}
 /* Card tags row + promo tag */
 .card__tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
 .card__tag--promo{background:linear-gradient(135deg,var(--orange) 0%,#ff5a1f 100%)!important;color:#fff!important;text-decoration:none;text-transform:uppercase;letter-spacing:.02em;font-weight:800!important;box-shadow:0 4px 12px rgba(255,140,66,.35);transition:all .25s ease;animation:promoPulse 2.4s ease-in-out infinite}
