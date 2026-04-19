@@ -731,22 +731,16 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
   pointer-events:none;
 }
 .promo__left,.promo__right{position:relative;z-index:1}
-/* Centered badge — fully above the card top edge */
+/* Inline tag — sits above title in left column, simple and clean */
 .promo__tag{
-  position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
-  margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:8px;
   background:linear-gradient(135deg,#ff7a00 0%,var(--orange) 50%,#ff5a1f 100%);
-  color:#fff;padding:12px 32px;border-radius:var(--radius-full);
-  font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;letter-spacing:.08em;
-  text-transform:uppercase;border:0;
-  box-shadow:0 6px 18px rgba(255,140,66,.4);
-  z-index:5;white-space:nowrap;
+  color:#fff;padding:8px 18px;border-radius:var(--radius-full);
+  font-family:'Manrope',sans-serif;font-weight:800;font-size:13px;letter-spacing:.08em;
+  text-transform:uppercase;border:0;margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(255,140,66,.3);white-space:nowrap;
 }
-.promo__card{overflow:visible!important}
-.promo__left,.promo__right{padding-top:0}
-@media(max-width:768px){
-  .promo__tag{font-size:13px;padding:9px 22px;margin-bottom:10px}
-}
+.promo__tag::before{content:'⚡';font-size:14px}
 .promo__title{color:var(--text);margin-bottom:20px;font-family:'Manrope',sans-serif;font-weight:800;font-size:clamp(30px,3.5vw,48px);letter-spacing:-.035em;line-height:1.02}
 .promo__desc{color:var(--text-dim);margin-bottom:32px;font-size:16px;line-height:1.6}
 .promo__desc b{color:var(--text);font-weight:700}
