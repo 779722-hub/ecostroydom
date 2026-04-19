@@ -386,13 +386,14 @@ body.theme-dark .btn--primary .btn__inner,
 body.theme-dark .btn--accent .btn__inner,
 body.theme-dark .btn--whatsapp .btn__inner,
 body.theme-dark .btn--ghost .btn__inner,
+body.theme-dark .btn--ember .btn__inner,
 body.theme-dark .btn--lg .btn__inner,
 body.theme-dark .btn--sm .btn__inner{
-  color:#000!important;
+  color:#fff!important;
 }
 body.theme-dark .btn svg,
 body.theme-dark .btn .btn__inner svg{
-  stroke:#000!important;
+  stroke:#fff!important;
 }
 
 /* «О товаре», «О нас», «Заявка» — заголовки и тексты по левому краю */
