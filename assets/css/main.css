@@ -558,14 +558,14 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* ========== SECTIONS ========== */
-.section{padding:120px 0;position:relative}
+.section{padding:72px 0;position:relative}
 .section--light,.section--gray{background:var(--bg-2)}
 .section--dark{background:var(--bg);color:var(--text)}
 .section--dark h2,.section--dark h3,.section--dark h4{color:var(--text)}
 .section--dark p{color:var(--text-dim)}
 .section--black{background:var(--bg);color:var(--text)}
 
-.section__head{max-width:960px;margin:0 0 80px;text-align:left}
+.section__head{max-width:960px;margin:0 0 40px;text-align:left}
 .section__head--left{text-align:left;margin-left:0}
 .section__head p{font-size:clamp(16px,1.5vw,18px);margin-top:20px;line-height:1.55;color:var(--text-dim);max-width:620px;margin-left:auto;margin-right:auto}
 .section--dark .section__head p{color:var(--text-dim)}
@@ -730,13 +730,23 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
   pointer-events:none;
 }
 .promo__left,.promo__right{position:relative;z-index:1}
+/* Corner ribbon — sits across top-left corner of .promo__card */
 .promo__tag{
-  display:inline-block;background:var(--orange);color:#fff;
-  padding:10px 22px;border-radius:var(--radius-full);
-  font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;
-  letter-spacing:.02em;margin-bottom:24px;text-transform:uppercase;
-  border:0;
+  position:absolute;top:32px;left:-72px;width:260px;text-align:center;
+  background:linear-gradient(135deg,#ff7a00 0%,var(--orange) 50%,#ff5a1f 100%);
+  color:#fff;padding:9px 0;
+  font-family:'Manrope',sans-serif;font-weight:800;font-size:15px;letter-spacing:.08em;
+  text-transform:uppercase;border:0;border-radius:0;
+  transform:rotate(-45deg);transform-origin:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.25),0 2px 6px rgba(0,0,0,.2);
+  z-index:5;pointer-events:none;
 }
+.promo__tag::before,.promo__tag::after{
+  content:'';position:absolute;top:100%;width:0;height:0;border-style:solid;
+  border-color:transparent #b34000 transparent transparent;opacity:.6;
+}
+.promo__tag::before{left:0;border-width:0 8px 8px 0}
+.promo__tag::after{right:0;border-width:0 0 8px 8px;border-color:transparent transparent transparent #b34000}
 .promo__title{color:var(--text);margin-bottom:20px;font-family:'Manrope',sans-serif;font-weight:800;font-size:clamp(30px,3.5vw,48px);letter-spacing:-.035em;line-height:1.02}
 .promo__desc{color:var(--text-dim);margin-bottom:32px;font-size:16px;line-height:1.6}
 .promo__desc b{color:var(--text);font-weight:700}
@@ -1089,8 +1099,8 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
   .seo-block__media{position:static}
   .newsletter__inner{flex-direction:column;text-align:center}
   .newsletter__form{max-width:100%;width:100%}
-  .section{padding:80px 0}
-  .section__head{margin-bottom:56px}
+  .section{padding:56px 0}
+  .section__head{margin-bottom:32px}
   .nav{gap:4px}
   .nav a{padding:10px 14px;font-size:14px}
 }
@@ -1117,7 +1127,7 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
   .header__inner{height:72px;gap:12px}
   .logo{font-size:22px}
   .container{padding:0 20px}
-  .section{padding:64px 0}
+  .section{padding:48px 0}
   .promo{padding:64px 0}
   .promo__card{padding:28px 24px;gap:32px}
   .timer{gap:6px}
