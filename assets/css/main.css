@@ -320,7 +320,8 @@ a,button,img,.card,.upsell,.feature,.blog-card,.review,.delivery__card,.stat{
 }
 .logo{display:flex;align-items:center;gap:10px;font-family:'Manrope',sans-serif;font-size:26px;font-weight:800;letter-spacing:-.04em;line-height:1}
 .logo__icon{display:none}
-.logo__static{height:26px;width:auto;object-fit:contain;flex-shrink:0}
+.logo__static{height:26px;width:auto;object-fit:contain;flex-shrink:0;transition:filter .3s ease}
+body:not(.theme-light) .logo__static{filter:drop-shadow(0 0 8px rgba(255,255,255,.55)) drop-shadow(0 0 2px rgba(255,255,255,.8))}
 .logo__text{color:var(--text);font-style:normal}
 .logo__text b{color:var(--mint);font-weight:800}
 .logo--light .logo__text{color:var(--text)}
