@@ -215,45 +215,8 @@ function initSeoForm(){
   });
 }
 
-// Reviews carousel
-function initReviews(){
-  var container=document.querySelector('.reviews');
-  if(!container)return;
-  var reviews=Array.from(container.querySelectorAll('.review'));
-  if(!reviews.length)return;
-  var perPage=window.innerWidth<768?1:(window.innerWidth<1024?2:3);
-  var totalPages=Math.ceil(reviews.length/perPage);
-  var page=0;
-
-  function show(){
-    reviews.forEach(function(r,i){
-      r.style.display=(i>=page*perPage&&i<(page+1)*perPage)?'':'none';
-    });
-  }
-
-  var prev=document.getElementById('revPrev');
-  var next=document.getElementById('revNext');
-
-  // Loop: prev from 0 goes to last, next from last goes to 0
-  if(prev) prev.addEventListener('click',function(){
-    page=(page-1+totalPages)%totalPages;show();
-  });
-  if(next) next.addEventListener('click',function(){
-    page=(page+1)%totalPages;show();
-  });
-
-  show();
-
-  window.addEventListener('resize',function(){
-    var newPP=window.innerWidth<768?1:(window.innerWidth<1024?2:3);
-    if(newPP!==perPage){perPage=newPP;totalPages=Math.ceil(reviews.length/perPage);page=0;show();}
-  });
-
-  // Autoplay every 8s
-  setInterval(function(){
-    page=(page+1)%totalPages;show();
-  },8000);
-}
+// Testimonials now use pure CSS infinite scroll — no JS needed
+function initReviews(){}
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){init();initSeoForm();initReviews();});
 else {init();initSeoForm();initReviews();}
