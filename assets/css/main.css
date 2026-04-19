@@ -111,7 +111,7 @@ body.theme-dark .stat span{color:rgba(255,255,255,.55)!important}
 body.theme-dark .stat:hover b{color:#2563EB!important}
 
 body.theme-dark .calc__form label{color:rgba(255,255,255,.72)!important}
-body.theme-dark .calc__form input,body .calc__form select{background:#0B0F12!important;color:#FFFFFF!important;border-color:rgba(255,255,255,.1)!important}
+body.theme-dark .calc__form input,body.theme-dark .calc__form select{background:#0B0F12!important;color:#FFFFFF!important;border-color:rgba(255,255,255,.1)!important}
 body.theme-dark .calc__result{background:#0B0F12!important;border-color:rgba(255,255,255,.08)!important;color:#FFFFFF!important}
 body.theme-dark .calc__result>div{color:rgba(255,255,255,.65)!important}
 body.theme-dark .calc__result b{color:#FFFFFF!important}
@@ -161,9 +161,11 @@ body.theme-dark .gallery__item,body .about__media{border-color:rgba(255,255,255,
 
 /* ===== Light theme — bg luminance >= .5 ===== */
 body.theme-light{
-  --bg:#FFFFFF;--bg-2:#F6F5F2;--surface:#FFFFFF;--surface-2:#F6F5F2;--surface-3:#ECECEC;
+  --bg:#FFFFFF;--bg-2:#F6F5F2;--bg-soft:#F6F5F2;
+  --surface:#FFFFFF;--surface-2:#F6F5F2;--surface-3:#ECECEC;
   --text:#1A1A1A;--text-dim:rgba(0,0,0,.7);--text-muted:rgba(0,0,0,.5);
   --line:rgba(0,0,0,.08);--line-soft:rgba(0,0,0,.05);
+  --dark:#1A1A1A;
   color:#1A1A1A!important;background:#FFFFFF!important;
 }
 body.theme-light .section,body.theme-light main,body.theme-light .marquee-section{background:#FFFFFF!important}
