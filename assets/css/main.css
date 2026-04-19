@@ -205,6 +205,9 @@ body.theme-light .footer .logo__text b{color:var(--mint)!important}
 body.theme-light .footer__bottom{color:rgba(255,255,255,.5)!important;border-top-color:rgba(255,255,255,.1)!important}
 body.theme-light .price-badge,body.theme-light .price-badge *{color:#fff!important}
 body.theme-light .price-badge__label,body.theme-light .price-badge__value small{color:rgba(255,255,255,.85)!important}
+body.theme-dark .price-badge,body.theme-dark .price-badge *{color:#fff!important}
+body.theme-dark .price-badge__label,body.theme-dark .price-badge__value small{color:rgba(255,255,255,.85)!important}
+body.theme-dark .marquee,body.theme-dark .marquee__track span,body.theme-dark .marquee__track span::after{color:#fff!important}
 /* Promo section lives on dark card even in light theme — override all text to light */
 body.theme-light .promo__caption{color:rgba(255,255,255,.65)!important}
 body.theme-light .promo__title{color:#fff!important}
