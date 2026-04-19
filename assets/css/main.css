@@ -83,7 +83,7 @@ body{
 /* Dark theme — applied by default and when luminance of bg < .5 */
 body.theme-dark h1,body.theme-dark h2,body.theme-dark h3,body.theme-dark h4,body.theme-dark h5{color:#FFFFFF!important}
 body.theme-dark .section__head h2,body .section__head h2 em,body .section__head h2 i{color:#FFFFFF!important}
-body.theme-dark .section__head h2 em,body .section__head h2 i{color:#2563EB!important}
+body.theme-dark .section__head h2 em,body .section__head h2 i,body.theme-dark .section__head h2 .accent,body.theme-light .section__head h2 .accent{color:#2563EB!important}
 body.theme-dark .hero__title{color:#FFFFFF!important}
 body.theme-dark .hero__title .accent{color:#2563EB!important}
 body.theme-dark .hero__sub{color:rgba(255,255,255,.72)!important}
@@ -554,7 +554,7 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 .section--dark p{color:var(--text-dim)}
 .section--black{background:var(--bg);color:var(--text)}
 
-.section__head{max-width:960px;margin:0 auto 80px;text-align:center}
+.section__head{max-width:960px;margin:0 0 80px;text-align:left}
 .section__head--left{text-align:left;margin-left:0}
 .section__head p{font-size:clamp(16px,1.5vw,18px);margin-top:20px;line-height:1.55;color:var(--text-dim);max-width:620px;margin-left:auto;margin-right:auto}
 .section--dark .section__head p{color:var(--text-dim)}
