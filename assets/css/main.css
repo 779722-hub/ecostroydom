@@ -732,25 +732,22 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 .promo__left,.promo__right{position:relative;z-index:1}
 /* Corner ribbon — sits across top-left corner of .promo__card */
 .promo__tag{
-  position:absolute;top:32px;left:-72px;width:260px;text-align:center;
+  position:absolute;top:18px;left:-58px;width:200px;text-align:center;
   background:linear-gradient(135deg,#ff7a00 0%,var(--orange) 50%,#ff5a1f 100%);
-  color:#fff;padding:9px 0;
-  font-family:'Manrope',sans-serif;font-weight:800;font-size:15px;letter-spacing:.08em;
+  color:#fff;padding:7px 0;
+  font-family:'Manrope',sans-serif;font-weight:800;font-size:13px;letter-spacing:.08em;
   text-transform:uppercase;border:0;border-radius:0;
   transform:rotate(-45deg);transform-origin:center;
-  box-shadow:0 6px 18px rgba(0,0,0,.25),0 2px 6px rgba(0,0,0,.2);
+  box-shadow:0 4px 14px rgba(0,0,0,.22);
   z-index:5;pointer-events:none;
 }
-.promo__tag::before,.promo__tag::after{
-  content:'';position:absolute;top:100%;width:0;height:0;border-style:solid;
-  border-color:transparent #b34000 transparent transparent;opacity:.6;
-}
-.promo__tag::before{left:0;border-width:0 8px 8px 0}
-.promo__tag::after{right:0;border-width:0 0 8px 8px;border-color:transparent transparent transparent #b34000}
+/* Push promo content below the ribbon area so they don't overlap */
+.promo__left,.promo__right{padding-top:24px}
+@media(max-width:768px){.promo__tag{top:14px;left:-66px;width:200px;font-size:12px}.promo__left,.promo__right{padding-top:32px}}
 .promo__title{color:var(--text);margin-bottom:20px;font-family:'Manrope',sans-serif;font-weight:800;font-size:clamp(30px,3.5vw,48px);letter-spacing:-.035em;line-height:1.02}
 .promo__desc{color:var(--text-dim);margin-bottom:32px;font-size:16px;line-height:1.6}
 .promo__desc b{color:var(--text);font-weight:700}
-.promo__caption{font-family:'Manrope',sans-serif;font-size:13px;color:var(--text-muted);text-transform:none;letter-spacing:-.01em;margin-bottom:20px;font-weight:600}
+.promo__caption{font-family:'Manrope',sans-serif;font-size:18px;color:var(--text-muted);text-transform:none;letter-spacing:-.01em;margin-bottom:20px;font-weight:700}
 .timer{display:flex;align-items:center;gap:10px;margin-bottom:24px}
 .timer__cell{
   background:var(--bg);border:1px solid var(--line);
