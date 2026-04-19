@@ -1126,6 +1126,7 @@ body.theme-dark .card__tag--promo,body.theme-light .card__tag--promo{color:#fff!
   body.theme-light .nav.nav--open a:hover{background:rgba(0,0,0,.05)!important}
   .header__inner{height:72px;gap:12px}
   .logo{font-size:22px}
+  .header .logo__static{display:none}
   .container{padding:0 20px}
   .section{padding:48px 0}
   .promo{padding:64px 0}
