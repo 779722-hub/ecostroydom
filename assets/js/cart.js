@@ -163,6 +163,8 @@ function renderCart(){
   if(anyPromo){
     var cond=getPromoConditions();
     if(cond)conditionsBlock='<div class="cart-promo-conditions"><b>⚡ Условия акции</b>'+esc(cond)+'</div>';
+  } else {
+    conditionsBlock='<div class="cart-shipping-note"><b>📦 Сроки отгрузки</b>Начало отгрузки в течение недели согласно графика Поставщика.</div>';
   }
 
   // Glue checkbox only if клей NOT already manually added

@@ -1462,3 +1462,13 @@ body.theme-light .cart-item__promo{color:rgba(0,0,0,.72)!important}
 }
 .cart-promo-conditions b{color:var(--orange,#FF8C42);display:block;margin-bottom:3px;font-size:13px;letter-spacing:-.01em}
 body.theme-light .cart-promo-conditions{color:rgba(0,0,0,.72)!important}
+
+/* ========== CART SHIPPING NOTE (shown when no promo selected) ========== */
+.cart-shipping-note{
+  margin:10px 0;padding:10px 12px;
+  background:var(--mint-light,rgba(37,99,235,.08));
+  border:1px dashed rgba(37,99,235,.35);
+  border-radius:8px;font-size:12px;line-height:1.5;color:var(--text-dim)
+}
+.cart-shipping-note b{color:var(--mint);display:block;margin-bottom:3px;font-size:13px;letter-spacing:-.01em}
+body.theme-light .cart-shipping-note{color:rgba(0,0,0,.72)!important}
