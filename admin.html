@@ -273,6 +273,8 @@
           <button class="subtab subtab--active" data-sub="catalog" type="button">Каталог</button>
           <button class="subtab" data-sub="upsell" type="button">Сопутствующие</button>
           <button class="subtab" data-sub="delivery" type="button">Доставка</button>
+          <button class="subtab" data-sub="features" type="button">Преимущества</button>
+          <button class="subtab" data-sub="steps" type="button">Шаги</button>
         </div>
 
         <div class="subpanel subpanel--active" id="subpanel-catalog">
@@ -406,6 +408,75 @@
           <div class="status" id="saveUpsellStatus"></div>
         </div>
 
+        <!-- FEATURES SUBPANEL -->
+        <div class="subpanel" id="subpanel-features">
+          <div class="card-list" id="featuresList"></div>
+          <button class="add-card-btn" id="addFeaturesBtn" type="button">+ Добавить преимущество</button>
+
+          <div class="card-editor" id="featuresEditor">
+            <button class="close" data-closesimple="features" type="button">×</button>
+            <h3 id="featuresEditorTitle">Редактирование</h3>
+            <label>Иконка</label>
+            <select id="featIcon" style="width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;font-size:14px">
+              <option value="i-factory">🏭 Завод</option>
+              <option value="i-award">🏆 Награда / качество</option>
+              <option value="i-doc">📄 Документ / ГОСТ</option>
+              <option value="i-ruler">📏 Линейка / геометрия</option>
+              <option value="i-leaf">🌿 Экология</option>
+              <option value="i-sound">🔊 Звук</option>
+              <option value="i-truck">🚚 Грузовик</option>
+              <option value="i-shield">🛡 Щит / гарантия</option>
+              <option value="i-clock">⏰ Часы / сроки</option>
+              <option value="i-cube">📦 Куб / поддон</option>
+              <option value="i-handshake">🤝 Рукопожатие</option>
+              <option value="i-check">✓ Галочка</option>
+              <option value="i-card">💳 Карта / оплата</option>
+              <option value="i-phone">📞 Телефон</option>
+              <option value="i-pin">📍 Пин</option>
+              <option value="i-mail">✉ Почта</option>
+              <option value="i-blog">📝 Блог</option>
+            </select>
+            <label>Заголовок</label>
+            <input type="text" id="featTitle" placeholder="Завод-изготовитель">
+            <label>Описание</label>
+            <textarea id="featDesc" rows="2"></textarea>
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" data-applysimple="features" type="button">Применить</button>
+              <button class="btn btn--ghost" data-closesimple="features" type="button">Отмена</button>
+            </div>
+          </div>
+          <div class="save-bar">
+            <button class="btn" data-savesimple="features" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="featuresDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveFeaturesStatus"></div>
+        </div>
+
+        <!-- STEPS SUBPANEL -->
+        <div class="subpanel" id="subpanel-steps">
+          <div class="card-list" id="stepsList"></div>
+          <button class="add-card-btn" id="addStepsBtn" type="button">+ Добавить шаг</button>
+
+          <div class="card-editor" id="stepsEditor">
+            <button class="close" data-closesimple="steps" type="button">×</button>
+            <h3 id="stepsEditorTitle">Редактирование шага</h3>
+            <div class="help-text">Номер шага проставляется автоматически по порядку в списке.</div>
+            <label>Заголовок</label>
+            <input type="text" id="stepTitle" placeholder="Заявка">
+            <label>Описание</label>
+            <textarea id="stepDesc" rows="2"></textarea>
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" data-applysimple="steps" type="button">Применить</button>
+              <button class="btn btn--ghost" data-closesimple="steps" type="button">Отмена</button>
+            </div>
+          </div>
+          <div class="save-bar">
+            <button class="btn" data-savesimple="steps" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="stepsDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveStepsStatus"></div>
+        </div>
+
         <!-- DELIVERY SUBPANEL -->
         <div class="subpanel" id="subpanel-delivery">
           <div class="card-list" id="deliveryList"></div>
@@ -473,6 +544,8 @@
   var CATALOG_PATH = 'data/catalog.json';
   var UPSELL_PATH = 'data/upsell.json';
   var DELIVERY_PATH = 'data/delivery.json';
+  var FEATURES_PATH = 'data/features.json';
+  var STEPS_PATH = 'data/steps.json';
 
   /* ---------- state ---------- */
   var S = {
@@ -482,7 +555,9 @@
     texts: { contentSha:null, content:null, indexSha:null, indexText:null, dirtyKeys:{} },
     catalog: { sha:null, data:null, editingIndex:null, dirty:false },
     upsell: { sha:null, data:null, editingIndex:null, dirty:false },
-    delivery: { sha:null, data:null, editingIndex:null, dirty:false }
+    delivery: { sha:null, data:null, editingIndex:null, dirty:false },
+    features: { sha:null, data:null, editingIndex:null, dirty:false },
+    steps: { sha:null, data:null, editingIndex:null, dirty:false }
   };
 
   /* ---------- DOM refs ---------- */
@@ -623,6 +698,8 @@
       .then(function(){ return loadCatalog(); })
       .then(function(){ return loadSimpleSection('upsell'); })
       .then(function(){ return loadSimpleSection('delivery'); })
+      .then(function(){ return loadSimpleSection('features'); })
+      .then(function(){ return loadSimpleSection('steps'); })
       .then(function(){
         localStorage.setItem(PAT_KEY, token);
         gateCard.classList.add('hidden');
@@ -633,6 +710,8 @@
         renderCatalogList();
         renderSimpleList('upsell');
         renderSimpleList('delivery');
+        renderSimpleList('features');
+        renderSimpleList('steps');
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -1455,6 +1534,38 @@
       meta: 'Доставка',
       fields: ['Img','Alt','Title','Desc','PricePrefix','Price','PriceSuffix'],
       defaults: {}
+    },
+    features: {
+      path: FEATURES_PATH,
+      marker: 'features',
+      prefix: 'feat',
+      listId: 'featuresList',
+      editorId: 'featuresEditor',
+      editorTitleId: 'featuresEditorTitle',
+      dirtyId: 'featuresDirty',
+      statusId: 'saveFeaturesStatus',
+      addBtnId: 'addFeaturesBtn',
+      addLabel: 'Новое преимущество',
+      editLabel: 'Редактирование',
+      meta: 'Преимущества',
+      fields: ['Icon','Title','Desc'],
+      defaults: { icon:'i-check' }
+    },
+    steps: {
+      path: STEPS_PATH,
+      marker: 'steps',
+      prefix: 'step',
+      listId: 'stepsList',
+      editorId: 'stepsEditor',
+      editorTitleId: 'stepsEditorTitle',
+      dirtyId: 'stepsDirty',
+      statusId: 'saveStepsStatus',
+      addBtnId: 'addStepsBtn',
+      addLabel: 'Новый шаг',
+      editLabel: 'Редактирование шага',
+      meta: 'Шаги',
+      fields: ['Title','Desc'],
+      defaults: {}
     }
   };
 
@@ -1481,9 +1592,17 @@
       var row = document.createElement('div');
       row.className = 'card-row';
       var imgUrl = c.img ? '/' + c.img : '';
-      var meta = [c.pricePrefix||'', c.price||'', c.priceSuffix||''].join('').trim();
+      var meta = '';
+      if (c.price) meta = [c.pricePrefix||'', c.price||'', c.priceSuffix||''].join('').trim();
+      else if (type === 'steps') meta = 'Шаг '+(i+1);
+      else if (c.desc) meta = c.desc.substring(0, 60) + (c.desc.length>60?'…':'');
+      // Thumb: image for upsell/delivery, icon label for features, number for steps
+      var thumbHtml;
+      if (type === 'features') thumbHtml = '<div class="card-row__img" style="display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);font-weight:700">'+escapeHtml(c.icon||'')+'</div>';
+      else if (type === 'steps') thumbHtml = '<div class="card-row__img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--mint);font-weight:800">'+(i+1)+'</div>';
+      else thumbHtml = '<div class="card-row__img" style="background-image:url(\''+escapeAttr(imgUrl)+'\')"></div>';
       row.innerHTML =
-        '<div class="card-row__img" style="background-image:url(\''+escapeAttr(imgUrl)+'\')"></div>' +
+        thumbHtml +
         '<div class="card-row__main">' +
           '<div class="card-row__title">'+escapeHtml(c.title || '(без названия)')+'</div>' +
           '<div class="card-row__meta">'+escapeHtml(meta)+' · id: '+escapeHtml(c.id || '—')+'</div>' +
@@ -1555,7 +1674,8 @@
     var cfg = SIMPLE_CONFIGS[type];
     var idx = S[type].editingIndex;
     var isNew = (idx === -1);
-    var card = { id: isNew ? ((type==='upsell'?'ups-':'del-')+Date.now().toString(36)) : (S[type].data.cards[idx].id || type+'-'+Date.now().toString(36)) };
+    var idPrefix = { upsell:'ups', delivery:'del', features:'feat', steps:'step' }[type] || type;
+    var card = { id: isNew ? (idPrefix+'-'+Date.now().toString(36)) : (S[type].data.cards[idx].id || idPrefix+'-'+Date.now().toString(36)) };
     cfg.fields.forEach(function(f){
       var id = cfg.prefix + f;
       var key = f.charAt(0).toLowerCase() + f.slice(1);
@@ -1608,15 +1728,39 @@
       '      </article>';
   }
 
+  /* Render HTML fragment for one feature card */
+  function buildFeatureCardHtml(c){
+    var icon = c.icon || 'i-check';
+    return '<div class="feature reveal">' +
+      '<div class="feature__ic"><svg class="icon icon--lg"><use href="#'+escapeAttr(icon)+'"/></svg></div>' +
+      '<h4>'+(c.title||'')+'</h4>' +
+      (c.desc ? '<p>'+c.desc+'</p>' : '') +
+      '</div>';
+  }
+  /* Render HTML fragment for one step */
+  function buildStepCardHtml(c, index){
+    return '<li class="reveal">' +
+      '<b>'+(index+1)+'</b>' +
+      '<h4>'+(c.title||'')+'</h4>' +
+      (c.desc ? '<p>'+c.desc+'</p>' : '') +
+      '</li>';
+  }
+
   function buildSimpleContainerHtml(type){
     var cards = (S[type].data.cards || []);
-    var parts = cards.map(function(c){
-      return type==='upsell' ? buildUpsellCardHtml(c) : buildDeliveryCardHtml(c);
-    }).join('\n');
     if (type === 'upsell'){
-      return '<div class="upsell__grid">\n' + parts + '\n    </div>';
+      return '<div class="upsell__grid">\n' + cards.map(buildUpsellCardHtml).join('\n') + '\n    </div>';
     }
-    return '<div class="delivery__grid delivery__grid--3">\n' + parts + '\n    </div>';
+    if (type === 'delivery'){
+      return '<div class="delivery__grid delivery__grid--3">\n' + cards.map(buildDeliveryCardHtml).join('\n') + '\n    </div>';
+    }
+    if (type === 'features'){
+      return '<div class="features">\n      ' + cards.map(buildFeatureCardHtml).join('\n      ') + '\n    </div>';
+    }
+    if (type === 'steps'){
+      return '<ol class="steps">\n      ' + cards.map(function(c, i){ return buildStepCardHtml(c, i); }).join('\n      ') + '\n    </ol>';
+    }
+    return '';
   }
 
   function patchSimpleInHtml(html, type){
@@ -1661,9 +1805,11 @@
       .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); });
   }
 
-  // Wire up-sell + delivery add buttons
+  // Wire add buttons for all simple sections
   document.getElementById('addUpsellBtn').addEventListener('click', function(){ openSimpleEditor('upsell', -1); });
   document.getElementById('addDeliveryBtn').addEventListener('click', function(){ openSimpleEditor('delivery', -1); });
+  document.getElementById('addFeaturesBtn').addEventListener('click', function(){ openSimpleEditor('features', -1); });
+  document.getElementById('addStepsBtn').addEventListener('click', function(){ openSimpleEditor('steps', -1); });
 
   document.body.addEventListener('click', function(e){
     var t = e.target;
