@@ -57,12 +57,13 @@ function showBadge(){
   b.style.display=t>0?'flex':'none';if(c)c.textContent=t;
 }
 
+function stripTags(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();}
 function getPromoConditions(){
   var cfg=window.PROMO_CONFIG||{};
   var parts=[];
-  if(cfg.title)parts.push(cfg.title);
-  if(cfg.desc)parts.push(cfg.desc);
-  return parts.join(' · ');
+  if(cfg.title)parts.push(stripTags(cfg.title));
+  if(cfg.desc)parts.push(stripTags(cfg.desc));
+  return parts.filter(Boolean).join(' · ');
 }
 
 function renderCart(){
