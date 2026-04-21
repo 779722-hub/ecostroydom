@@ -99,6 +99,41 @@
   summary{cursor:pointer;color:var(--muted);font-size:12px;padding:4px 0}
   summary:hover{color:var(--text)}
 
+  /* Subtabs (used in Cards tab) */
+  .subtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;padding:4px;background:var(--bg);border-radius:8px;border:1px solid var(--line)}
+  .subtab{background:transparent;border:0;color:var(--muted);padding:7px 12px;border-radius:6px;font:inherit;font-weight:700;font-size:12px;cursor:pointer}
+  .subtab:hover{color:var(--text)}
+  .subtab--active{background:var(--surface-2);color:var(--text)}
+  .subpanel{display:none}
+  .subpanel--active{display:block}
+
+  /* Card list rows */
+  .card-list{display:flex;flex-direction:column;gap:8px}
+  .card-row{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
+  .card-row:hover{border-color:var(--mint)}
+  .card-row__img{width:44px;height:44px;border-radius:6px;background:var(--surface-2);background-size:cover;background-position:center;flex-shrink:0}
+  .card-row__main{flex:1;min-width:0}
+  .card-row__title{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-row__meta{font-size:11px;color:var(--muted);margin-top:2px}
+  .card-row__actions{display:flex;gap:4px}
+  .card-row__actions button{background:transparent;border:1px solid var(--line);color:var(--muted);padding:5px 8px;border-radius:4px;font-size:11px;cursor:pointer}
+  .card-row__actions button:hover{color:var(--text);border-color:var(--mint)}
+  .card-row__actions .del:hover{border-color:var(--err);color:var(--err)}
+  .add-card-btn{margin-top:10px;width:100%;padding:12px;background:transparent;border:1px dashed var(--line);color:var(--mint);border-radius:8px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+  .add-card-btn:hover{border-color:var(--mint);background:rgba(37,99,235,.06)}
+
+  /* Card editor modal-like area */
+  .card-editor{display:none;background:var(--bg);border:1px solid var(--mint);border-radius:10px;padding:18px;margin-top:14px}
+  .card-editor.is-visible{display:block}
+  .card-editor h3{margin-top:0;color:var(--mint)}
+  .card-editor .close{float:right;background:transparent;border:0;color:var(--muted);font-size:18px;cursor:pointer;padding:0 4px}
+  .card-editor .close:hover{color:var(--text)}
+  .tags-editor{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+  .tag-row{display:flex;gap:6px;align-items:center;background:var(--surface-2);border-radius:6px;padding:6px}
+  .tag-row select{background:var(--bg);border:1px solid var(--line);border-radius:4px;color:var(--text);padding:5px 7px;font:inherit;font-size:12px}
+  .tag-row input{flex:1;font-size:12px;padding:6px 8px}
+  .tag-row .rm{background:transparent;border:0;color:var(--err);cursor:pointer;font-size:16px;padding:0 6px}
+
   /* Texts tab */
   .group-title{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--mint);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
   .group-title:first-child{margin-top:0}
@@ -143,6 +178,7 @@
       <button class="tab tab--active" data-panel="promo" type="button">🔥 Акция</button>
       <button class="tab" data-panel="themes" type="button">🎨 Темы</button>
       <button class="tab" data-panel="texts" type="button">📝 Тексты</button>
+      <button class="tab" data-panel="cards" type="button">📦 Карточки</button>
     </div>
 
     <!-- ========== PROMO PANEL ========== -->
@@ -227,6 +263,88 @@
       </div>
     </div>
 
+    <!-- ========== CARDS PANEL ========== -->
+    <div class="panel" id="panel-cards">
+      <div class="card">
+        <h2>Карточки товаров</h2>
+        <p class="lead">Добавление, редактирование и удаление карточек в секциях. На текущем этапе доступен каталог газоблока.</p>
+
+        <div class="subtabs" id="cardsSubtabs">
+          <button class="subtab subtab--active" data-sub="catalog" type="button">Каталог (газоблок, клей)</button>
+          <button class="subtab" data-sub="soon" type="button" disabled style="opacity:.4">Остальные — скоро</button>
+        </div>
+
+        <div class="subpanel subpanel--active" id="subpanel-catalog">
+          <div class="card-list" id="catalogList"></div>
+          <button class="add-card-btn" id="addCatalogBtn" type="button">+ Добавить карточку</button>
+
+          <div class="card-editor" id="catalogEditor">
+            <button class="close" id="closeEditorBtn" type="button">×</button>
+            <h3 id="editorTitle">Редактирование карточки</h3>
+
+            <label>Изображение (путь от корня сайта)</label>
+            <input type="text" id="cardImg" placeholder="assets/img/block-100.png">
+            <div class="help-text">Пока вручную (в этапе 6 будет загрузка файла). Пример: <code>assets/img/my-image.jpg</code></div>
+
+            <label>Alt-текст (для SEO)</label>
+            <input type="text" id="cardAlt" placeholder="Газоблок D600 600x300x100">
+
+            <div class="row">
+              <div>
+                <label>Заголовок</label>
+                <input type="text" id="cardTitle" placeholder="Газоблок D600">
+              </div>
+              <div>
+                <label>Размер / подпись</label>
+                <input type="text" id="cardSize" placeholder="600 × 300 × 100 мм">
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Цена</label>
+                <input type="text" id="cardPrice" placeholder="41 500 ₸">
+              </div>
+              <div>
+                <label>Единица</label>
+                <input type="text" id="cardPriceUnit" placeholder="/м³">
+              </div>
+            </div>
+
+            <label>Характеристики (по одной строке, можно &lt;b&gt;…&lt;/b&gt;)</label>
+            <textarea id="cardSpecs" rows="5" placeholder="Прочность <b>B3.5 МПа</b>
+Морозостойкость <b>F75</b>"></textarea>
+
+            <label>Теги</label>
+            <div class="tags-editor" id="cardTags"></div>
+            <button type="button" class="btn btn--ghost btn--sm" id="addTagBtn" style="margin-top:6px">+ Добавить тег</button>
+
+            <div class="row" style="margin-top:14px">
+              <div>
+                <label>Текст кнопки</label>
+                <input type="text" id="cardBtnText" placeholder="В заявку">
+              </div>
+              <div>
+                <label>Ссылка кнопки</label>
+                <input type="text" id="cardBtnHref" placeholder="#form">
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" id="applyCardBtn" type="button">Применить к списку</button>
+              <button class="btn btn--ghost" id="cancelCardBtn" type="button">Отмена</button>
+            </div>
+          </div>
+
+          <div class="save-bar">
+            <button class="btn" id="saveCardsBtn" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="cardsDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveCardsStatus"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -248,13 +366,15 @@
   var THEMES_PATH = 'data/themes.json';
   var CONTENT_PATH = 'data/content.json';
   var INDEX_PATH = 'index.html';
+  var CATALOG_PATH = 'data/catalog.json';
 
   /* ---------- state ---------- */
   var S = {
     token: '',
     promo: { sha:null, config:null },
     themes: { sha:null, data:null, editingSlot:null, editingVariant:'dark' },
-    texts: { contentSha:null, content:null, indexSha:null, indexText:null, dirtyKeys:{} }
+    texts: { contentSha:null, content:null, indexSha:null, indexText:null, dirtyKeys:{} },
+    catalog: { sha:null, data:null, editingIndex:null, dirty:false }
   };
 
   /* ---------- DOM refs ---------- */
@@ -392,6 +512,7 @@
     loadPromoConfig()
       .then(function(){ return loadThemes(); })
       .then(function(){ return loadContent(); })
+      .then(function(){ return loadCatalog(); })
       .then(function(){
         localStorage.setItem(PAT_KEY, token);
         gateCard.classList.add('hidden');
@@ -399,6 +520,7 @@
         renderPromo();
         renderThemeSlots();
         renderTextsForm();
+        renderCatalogList();
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -919,6 +1041,267 @@
         setStatus(status,'✓ Опубликовано ('+changed.length+' полей). Сайт обновится через ~1 мин.','ok');
         $('textsDirty').classList.remove('is-visible');
         renderTextsForm();
+      })
+      .catch(function(err){
+        setStatus(status,'Ошибка: '+err.message,'err');
+      })
+      .finally(function(){
+        btn.disabled = false; btn.textContent = 'Сохранить и опубликовать';
+      });
+  }
+
+  /* ============================================================
+     CATALOG TAB (card CRUD)
+     ============================================================ */
+  function loadCatalog(){
+    return ghGetFile(CATALOG_PATH).then(function(f){
+      if (!f) throw new Error('data/catalog.json не найден');
+      S.catalog.sha = f.sha;
+      S.catalog.data = JSON.parse(f.text);
+      S.catalog.dirty = false;
+    });
+  }
+
+  function renderCatalogList(){
+    var list = $('catalogList');
+    list.innerHTML = '';
+    var cards = (S.catalog.data && S.catalog.data.cards) || [];
+    if (cards.length === 0){
+      list.innerHTML = '<div class="muted" style="text-align:center;padding:20px">Карточек пока нет</div>';
+      return;
+    }
+    cards.forEach(function(c, i){
+      var row = document.createElement('div');
+      row.className = 'card-row';
+      var imgUrl = c.img ? '/' + c.img : '';
+      row.innerHTML =
+        '<div class="card-row__img" style="background-image:url(\''+escapeAttr(imgUrl)+'\')"></div>' +
+        '<div class="card-row__main">' +
+          '<div class="card-row__title">'+escapeHtml(c.title || '(без названия)')+(c.size ? ' · '+escapeHtml(c.size) : '')+'</div>' +
+          '<div class="card-row__meta">'+escapeHtml(c.price || '')+' '+escapeHtml(c.priceUnit || '')+' · id: '+escapeHtml(c.id || '—')+'</div>' +
+        '</div>' +
+        '<div class="card-row__actions">' +
+          '<button type="button" data-act="edit" data-i="'+i+'">Редакт.</button>' +
+          '<button type="button" data-act="up"   data-i="'+i+'">↑</button>' +
+          '<button type="button" data-act="down" data-i="'+i+'">↓</button>' +
+          '<button type="button" class="del" data-act="del" data-i="'+i+'">Удалить</button>' +
+        '</div>';
+      row.querySelectorAll('[data-act]').forEach(function(b){
+        b.addEventListener('click', function(e){
+          e.stopPropagation();
+          var idx = parseInt(b.dataset.i, 10);
+          var act = b.dataset.act;
+          if (act === 'edit') openCardEditor(idx);
+          else if (act === 'up')   moveCard(idx, -1);
+          else if (act === 'down') moveCard(idx, +1);
+          else if (act === 'del')  deleteCard(idx);
+        });
+      });
+      list.appendChild(row);
+    });
+  }
+
+  function markCardsDirty(){
+    S.catalog.dirty = true;
+    $('cardsDirty').classList.add('is-visible');
+  }
+
+  function moveCard(i, delta){
+    var cards = S.catalog.data.cards;
+    var j = i + delta;
+    if (j < 0 || j >= cards.length) return;
+    var tmp = cards[i]; cards[i] = cards[j]; cards[j] = tmp;
+    markCardsDirty();
+    renderCatalogList();
+  }
+
+  function deleteCard(i){
+    var c = S.catalog.data.cards[i];
+    if (!confirm('Удалить карточку «'+(c.title||'?')+' '+(c.size||'')+'»?')) return;
+    S.catalog.data.cards.splice(i, 1);
+    markCardsDirty();
+    renderCatalogList();
+  }
+
+  /* ---- Card editor ---- */
+  var editor = $('catalogEditor');
+  $('addCatalogBtn').addEventListener('click', function(){
+    openCardEditor(-1); // -1 = new
+  });
+  $('closeEditorBtn').addEventListener('click', closeEditor);
+  $('cancelCardBtn').addEventListener('click', closeEditor);
+  $('applyCardBtn').addEventListener('click', applyCardEdits);
+  $('addTagBtn').addEventListener('click', function(){ addTagRow({ style:'default', text:'', href:'' }); });
+
+  function openCardEditor(idx){
+    S.catalog.editingIndex = idx;
+    var isNew = (idx === -1);
+    var c = isNew
+      ? { id:'', img:'', alt:'', title:'', size:'', specs:[], price:'', priceUnit:'/м³', tags:[], btnText:'В заявку', btnHref:'#form' }
+      : S.catalog.data.cards[idx];
+    $('editorTitle').textContent = isNew ? 'Новая карточка' : 'Редактирование: ' + (c.title || '');
+    $('cardImg').value = c.img || '';
+    $('cardAlt').value = c.alt || '';
+    $('cardTitle').value = c.title || '';
+    $('cardSize').value = c.size || '';
+    $('cardPrice').value = c.price || '';
+    $('cardPriceUnit').value = c.priceUnit || '';
+    $('cardSpecs').value = (c.specs || []).join('\n');
+    $('cardBtnText').value = c.btnText || 'В заявку';
+    $('cardBtnHref').value = c.btnHref || '#form';
+    // Tags
+    var tagsBox = $('cardTags');
+    tagsBox.innerHTML = '';
+    (c.tags || []).forEach(addTagRow);
+    editor.classList.add('is-visible');
+    editor.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function addTagRow(tag){
+    tag = tag || { style:'default', text:'', href:'' };
+    var row = document.createElement('div');
+    row.className = 'tag-row';
+    row.innerHTML =
+      '<select data-tag-field="style">' +
+        '<option value="default"'+(tag.style==='default'?' selected':'')+'>обычный</option>' +
+        '<option value="blue"'+(tag.style==='blue'?' selected':'')+'>синий</option>' +
+        '<option value="promo"'+(tag.style==='promo'?' selected':'')+'>акция (ссылка)</option>' +
+      '</select>' +
+      '<input type="text" data-tag-field="text" placeholder="Текст тега" value="'+escapeAttr(tag.text||'')+'">' +
+      '<input type="text" data-tag-field="href" placeholder="Ссылка (для акции)" value="'+escapeAttr(tag.href||'')+'" style="max-width:110px">' +
+      '<button type="button" class="rm" title="Удалить">×</button>';
+    row.querySelector('.rm').addEventListener('click', function(){ row.remove(); });
+    $('cardTags').appendChild(row);
+  }
+
+  function closeEditor(){
+    S.catalog.editingIndex = null;
+    editor.classList.remove('is-visible');
+  }
+
+  function applyCardEdits(){
+    var idx = S.catalog.editingIndex;
+    var isNew = (idx === -1);
+    var tagRows = $('cardTags').querySelectorAll('.tag-row');
+    var tags = Array.prototype.map.call(tagRows, function(r){
+      var style = r.querySelector('[data-tag-field="style"]').value;
+      var text = r.querySelector('[data-tag-field="text"]').value.trim();
+      var href = r.querySelector('[data-tag-field="href"]').value.trim();
+      var t = { style: style, text: text };
+      if (href) t.href = href;
+      return t;
+    }).filter(function(t){ return t.text; });
+
+    var specs = $('cardSpecs').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+    var id = (isNew
+      ? ('card-'+Date.now().toString(36))
+      : (S.catalog.data.cards[idx].id || 'card-'+Date.now().toString(36))
+    );
+    var card = {
+      id: id,
+      img: $('cardImg').value.trim(),
+      alt: $('cardAlt').value.trim(),
+      title: $('cardTitle').value.trim(),
+      size: $('cardSize').value.trim(),
+      specs: specs,
+      price: $('cardPrice').value.trim(),
+      priceUnit: $('cardPriceUnit').value.trim(),
+      tags: tags,
+      btnText: $('cardBtnText').value.trim() || 'В заявку',
+      btnHref: $('cardBtnHref').value.trim() || '#form'
+    };
+    if (!card.title){ alert('Заполните заголовок'); return; }
+    if (isNew) S.catalog.data.cards.push(card);
+    else S.catalog.data.cards[idx] = card;
+    markCardsDirty();
+    renderCatalogList();
+    closeEditor();
+  }
+
+  /* ---- Render HTML fragment from catalog data ---- */
+  function buildCardHtml(c){
+    var tagsHtml = '';
+    if (c.tags && c.tags.length){
+      var parts = c.tags.map(function(t){
+        var cls = 'card__tag';
+        if (t.style === 'blue') cls += ' card__tag--blue';
+        else if (t.style === 'promo') cls += ' card__tag--promo';
+        if (t.href){
+          return '<a href="'+escapeAttr(t.href)+'" class="'+cls+'">'+t.text+'</a>';
+        }
+        return '<span class="'+cls+'">'+t.text+'</span>';
+      }).join('');
+      tagsHtml = '<div class="card__tags">'+parts+'</div>';
+    }
+    var specsHtml = (c.specs || []).length
+      ? '<ul class="card__specs">' + c.specs.map(function(s){ return '<li>'+s+'</li>'; }).join('') + '</ul>'
+      : '';
+    var imgAlt = escapeAttr(c.alt || c.title || '');
+    var priceHtml = c.price
+      ? '<div class="card__price"><b>'+c.price+'</b>' + (c.priceUnit ? '<small>'+c.priceUnit+'</small>' : '') + '</div>'
+      : '';
+    return '' +
+      '      <article class="card reveal">\n' +
+      '        <div class="card__img"><img src="'+escapeAttr(c.img)+'" alt="'+imgAlt+'" loading="lazy" width="600" height="400"></div>\n' +
+      '        <div class="card__body">\n' +
+      (tagsHtml ? '          '+tagsHtml+'\n' : '') +
+      '          <h3>'+(c.title||'')+'</h3>\n' +
+      (c.size ? '          <div class="card__size">'+c.size+'</div>\n' : '') +
+      (specsHtml ? '          '+specsHtml+'\n' : '') +
+      (priceHtml ? '          '+priceHtml+'\n' : '') +
+      '          <a href="'+escapeAttr(c.btnHref||'#form')+'" class="btn btn--primary btn--sm"><span class="btn__inner">'+(c.btnText||'В заявку')+'</span></a>\n' +
+      '        </div>\n' +
+      '      </article>';
+  }
+
+  function buildCatalogContainerHtml(){
+    var cards = (S.catalog.data.cards || []).map(buildCardHtml).join('\n');
+    return '<div class="cards">\n' + cards + '\n    </div>';
+  }
+
+  function patchCatalogInHtml(html){
+    var startMark = '<!-- CARDS:catalog START -->';
+    var endMark = '<!-- CARDS:catalog END -->';
+    var si = html.indexOf(startMark);
+    var ei = html.indexOf(endMark);
+    if (si < 0 || ei < 0) throw new Error('Маркеры CARDS:catalog не найдены в index.html');
+    var before = html.substring(0, si + startMark.length);
+    var after = html.substring(ei);
+    return before + '\n    ' + buildCatalogContainerHtml() + '\n    ' + after;
+  }
+
+  $('saveCardsBtn').addEventListener('click', saveCatalog);
+
+  function saveCatalog(){
+    var status = $('saveCardsStatus');
+    clearStatus(status);
+    if (!S.catalog.dirty){ setStatus(status,'Нет изменений.','warn'); return; }
+
+    var btn = $('saveCardsBtn');
+    btn.disabled = true; btn.textContent = 'Сохраняем…';
+    setStatus(status,'Обновляем JSON и HTML…','warn');
+
+    // Need latest index.html. If texts.indexText isn't loaded, fetch now.
+    var getIdx = S.texts.indexText
+      ? Promise.resolve({ text: S.texts.indexText, sha: S.texts.indexSha })
+      : ghGetFile(INDEX_PATH);
+
+    getIdx.then(function(idx){
+      if (!idx) throw new Error('index.html не найден');
+      var newIndex = patchCatalogInHtml(idx.text);
+      var newJson = JSON.stringify(S.catalog.data, null, 2) + '\n';
+      return ghCommitMultiple([
+        { path: CATALOG_PATH, content: newJson },
+        { path: INDEX_PATH,   content: newIndex }
+      ], 'Admin: update catalog ('+S.catalog.data.cards.length+' cards)');
+    })
+      .then(function(){
+        return Promise.all([loadCatalog(), loadContent()]); // refresh shas & index
+      })
+      .then(function(){
+        setStatus(status,'✓ Опубликовано. Сайт обновится через ~1 мин.','ok');
+        $('cardsDirty').classList.remove('is-visible');
+        renderCatalogList();
       })
       .catch(function(err){
         setStatus(status,'Ошибка: '+err.message,'err');
