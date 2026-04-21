@@ -15,8 +15,15 @@
       "price": "41 500 ₸",
       "priceUnit": "/м³",
       "tags": [
-        { "style": "blue", "text": "Перегородочный" },
-        { "style": "promo", "text": "⚡ Доступен по акции", "href": "#promo" }
+        {
+          "style": "blue",
+          "text": "Перегородочный"
+        },
+        {
+          "style": "promo",
+          "text": "⚡ Доступен по акции",
+          "href": "#promo"
+        }
       ],
       "btnText": "В заявку",
       "btnHref": "#form"
@@ -36,8 +43,15 @@
       "price": "41 500 ₸",
       "priceUnit": "/м³",
       "tags": [
-        { "style": "default", "text": "Хит" },
-        { "style": "promo", "text": "⚡ Доступен по акции", "href": "#promo" }
+        {
+          "style": "default",
+          "text": "Хит"
+        },
+        {
+          "style": "promo",
+          "text": "⚡ Доступен по акции",
+          "href": "#promo"
+        }
       ],
       "btnText": "В заявку",
       "btnHref": "#form"
@@ -93,7 +107,10 @@
       "price": "41 500 ₸",
       "priceUnit": "/м³",
       "tags": [
-        { "style": "default", "text": "Несущий" }
+        {
+          "style": "default",
+          "text": "Несущий"
+        }
       ],
       "btnText": "В заявку",
       "btnHref": "#form"
@@ -106,14 +123,21 @@
       "size": "Мешок 25 кг",
       "specs": [
         "Тонкий шов <b>1–3 мм</b>",
-        "Расход <b>~1.6 кг/м²</b>",
+        "Расход <b>~1.5 кг/м²</b>",
         "Морозостойкий"
       ],
-      "price": "1 800 ₸",
+      "price": "1 900 ₸",
       "priceUnit": "/мешок",
       "tags": [
-        { "style": "blue", "text": "Сопутствующее" },
-        { "style": "promo", "text": "⚡ Доступен по акции", "href": "#promo" }
+        {
+          "style": "blue",
+          "text": "Сопутствующее"
+        },
+        {
+          "style": "promo",
+          "text": "⚡ Доступен по акции",
+          "href": "#promo"
+        }
       ],
       "btnText": "В заявку",
       "btnHref": "#form"
