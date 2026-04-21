@@ -315,6 +315,18 @@
             <textarea id="cardSpecs" rows="5" placeholder="Прочность <b>B3.5 МПа</b>
 Морозостойкость <b>F75</b>"></textarea>
 
+            <div class="row">
+              <div>
+                <label>Подпись о поддоне</label>
+                <input type="text" id="cardPalletInfo" placeholder="1 поддон: 0.9 м³ (16 шт)">
+              </div>
+              <div>
+                <label>Подпись о залоге</label>
+                <input type="text" id="cardDepositInfo" placeholder="Залог 3 500 ₸ / поддон">
+              </div>
+            </div>
+            <div class="help-text">Обе подписи покажутся одной строкой под ценой, разделённые · (точкой). Оставьте пустым, чтобы скрыть.</div>
+
             <label>Теги</label>
             <div class="tags-editor" id="cardTags"></div>
             <button type="button" class="btn btn--ghost btn--sm" id="addTagBtn" style="margin-top:6px">+ Добавить тег</button>
@@ -1137,7 +1149,7 @@
     S.catalog.editingIndex = idx;
     var isNew = (idx === -1);
     var c = isNew
-      ? { id:'', img:'', alt:'', title:'', size:'', specs:[], price:'', priceUnit:'/м³', tags:[], btnText:'В заявку', btnHref:'#form' }
+      ? { id:'', img:'', alt:'', title:'', size:'', specs:[], palletInfo:'', depositInfo:'', price:'', priceUnit:'/м³', tags:[], btnText:'В заявку', btnHref:'#form' }
       : S.catalog.data.cards[idx];
     $('editorTitle').textContent = isNew ? 'Новая карточка' : 'Редактирование: ' + (c.title || '');
     $('cardImg').value = c.img || '';
@@ -1147,6 +1159,8 @@
     $('cardPrice').value = c.price || '';
     $('cardPriceUnit').value = c.priceUnit || '';
     $('cardSpecs').value = (c.specs || []).join('\n');
+    $('cardPalletInfo').value = c.palletInfo || '';
+    $('cardDepositInfo').value = c.depositInfo || '';
     $('cardBtnText').value = c.btnText || 'В заявку';
     $('cardBtnHref').value = c.btnHref || '#form';
     // Tags
@@ -1204,6 +1218,8 @@
       title: $('cardTitle').value.trim(),
       size: $('cardSize').value.trim(),
       specs: specs,
+      palletInfo: $('cardPalletInfo').value.trim(),
+      depositInfo: $('cardDepositInfo').value.trim(),
       price: $('cardPrice').value.trim(),
       priceUnit: $('cardPriceUnit').value.trim(),
       tags: tags,
@@ -1240,6 +1256,13 @@
     var priceHtml = c.price
       ? '<div class="card__price"><b>'+c.price+'</b>' + (c.priceUnit ? '<small>'+c.priceUnit+'</small>' : '') + '</div>'
       : '';
+    // Build pallet/deposit caption (single line combining both if both set)
+    var palletParts = [];
+    if (c.palletInfo) palletParts.push(c.palletInfo);
+    if (c.depositInfo) palletParts.push(c.depositInfo);
+    var palletHtml = palletParts.length
+      ? '<div class="card__pallet">'+palletParts.join(' · ')+'</div>'
+      : '';
     return '' +
       '      <article class="card reveal">\n' +
       '        <div class="card__img"><img src="'+escapeAttr(c.img)+'" alt="'+imgAlt+'" loading="lazy" width="600" height="400"></div>\n' +
@@ -1249,6 +1272,7 @@
       (c.size ? '          <div class="card__size">'+c.size+'</div>\n' : '') +
       (specsHtml ? '          '+specsHtml+'\n' : '') +
       (priceHtml ? '          '+priceHtml+'\n' : '') +
+      (palletHtml ? '          '+palletHtml+'\n' : '') +
       '          <a href="'+escapeAttr(c.btnHref||'#form')+'" class="btn btn--primary btn--sm"><span class="btn__inner">'+(c.btnText||'В заявку')+'</span></a>\n' +
       '        </div>\n' +
       '      </article>';
