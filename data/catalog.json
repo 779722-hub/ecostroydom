@@ -150,8 +150,8 @@
       "depositInfo": "Залог 3500 тг/поддон - или навалом",
       "price": "1 900 ₸",
       "priceUnit": "/мешок",
-      "promoPrice": "1700",
-      "qtyUnit": "мешок 25 кг",
+      "promoPrice": "",
+      "qtyUnit": "мешок",
       "tags": [
         {
           "style": "blue",
