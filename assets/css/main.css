@@ -1430,3 +1430,35 @@ body.theme-light .voicyfy-label{
 @media (max-width:720px){
   .voicyfy-label{right:80px;bottom:26px;font-size:12px;padding:6px 12px}
 }
+
+/* ========== CARD PROMO PRICE ========== */
+.card__price-promo{
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;
+  color:var(--text-dim);margin-top:4px;display:flex;align-items:baseline;gap:4px;flex-wrap:wrap
+}
+.card__price-promo b{color:var(--orange,#FF8C42);font-weight:800;font-size:19px;letter-spacing:-.02em}
+.card__price-promo small{font-size:11px;color:var(--text-muted)}
+.promo-flame{
+  display:inline-flex;align-items:center;font-size:11px;font-weight:800;letter-spacing:.04em;
+  background:linear-gradient(135deg,#ff7a00 0%,var(--orange,#FF8C42) 50%,#ff5a1f 100%);
+  color:#fff;padding:3px 8px;border-radius:999px;text-transform:uppercase;white-space:nowrap
+}
+body.theme-light .card__price-promo{color:rgba(0,0,0,.65)!important}
+body.theme-light .card__price-promo small{color:rgba(0,0,0,.5)!important}
+
+/* ========== CART PROMO CHECKBOX + CONDITIONS ========== */
+.cart-item__promo{
+  display:flex;align-items:center;gap:7px;margin-top:6px;padding:6px 8px;
+  background:rgba(255,140,66,.08);border:1px solid rgba(255,140,66,.25);
+  border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text-dim)
+}
+.cart-item__promo input{width:auto;accent-color:var(--orange,#FF8C42)}
+.cart-item__promo b{color:var(--orange,#FF8C42);margin-left:auto}
+body.theme-light .cart-item__promo{color:rgba(0,0,0,.72)!important}
+
+.cart-promo-conditions{
+  margin:10px 0;padding:10px 12px;background:rgba(255,140,66,.08);border:1px dashed rgba(255,140,66,.35);
+  border-radius:8px;font-size:12px;line-height:1.5;color:var(--text-dim)
+}
+.cart-promo-conditions b{color:var(--orange,#FF8C42);display:block;margin-bottom:3px;font-size:13px;letter-spacing:-.01em}
+body.theme-light .cart-promo-conditions{color:rgba(0,0,0,.72)!important}

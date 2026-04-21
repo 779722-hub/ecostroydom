@@ -12,25 +12,38 @@ function getThick(s){var m=s.match(/(\d+)\s*мм/);if(m)return m[1];var p=s.repl
 function fmt(n){return Math.round(n).toLocaleString('ru-RU');}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+function parsePriceNum(s){
+  if(!s)return 0;
+  return parseInt(String(s).replace(/\s/g,'').replace(/[^\d]/g,''))||0;
+}
+
 function addToCart(card,qty){
   var title=card.querySelector('h3')?card.querySelector('h3').textContent.trim():'';
   var sizeEl=card.querySelector('.card__size');
   var sizeStr=sizeEl?sizeEl.textContent.trim():'300';
   var thick=getThick(sizeStr);
   var priceEl=card.querySelector('.card__price b');
-  var priceText=priceEl?priceEl.textContent.replace(/\s/g,'').replace(/[^\d]/g,''):'41500';
-  var price=parseInt(priceText)||41500;
+  var price=parsePriceNum(priceEl?priceEl.textContent:'41500')||41500;
+  // Promo price (from data-attr on .card__price or secondary .card__price-promo b)
+  var priceWrap=card.querySelector('.card__price');
+  var promoAttr=priceWrap?priceWrap.getAttribute('data-promo-price'):null;
+  var promoPrice=parsePriceNum(promoAttr);
+  if(!promoPrice){
+    var pp=card.querySelector('.card__price-promo b');
+    if(pp)promoPrice=parsePriceNum(pp.textContent);
+  }
   var imgEl=card.querySelector('img');var img=imgEl?imgEl.src:'';
 
-  // Round qty to pallets
   var p=PALLETS[thick]||PALLETS['300'];
-  var pallets=Math.max(1,Math.ceil((qty||1)*((parseInt(thick)||300)/1000)/p.vol)); // Round m³ up
-  // Actually for simplicity: qty = number of pallets user wants
-  pallets=Math.max(1,parseInt(qty)||1);
+  var pallets=Math.max(1,parseInt(qty)||1);
 
   var existing=cart.find(function(c){return c.title===title&&c.thick===thick;});
-  if(existing){existing.pallets+=pallets;}
-  else{cart.push({title:title,size:sizeStr,thick:thick,price:price,img:img,pallets:pallets});}
+  if(existing){
+    existing.pallets+=pallets;
+    if(promoPrice)existing.promoPrice=promoPrice; // update in case changed
+  } else {
+    cart.push({title:title,size:sizeStr,thick:thick,price:price,promoPrice:promoPrice||0,usePromo:false,img:img,pallets:pallets});
+  }
   saveCart();renderCart();showBadge();
 }
 
@@ -42,23 +55,46 @@ function showBadge(){
   b.style.display=t>0?'flex':'none';if(c)c.textContent=t;
 }
 
+function getPromoConditions(){
+  var cfg=window.PROMO_CONFIG||{};
+  var parts=[];
+  if(cfg.title)parts.push(cfg.title);
+  if(cfg.desc)parts.push(cfg.desc);
+  if(cfg.bonus)parts.push('🎁 '+cfg.bonus);
+  return parts.join(' · ');
+}
+
 function renderCart(){
   var body=document.getElementById('cartBody'),footer=document.getElementById('cartFooter');if(!body)return;
   if(!cart.length){body.innerHTML='<p style="text-align:center;color:var(--muted);padding:40px 0">Корзина пуста</p>';footer.innerHTML='';return;}
 
-  var html='',totalCost=0,totalDep=0,totalGlue=0;
+  var html='',totalCost=0,totalDep=0,totalGlue=0,anyPromo=false;
   cart.forEach(function(item,i){
     var p=PALLETS[item.thick]||PALLETS['300'];
     var vol=item.pallets*p.vol;var blocks=item.pallets*p.blocks;
-    var cost=Math.round(vol*item.price);var dep=item.pallets*DEPOSIT;var glue=Math.ceil(vol*GLUE);
+    var effPrice=item.usePromo&&item.promoPrice?item.promoPrice:item.price;
+    var cost=Math.round(vol*effPrice);
+    var dep=item.pallets*DEPOSIT;var glue=Math.ceil(vol*GLUE);
     totalCost+=cost;totalDep+=dep;totalGlue+=glue;
+    if(item.usePromo)anyPromo=true;
+
+    var promoLine='';
+    if(item.promoPrice){
+      var regLine=item.usePromo?('<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(vol*item.price)+' ₸</small>'):'';
+      promoLine='<label class="cart-item__promo">'+
+        '<input type="checkbox" data-promo-toggle="'+i+'"'+(item.usePromo?' checked':'')+'>'+
+        '<span>По акции — '+fmt(item.promoPrice)+' ₸'+(item.size?'/м³':'')+'</span>'+
+        '<b>'+(item.usePromo?'−'+fmt((item.price-item.promoPrice)*vol)+' ₸':'')+'</b>'+
+        '</label>';
+    }
 
     html+='<div class="cart-item"><img src="'+esc(item.img)+'" alt="">'+
       '<div class="cart-item__info"><h4>'+esc(item.title)+'</h4>'+
       '<p>'+esc(item.size)+'</p>'+
       '<p>'+item.pallets+' подд. × '+p.vol+' м³ = '+vol.toFixed(2)+' м³ ('+blocks+' шт)</p>'+
       '<p>Клей: ~'+glue+' мешков</p>'+
-      '<p style="color:var(--accent);font-weight:600">'+fmt(cost)+' ₸</p>'+
+      '<p style="color:var(--accent);font-weight:600">'+(item.usePromo?'<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(vol*item.price)+' ₸</small>':'')+fmt(cost)+' ₸</p>'+
+      promoLine+
       '<div class="cart-item__qty">'+
         '<button data-minus="'+i+'">−</button>'+
         '<input type="number" value="'+item.pallets+'" min="1" data-qinp="'+i+'" style="width:50px;text-align:center;border:1px solid var(--border);border-radius:6px;padding:4px;font-weight:700">'+
@@ -72,8 +108,15 @@ function renderCart(){
   var includeGlue=glueChecked?glueChecked.checked:false;
   var glueCost=includeGlue?totalGlue*1800:0;
 
+  var conditionsBlock='';
+  if(anyPromo){
+    var cond=getPromoConditions();
+    if(cond)conditionsBlock='<div class="cart-promo-conditions"><b>⚡ Условия акции</b>'+esc(cond)+'</div>';
+  }
+
   footer.innerHTML=
     '<div class="min-order-notice">Заказы от 10 м.куб газоблока. Расчёт от суммы заявки 500 000 ₸</div>'+
+    conditionsBlock+
     '<div style="font-size:13px;display:flex;flex-direction:column;gap:6px;margin-bottom:12px">'+
     '<div style="display:flex;justify-content:space-between"><span>Блок:</span><b>'+fmt(totalCost)+' ₸</b></div>'+
     '<div style="display:flex;justify-content:space-between"><span>Залог поддоны (возвр.):</span><b>'+fmt(totalDep)+' ₸</b></div>'+
@@ -94,6 +137,9 @@ function renderCart(){
     var i=+inp.dataset.qinp;var v=parseInt(inp.value)||1;cart[i].pallets=Math.max(1,v);saveCart();renderCart();showBadge();
   });});
   body.querySelectorAll('[data-cdel]').forEach(function(b){b.addEventListener('click',function(){cart.splice(+b.dataset.cdel,1);saveCart();renderCart();showBadge();});});
+  body.querySelectorAll('[data-promo-toggle]').forEach(function(cb){cb.addEventListener('change',function(){
+    var i=+cb.dataset.promoToggle;cart[i].usePromo=cb.checked;saveCart();renderCart();
+  });});
 
   // Glue checkbox toggle
   var glueCheck=document.getElementById('cartGlueCheck');
@@ -107,14 +153,23 @@ function renderCart(){
     var addr=(document.getElementById('cartAddr').value||'').trim();
     if(!name||!phone||!addr){alert('Заполните все поля: Имя, Телефон, Адрес/район');return;}
     var msg='Заказ с ecostroydom.kz%0A%0A👤 '+encodeURIComponent(name)+'%0A📞 '+encodeURIComponent(phone)+'%0A📍 '+encodeURIComponent(addr)+'%0A%0A📦 Товары:%0A';
+    var promoFlag=false;
     cart.forEach(function(item){
       var p=PALLETS[item.thick]||PALLETS['300'];
       var vol=item.pallets*p.vol;
-      msg+='• '+encodeURIComponent(item.title)+' '+encodeURIComponent(item.size)+': '+item.pallets+' подд. ('+vol.toFixed(2)+' м³) = '+fmt(Math.round(vol*item.price))+' ₸%0A';
+      var effPrice=item.usePromo&&item.promoPrice?item.promoPrice:item.price;
+      var promoMark=item.usePromo?' ⚡АКЦИЯ':'';
+      if(item.usePromo)promoFlag=true;
+      msg+='• '+encodeURIComponent(item.title)+' '+encodeURIComponent(item.size)+': '+item.pallets+' подд. ('+vol.toFixed(2)+' м³) = '+fmt(Math.round(vol*effPrice))+' ₸'+encodeURIComponent(promoMark)+'%0A';
     });
     var gc=document.getElementById('cartGlueCheck');
     var withGlue=gc&&gc.checked;
     msg+='%0A💰 Итого блок: '+fmt(totalCost)+' ₸';
+    if(promoFlag){
+      var cfg=window.PROMO_CONFIG||{};
+      msg+='%0A⚡ Применена акция';
+      if(cfg.bonus)msg+=': '+encodeURIComponent(cfg.bonus);
+    }
     if(withGlue) msg+='%0A🧱 Клей: ~'+totalGlue+' мешков (~'+fmt(totalGlue*1800)+' ₸)';
     msg+='%0A📦 Залог поддоны (возвр.): '+fmt(totalDep)+' ₸';
     window.open('https://wa.me/'+WA+'?text='+msg,'_blank');

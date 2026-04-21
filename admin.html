@@ -311,6 +311,10 @@
               </div>
             </div>
 
+            <label>Цена по акции (опционально)</label>
+            <input type="text" id="cardPromoPrice" placeholder="37 500 ₸ (оставьте пустым, если товар не участвует в акции)">
+            <div class="help-text">Если указана — клиент увидит обе цены и сможет выбрать в корзине. Условия акции берутся из таба «🔥 Акция».</div>
+
             <label>Характеристики (по одной строке, можно &lt;b&gt;…&lt;/b&gt;)</label>
             <textarea id="cardSpecs" rows="5" placeholder="Прочность <b>B3.5 МПа</b>
 Морозостойкость <b>F75</b>"></textarea>
@@ -1158,6 +1162,7 @@
     $('cardSize').value = c.size || '';
     $('cardPrice').value = c.price || '';
     $('cardPriceUnit').value = c.priceUnit || '';
+    $('cardPromoPrice').value = c.promoPrice || '';
     $('cardSpecs').value = (c.specs || []).join('\n');
     $('cardPalletInfo').value = c.palletInfo || '';
     $('cardDepositInfo').value = c.depositInfo || '';
@@ -1222,6 +1227,7 @@
       depositInfo: $('cardDepositInfo').value.trim(),
       price: $('cardPrice').value.trim(),
       priceUnit: $('cardPriceUnit').value.trim(),
+      promoPrice: $('cardPromoPrice').value.trim(),
       tags: tags,
       btnText: $('cardBtnText').value.trim() || 'В заявку',
       btnHref: $('cardBtnHref').value.trim() || '#form'
@@ -1253,9 +1259,13 @@
       ? '<ul class="card__specs">' + c.specs.map(function(s){ return '<li>'+s+'</li>'; }).join('') + '</ul>'
       : '';
     var imgAlt = escapeAttr(c.alt || c.title || '');
-    var priceHtml = c.price
-      ? '<div class="card__price"><b>'+c.price+'</b>' + (c.priceUnit ? '<small>'+c.priceUnit+'</small>' : '') + '</div>'
-      : '';
+    var priceHtml = '';
+    if (c.price){
+      priceHtml = '<div class="card__price"'+(c.promoPrice?' data-promo-price="'+escapeAttr(c.promoPrice)+'"':'')+'><b>'+c.price+'</b>' + (c.priceUnit ? '<small>'+c.priceUnit+'</small>' : '') + '</div>';
+      if (c.promoPrice){
+        priceHtml += '\n          <div class="card__price-promo">или <b>'+c.promoPrice+'</b>' + (c.priceUnit ? '<small>'+c.priceUnit+'</small>' : '') + ' <span class="promo-flame">⚡ по акции</span></div>';
+      }
+    }
     // Build pallet/deposit caption (single line combining both if both set)
     var palletParts = [];
     if (c.palletInfo) palletParts.push(c.palletInfo);
