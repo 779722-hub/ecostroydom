@@ -670,6 +670,19 @@
               <span>Показывать на главной (в блоке «Полезные статьи», макс. 8)</span>
             </label>
 
+            <hr style="margin:22px 0;border:0;border-top:1px solid var(--line)">
+            <label style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <span>Содержимое статьи (HTML)</span>
+              <span id="blgBodyStatus" style="font-size:12px;color:var(--muted);font-weight:normal"></span>
+            </label>
+            <div class="help-text">Поддерживаются любые HTML-теги: <code>&lt;h2&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;ul&gt;</code>, <code>&lt;table class="article__table"&gt;</code>, <code>&lt;img class="inline"&gt;</code>, <code>&lt;b&gt;</code> и т.д. Редактируется весь блок между <code>&lt;article&gt;…&lt;/article&gt;</code>.</div>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <button type="button" class="btn btn--ghost" id="blgLoadBodyBtn" style="font-size:12px;padding:6px 12px">📥 Загрузить текущее содержимое</button>
+              <button type="button" class="btn btn--ghost" id="blgPreviewBtn" style="font-size:12px;padding:6px 12px">👁 Предпросмотр</button>
+            </div>
+            <textarea id="blgBody" rows="18" placeholder="<!-- Breadcrumb -->&#10;<nav class=&quot;article__breadcrumb&quot;>…&#10;<h1>Заголовок статьи</h1>&#10;<p class=&quot;article__lead&quot;>Вводный абзац…</p>&#10;<h2>Подзаголовок</h2>&#10;<p>Основной текст…</p>" style="font-family:Consolas,Monaco,monospace;font-size:12px;line-height:1.5"></textarea>
+            <div id="blgPreview" style="display:none;margin-top:10px;background:#fff;color:#111;border:1px solid var(--line);border-radius:8px;padding:16px;max-height:600px;overflow:auto"></div>
+
             <div style="display:flex;gap:10px;margin-top:18px">
               <button class="btn" id="applyBlgBtn" type="button">Применить</button>
               <button class="btn btn--ghost" data-closeblog="1" type="button">Отмена</button>
@@ -835,7 +848,7 @@
     gallery: { sha:null, data:null, editingIndex:null, dirty:false },
     tst: { sha:null, data:null, editingCol:null, editingIndex:null, dirty:false },
     prices: { dirty: false },
-    blog: { sha:null, data:null, editingIndex:null, dirty:false, blogIndexSha:null, blogIndexText:null }
+    blog: { sha:null, data:null, editingIndex:null, dirty:false, blogIndexSha:null, blogIndexText:null, editingBody:null, editingBodySha:null, editingBodyDirty:false, pendingBodyPatches:{} }
   };
 
   /* ---------- DOM refs ---------- */
@@ -2788,6 +2801,14 @@
     document.getElementById('blgImgAlt').value = p.imgAlt || '';
     document.getElementById('blgExcerpt').value = p.excerpt || '';
     document.getElementById('blgShowOnMain').checked = !!p.showOnMain;
+    // Reset body editor state
+    var body = document.getElementById('blgBody');
+    body.value = '';
+    S.blog.editingBody = null;
+    S.blog.editingBodySha = null;
+    S.blog.editingBodyDirty = false;
+    document.getElementById('blgBodyStatus').textContent = isNew ? 'Новая статья — HTML-файл создаётся при сохранении' : 'Нажмите «Загрузить текущее содержимое» чтобы отредактировать';
+    document.getElementById('blgPreview').style.display = 'none';
     var ed = document.getElementById('blogEditor');
     ed.classList.add('is-visible');
     ed.scrollIntoView({behavior:'smooth', block:'start'});
@@ -2832,6 +2853,19 @@
     };
     if (isNew) S.blog.data.posts.push(post);
     else S.blog.data.posts[idx] = post;
+
+    // If body was edited — stash the patched file content for save time
+    if (S.blog.editingBodyDirty && S.blog.editingBody){
+      var bodyText = document.getElementById('blgBody').value;
+      try {
+        var newHtml = patchArticleBody(S.blog.editingBody, bodyText);
+        S.blog.pendingBodyPatches[post.slug] = { path: 'blog/'+post.slug+'.html', content: newHtml, sha: S.blog.editingBodySha };
+      } catch(err){
+        alert('Не удалось применить содержимое статьи: ' + err.message);
+        return;
+      }
+    }
+
     markBlgDirty(); renderBlogList(); closeBlogEditor();
   }
 
@@ -2911,6 +2945,84 @@
   });
   document.getElementById('applyBlgBtn').addEventListener('click', applyBlgEdits);
 
+  document.getElementById('blgBody').addEventListener('input', function(){
+    S.blog.editingBodyDirty = true;
+    document.getElementById('blgBodyStatus').textContent = '● Изменения не сохранены';
+    document.getElementById('blgBodyStatus').style.color = 'var(--mint)';
+  });
+
+  document.getElementById('blgLoadBodyBtn').addEventListener('click', function(){
+    var idx = S.blog.editingIndex;
+    if (idx === -1 || idx === null){
+      alert('Сохраните карточку записи, прежде чем редактировать содержимое статьи.');
+      return;
+    }
+    var post = S.blog.data.posts[idx];
+    if (!post || !post.slug){ alert('Slug не задан'); return; }
+    var st = document.getElementById('blgBodyStatus');
+    st.textContent = 'Загружаем blog/'+post.slug+'.html…';
+    st.style.color = 'var(--muted)';
+    var btn = document.getElementById('blgLoadBodyBtn');
+    btn.disabled = true;
+    ghGetFile('blog/' + post.slug + '.html').then(function(f){
+      if (!f){
+        st.textContent = '⚠ Файл blog/'+post.slug+'.html не найден в репозитории';
+        st.style.color = '#F87171';
+        return;
+      }
+      var body = extractArticleBody(f.text);
+      if (body === null){
+        st.textContent = '⚠ Маркеры <!-- ARTICLE:body --> не найдены. Добавьте их вручную в файл.';
+        st.style.color = '#F87171';
+        return;
+      }
+      S.blog.editingBody = f.text;
+      S.blog.editingBodySha = f.sha;
+      S.blog.editingBodyDirty = false;
+      document.getElementById('blgBody').value = body.trim();
+      st.textContent = '✓ Загружено ('+body.length+' символов)';
+      st.style.color = '#34D399';
+    }).catch(function(err){
+      st.textContent = '✗ Ошибка: '+err.message;
+      st.style.color = '#F87171';
+    }).finally(function(){
+      btn.disabled = false;
+    });
+  });
+
+  document.getElementById('blgPreviewBtn').addEventListener('click', function(){
+    var pv = document.getElementById('blgPreview');
+    var body = document.getElementById('blgBody').value;
+    if (!body.trim()){ alert('Содержимое пусто'); return; }
+    if (pv.style.display === 'none'){
+      pv.innerHTML = body;
+      pv.style.display = 'block';
+      pv.scrollIntoView({behavior:'smooth', block:'nearest'});
+    } else {
+      pv.style.display = 'none';
+    }
+  });
+
+  function extractArticleBody(html){
+    var START = '<!-- ARTICLE:body START -->';
+    var END = '<!-- ARTICLE:body END -->';
+    var si = html.indexOf(START);
+    var ei = html.indexOf(END);
+    if (si < 0 || ei < 0) return null;
+    return html.substring(si + START.length, ei);
+  }
+
+  function patchArticleBody(html, newBody){
+    var START = '<!-- ARTICLE:body START -->';
+    var END = '<!-- ARTICLE:body END -->';
+    var si = html.indexOf(START);
+    var ei = html.indexOf(END);
+    if (si < 0 || ei < 0) throw new Error('Маркеры ARTICLE:body не найдены');
+    var before = html.substring(0, si + START.length);
+    var after = html.substring(ei);
+    return before + '\n  ' + newBody.trim() + '\n  ' + after;
+  }
+
   document.getElementById('saveBlgBtn').addEventListener('click', function(){
     var status = document.getElementById('saveBlgStatus');
     clearStatus(status);
@@ -2928,13 +3040,25 @@
       var newIndex = patchBlogInMainHtml(idx.text);
       var newBlogIndex = patchBlogInBlogIndexHtml(S.blog.blogIndexText);
       var newJson = JSON.stringify(S.blog.data, null, 2) + '\n';
-      return ghCommitMultiple([
+      var files = [
         { path: BLOG_POSTS_PATH, content: newJson },
         { path: INDEX_PATH,      content: newIndex },
         { path: BLOG_INDEX_PATH, content: newBlogIndex }
-      ], 'Admin: update blog ('+S.blog.data.posts.length+' posts)');
+      ];
+      // Attach body patches (if any)
+      var bodyKeys = Object.keys(S.blog.pendingBodyPatches);
+      bodyKeys.forEach(function(slug){
+        var p = S.blog.pendingBodyPatches[slug];
+        files.push({ path: p.path, content: p.content });
+      });
+      var msg = 'Admin: update blog ('+S.blog.data.posts.length+' posts'+(bodyKeys.length?', '+bodyKeys.length+' article'+(bodyKeys.length>1?'s':'')+' edited':'')+')';
+      return ghCommitMultiple(files, msg);
     })
-      .then(function(){ return Promise.all([loadBlog(), loadContent()]); })
+      .then(function(){
+        // Clear pending body patches after successful commit
+        S.blog.pendingBodyPatches = {};
+        return Promise.all([loadBlog(), loadContent()]);
+      })
       .then(function(){
         setStatus(status,'✓ Опубликовано. Сайт обновится через ~1 мин.','ok');
         document.getElementById('blgDirty').classList.remove('is-visible');
