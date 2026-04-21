@@ -1,6 +1,7 @@
 # robots.txt for ecostroydom.kz
 User-agent: *
 Allow: /
+Disallow: /admin.html
 Disallow: /blog/editor.html
 Disallow: /screenshots/
 Disallow: /node_modules/
@@ -11,12 +12,14 @@ Disallow: /ads-campaign.md
 # Yandex specific
 User-agent: Yandex
 Allow: /
+Disallow: /admin.html
 Disallow: /blog/editor.html
 Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content
 
 # Google specific
 User-agent: Googlebot
 Allow: /
+Disallow: /admin.html
 Disallow: /blog/editor.html
 
 # Crawl-delay for less aggressive bots

@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Админка акции · EcoStroyDom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F12;--surface:#141A1E;--line:rgba(255,255,255,.08);
+    --text:#F2F2F2;--muted:#9AA2A6;--mint:#2563EB;--mint-hover:#1D4ED8;
+    --ok:#3FCF7F;--err:#FF5A4F;--warn:#F5B301;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Manrope',system-ui,sans-serif}
+  body{min-height:100vh;display:flex;justify-content:center;padding:32px 16px}
+  .wrap{width:100%;max-width:640px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:16px}
+  h1{font-size:26px;font-weight:800;margin:0 0 8px;letter-spacing:-.02em}
+  h2{font-size:18px;font-weight:800;margin:0 0 16px;letter-spacing:-.01em}
+  p.lead{color:var(--muted);margin:0 0 20px;font-size:14px;line-height:1.5}
+  label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  input[type=text],input[type=password],input[type=date],input[type=time],textarea{
+    width:100%;background:#0B0F12;border:1px solid var(--line);border-radius:8px;
+    padding:12px 14px;color:var(--text);font:inherit;font-size:15px;
+    transition:border-color .2s;
+  }
+  input:focus,textarea:focus{outline:none;border-color:var(--mint)}
+  textarea{min-height:90px;resize:vertical;font-family:'Manrope',sans-serif}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--mint);color:#fff;border:0;border-radius:8px;
+    padding:14px 22px;font:inherit;font-weight:800;font-size:15px;cursor:pointer;
+    transition:background .15s,transform .1s;width:100%;margin-top:18px;
+    letter-spacing:-.01em;
+  }
+  .btn:hover{background:var(--mint-hover)}
+  .btn:active{transform:scale(.98)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn--ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  .btn--ghost:hover{background:rgba(255,255,255,.05)}
+  .status{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;display:none}
+  .status--ok{display:block;background:rgba(63,207,127,.1);color:var(--ok);border:1px solid rgba(63,207,127,.25)}
+  .status--err{display:block;background:rgba(255,90,79,.1);color:var(--err);border:1px solid rgba(255,90,79,.25)}
+  .status--warn{display:block;background:rgba(245,179,1,.1);color:var(--warn);border:1px solid rgba(245,179,1,.25)}
+  .muted{color:var(--muted);font-size:13px;line-height:1.5}
+  .muted a{color:var(--mint);text-decoration:none}
+  .muted a:hover{text-decoration:underline}
+  details{margin-top:8px}
+  summary{cursor:pointer;color:var(--muted);font-size:13px}
+  summary:hover{color:var(--text)}
+  .token-row{display:flex;gap:8px;align-items:stretch}
+  .token-row input{flex:1}
+  .token-row button{margin-top:0;padding:12px 16px;width:auto;font-size:13px}
+  .preview{background:#0B0F12;border:1px dashed var(--line);border-radius:8px;padding:14px;margin-top:10px;font-size:13px;color:var(--muted)}
+  .preview b{color:var(--text)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card" id="gateCard">
+    <h1>Админка акции</h1>
+    <p class="lead">Быстрое редактирование баннера акции на <a href="/" style="color:var(--mint)">ecostroydom.kz</a>. Изменения появятся на сайте через ~1 минуту (сборка GitHub Pages).</p>
+
+    <label for="pat">GitHub Personal Access Token</label>
+    <div class="token-row">
+      <input id="pat" type="password" autocomplete="off" placeholder="ghp_... или fine-grained token">
+      <button class="btn btn--ghost" id="togglePatBtn" type="button" title="Показать/скрыть">👁</button>
+    </div>
+    <div class="muted" style="margin-top:6px">
+      Токен хранится только в вашем браузере (localStorage). Создать: <a href="https://github.com/settings/tokens/new?scopes=repo&description=EcoStroyDom+Admin" target="_blank" rel="noopener">github.com/settings/tokens</a> → выбрать scope <b>repo</b>.
+    </div>
+    <button class="btn" id="loginBtn">Войти и загрузить акцию</button>
+    <div class="status" id="gateStatus"></div>
+  </div>
+
+  <div class="card hidden" id="editorCard">
+    <h2>Параметры акции</h2>
+
+    <label for="f_tag">Тег (плашка сверху)</label>
+    <input id="f_tag" type="text" placeholder="Акция месяца">
+
+    <label for="f_title">Заголовок</label>
+    <input id="f_title" type="text" placeholder="−10% на газоблок D600 по предзаказу">
+
+    <label for="f_desc">Подзаголовок (можно HTML: &lt;b&gt;…&lt;/b&gt;)</label>
+    <textarea id="f_desc" placeholder="Забронируйте партию &lt;b&gt;за месяц вперёд&lt;/b&gt; и получите скидку 10%."></textarea>
+
+    <div class="row">
+      <div>
+        <label for="f_date">Дата окончания</label>
+        <input id="f_date" type="date">
+      </div>
+      <div>
+        <label for="f_time">Время окончания</label>
+        <input id="f_time" type="time" step="60">
+      </div>
+    </div>
+
+    <div class="preview" id="preview"></div>
+
+    <button class="btn" id="saveBtn">Сохранить и опубликовать</button>
+    <div class="status" id="saveStatus"></div>
+
+    <details>
+      <summary>Служебное</summary>
+      <div class="muted" style="margin-top:10px">
+        Пишем в ветку <b>main</b>, файл <b>assets/js/config.js</b>. После коммита GitHub Pages пересобирает сайт за 30-90 секунд. Обновите вкладку сайта Ctrl+F5 чтобы увидеть новый текст. Таймер читает <code>endsAt</code> раз в секунду и обновится сразу при следующем рендере.
+      </div>
+      <button class="btn btn--ghost" id="logoutBtn" type="button" style="margin-top:12px">Выйти (забыть токен)</button>
+    </details>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var OWNER = '779722-hub';
+  var REPO = 'ecostroydom';
+  var BRANCH = 'main';
+  var PATH = 'assets/js/config.js';
+  var PAT_KEY = 'eco_admin_pat_v1';
+  var TZ_OFFSET = '+05:00'; // Астана
+
+  var gateCard = document.getElementById('gateCard');
+  var editorCard = document.getElementById('editorCard');
+  var patInput = document.getElementById('pat');
+  var gateStatus = document.getElementById('gateStatus');
+  var saveStatus = document.getElementById('saveStatus');
+  var fTag = document.getElementById('f_tag');
+  var fTitle = document.getElementById('f_title');
+  var fDesc = document.getElementById('f_desc');
+  var fDate = document.getElementById('f_date');
+  var fTime = document.getElementById('f_time');
+  var preview = document.getElementById('preview');
+
+  var currentSha = null;
+  var currentConfig = null;
+
+  patInput.value = localStorage.getItem(PAT_KEY) || '';
+
+  document.getElementById('togglePatBtn').addEventListener('click', function(){
+    patInput.type = patInput.type === 'password' ? 'text' : 'password';
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    localStorage.removeItem(PAT_KEY);
+    patInput.value = '';
+    editorCard.classList.add('hidden');
+    setStatus(gateStatus, 'Токен удалён из браузера.', 'warn');
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', login);
+  document.getElementById('saveBtn').addEventListener('click', save);
+
+  [fTag, fTitle, fDesc, fDate, fTime].forEach(function(el){
+    el.addEventListener('input', updatePreview);
+  });
+
+  function setStatus(el, msg, kind){
+    el.className = 'status status--' + (kind || 'ok');
+    el.textContent = msg;
+  }
+  function clearStatus(el){ el.className = 'status'; el.textContent=''; }
+
+  function ghFetch(method, body){
+    var token = patInput.value.trim();
+    if(!token){ throw new Error('Нет токена'); }
+    var url = 'https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+PATH+'?ref='+BRANCH;
+    var opts = {
+      method: method,
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': 'Bearer '+token,
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    };
+    if(body){
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(body);
+    }
+    return fetch(url, opts).then(function(r){
+      return r.json().then(function(data){
+        if(!r.ok) throw new Error((data && data.message) || ('HTTP '+r.status));
+        return data;
+      });
+    });
+  }
+
+  // Decode base64 → utf-8 string
+  function b64decode(b64){
+    var bin = atob(b64.replace(/\s/g,''));
+    var bytes = new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+  // Encode utf-8 string → base64
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str);
+    var bin = '';
+    for(var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  function parseConfig(jsText){
+    // Extract the object literal from config.js. We use a controlled Function eval.
+    var m = jsText.match(/window\.PROMO_CONFIG\s*=\s*(\{[\s\S]*?\})\s*;?\s*$/m);
+    if(!m) throw new Error('Не нашёл window.PROMO_CONFIG в файле');
+    // Evaluate safely: this file is our own, we trust it.
+    return (new Function('return '+m[1]))();
+  }
+
+  function buildConfigFile(cfg){
+    return '/*\n'+
+      '  Конфиг акции. Редактируется через /admin.html (GitHub PAT) или вручную.\n'+
+      '  Формат даты: ISO с таймзоной Астаны: YYYY-MM-DDTHH:mm:ss+05:00\n'+
+      '  Подробности — в README.md рядом.\n'+
+      '*/\n'+
+      'window.PROMO_CONFIG = {\n'+
+      '  endsAt: '+JSON.stringify(cfg.endsAt)+',\n'+
+      '  durationDays: '+(cfg.durationDays || 3)+',\n'+
+      '  tag: '+JSON.stringify(cfg.tag)+',\n'+
+      '  title: '+JSON.stringify(cfg.title)+',\n'+
+      '  desc: '+JSON.stringify(cfg.desc)+',\n'+
+      '  discount: '+JSON.stringify(cfg.discount || '−10%')+',\n'+
+      '  bonus: '+JSON.stringify(cfg.bonus || 'Клей USTA в подарок')+'\n'+
+      '};\n';
+  }
+
+  function login(){
+    clearStatus(gateStatus);
+    var token = patInput.value.trim();
+    if(!token){ setStatus(gateStatus, 'Введите GitHub PAT', 'err'); return; }
+    localStorage.setItem(PAT_KEY, token);
+    setStatus(gateStatus, 'Загружаем текущую акцию…', 'warn');
+
+    ghFetch('GET').then(function(data){
+      currentSha = data.sha;
+      var jsText = b64decode(data.content);
+      currentConfig = parseConfig(jsText);
+      fillForm(currentConfig);
+      gateCard.classList.add('hidden');
+      editorCard.classList.remove('hidden');
+    }).catch(function(err){
+      setStatus(gateStatus, 'Ошибка: '+err.message, 'err');
+    });
+  }
+
+  function fillForm(cfg){
+    fTag.value = cfg.tag || 'Акция месяца';
+    fTitle.value = cfg.title || '';
+    fDesc.value = cfg.desc || '';
+    // endsAt like "2026-04-23T20:00:00+05:00" — split into date + time (local)
+    var m = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/.exec(cfg.endsAt || '');
+    if(m){
+      fDate.value = m[1];
+      fTime.value = m[2];
+    } else {
+      var d = new Date();
+      d.setDate(d.getDate()+3);
+      fDate.value = d.toISOString().slice(0,10);
+      fTime.value = '20:00';
+    }
+    updatePreview();
+  }
+
+  function updatePreview(){
+    var endsAt = buildEndsAt();
+    preview.innerHTML =
+      '<b>Тег:</b> '+escapeHtml(fTag.value)+'<br>'+
+      '<b>Заголовок:</b> '+escapeHtml(fTitle.value)+'<br>'+
+      '<b>Подзаголовок:</b> '+fDesc.value+'<br>'+
+      '<b>Заканчивается:</b> '+escapeHtml(endsAt);
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function buildEndsAt(){
+    var d = fDate.value;
+    var t = fTime.value || '20:00';
+    if(!d) return '';
+    return d+'T'+t+':00'+TZ_OFFSET;
+  }
+
+  function save(){
+    clearStatus(saveStatus);
+    if(!fDate.value || !fTime.value){ setStatus(saveStatus,'Укажите дату и время','err'); return; }
+    if(!fTitle.value.trim()){ setStatus(saveStatus,'Заголовок не может быть пустым','err'); return; }
+
+    var newCfg = Object.assign({}, currentConfig || {}, {
+      tag: fTag.value.trim() || 'Акция месяца',
+      title: fTitle.value.trim(),
+      desc: fDesc.value.trim(),
+      endsAt: buildEndsAt(),
+      durationDays: 3
+    });
+
+    var fileText = buildConfigFile(newCfg);
+    var saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Сохраняем…';
+    setStatus(saveStatus, 'Публикуем в GitHub…', 'warn');
+
+    ghFetch('PUT', {
+      message: 'Admin: update promo ('+fDate.value+' '+fTime.value+')',
+      content: b64encode(fileText),
+      sha: currentSha,
+      branch: BRANCH
+    }).then(function(data){
+      currentSha = data.content.sha;
+      currentConfig = newCfg;
+      setStatus(saveStatus, '✓ Опубликовано. Сайт обновится через ~1 мин. Откройте ecostroydom.kz и обновите Ctrl+F5.', 'ok');
+    }).catch(function(err){
+      setStatus(saveStatus, 'Ошибка: '+err.message, 'err');
+    }).finally(function(){
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Сохранить и опубликовать';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,6 +1,18 @@
 (function(){
   var intv = null;
 
+  // Render promo texts from config into DOM
+  function renderPromoTexts(){
+    var cfg = window.PROMO_CONFIG || {};
+    var tag = document.getElementById('promoTag');
+    var title = document.getElementById('promoTitle');
+    var desc = document.getElementById('promoDesc');
+    if(tag && cfg.tag) tag.textContent = cfg.tag;
+    if(title && cfg.title) title.textContent = cfg.title;
+    if(desc && cfg.desc) desc.innerHTML = cfg.desc;
+  }
+  renderPromoTexts();
+
   function startTimer(){
     var cfg = window.PROMO_CONFIG || {};
     var root = document.getElementById('timer');
