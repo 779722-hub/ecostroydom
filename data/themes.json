@@ -1,0 +1,44 @@
+{
+  "active": "slot1",
+  "slots": {
+    "slot1": {
+      "name": "Синий (текущий)",
+      "dark": {
+        "accent": "#2563EB",
+        "accentHover": "#1D4ED8",
+        "bg": "#0B0F12",
+        "bg2": "#141A1E",
+        "surface": "#1A2125",
+        "surface2": "#222A2F",
+        "surface3": "#2C353B",
+        "text": "#FFFFFF",
+        "textDim": "rgba(255,255,255,0.72)",
+        "textMuted": "rgba(255,255,255,0.5)",
+        "line": "rgba(255,255,255,0.08)",
+        "lineSoft": "rgba(255,255,255,0.05)",
+        "accentLight": "rgba(37,99,235,0.12)",
+        "accentGlow": "rgba(37,99,235,0.35)"
+      },
+      "light": {
+        "accent": "#2563EB",
+        "accentHover": "#1D4ED8",
+        "bg": "#FFFFFF",
+        "bg2": "#F6F5F2",
+        "surface": "#FFFFFF",
+        "surface2": "#F6F5F2",
+        "surface3": "#ECECEC",
+        "text": "#1A1A1A",
+        "textDim": "rgba(0,0,0,0.7)",
+        "textMuted": "rgba(0,0,0,0.5)",
+        "line": "rgba(0,0,0,0.08)",
+        "lineSoft": "rgba(0,0,0,0.04)",
+        "accentLight": "rgba(37,99,235,0.08)",
+        "accentGlow": "rgba(37,99,235,0.25)"
+      }
+    },
+    "slot2": null,
+    "slot3": null,
+    "slot4": null,
+    "slot5": null
+  }
+}
