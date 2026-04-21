@@ -38,11 +38,13 @@ function addToCart(card,qty){
   var pallets=Math.max(1,parseInt(qty)||1);
 
   var existing=cart.find(function(c){return c.title===title&&c.thick===thick;});
+  var qtyUnit = card.getAttribute('data-qty-unit') || 'подд.';
   if(existing){
     existing.pallets+=pallets;
     if(promoPrice)existing.promoPrice=promoPrice; // update in case changed
+    existing.qtyUnit=qtyUnit;
   } else {
-    cart.push({title:title,size:sizeStr,thick:thick,price:price,promoPrice:promoPrice||0,usePromo:false,img:img,pallets:pallets});
+    cart.push({title:title,size:sizeStr,thick:thick,price:price,promoPrice:promoPrice||0,usePromo:false,img:img,pallets:pallets,qtyUnit:qtyUnit});
   }
   saveCart();renderCart();showBadge();
 }
@@ -88,10 +90,11 @@ function renderCart(){
         '</label>';
     }
 
+    var unit=item.qtyUnit||'подд.';
     html+='<div class="cart-item"><img src="'+esc(item.img)+'" alt="">'+
       '<div class="cart-item__info"><h4>'+esc(item.title)+'</h4>'+
       '<p>'+esc(item.size)+'</p>'+
-      '<p>'+item.pallets+' подд. × '+p.vol+' м³ = '+vol.toFixed(2)+' м³ ('+blocks+' шт)</p>'+
+      '<p>'+item.pallets+' '+esc(unit)+' × '+p.vol+' м³ = '+vol.toFixed(2)+' м³ ('+blocks+' шт)</p>'+
       '<p>Клей: ~'+glue+' мешков</p>'+
       '<p style="color:var(--accent);font-weight:600">'+(item.usePromo?'<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(vol*item.price)+' ₸</small>':'')+fmt(cost)+' ₸</p>'+
       promoLine+
@@ -159,8 +162,9 @@ function renderCart(){
       var vol=item.pallets*p.vol;
       var effPrice=item.usePromo&&item.promoPrice?item.promoPrice:item.price;
       var promoMark=item.usePromo?' ⚡АКЦИЯ':'';
+      var unit=item.qtyUnit||'подд.';
       if(item.usePromo)promoFlag=true;
-      msg+='• '+encodeURIComponent(item.title)+' '+encodeURIComponent(item.size)+': '+item.pallets+' подд. ('+vol.toFixed(2)+' м³) = '+fmt(Math.round(vol*effPrice))+' ₸'+encodeURIComponent(promoMark)+'%0A';
+      msg+='• '+encodeURIComponent(item.title)+' '+encodeURIComponent(item.size)+': '+item.pallets+' '+encodeURIComponent(unit)+' ('+vol.toFixed(2)+' м³) = '+fmt(Math.round(vol*effPrice))+' ₸'+encodeURIComponent(promoMark)+'%0A';
     });
     var gc=document.getElementById('cartGlueCheck');
     var withGlue=gc&&gc.checked;
@@ -195,7 +199,8 @@ function replaceCartButtons(){
     var card=btn.closest('.card');if(!card)return;
     var wrap=document.createElement('div');
     wrap.style.cssText='display:flex;gap:8px;align-items:center;margin-bottom:12px';
-    wrap.innerHTML='<input type="number" class="cart-qty-inp" value="1" min="1" style="width:60px;padding:8px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-weight:700;font-size:14px"> <span style="font-size:12px;color:var(--muted)">подд.</span>';
+    var unit=card.getAttribute('data-qty-unit')||'подд.';
+    wrap.innerHTML='<input type="number" class="cart-qty-inp" value="1" min="1" style="width:60px;padding:8px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-weight:700;font-size:14px"> <span style="font-size:12px;color:var(--muted)">'+esc(unit)+'</span>';
     btn.before(wrap);
 
     btn.addEventListener('click',function(e){

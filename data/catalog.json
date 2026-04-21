@@ -29,7 +29,8 @@
       ],
       "btnText": "В заявку",
       "btnHref": "#form",
-      "promoPrice": "37 500 ₸"
+      "promoPrice": "37 500 ₸",
+      "qtyUnit": "подд."
     },
     {
       "id": "gb-200",
@@ -60,7 +61,8 @@
       ],
       "btnText": "В заявку",
       "btnHref": "#form",
-      "promoPrice": "37 500 ₸"
+      "promoPrice": "37 500 ₸",
+      "qtyUnit": "подд."
     },
     {
       "id": "gb-250",
@@ -81,7 +83,8 @@
       "tags": [],
       "btnText": "В заявку",
       "btnHref": "#form",
-      "promoPrice": "37 500 ₸"
+      "promoPrice": "37 500 ₸",
+      "qtyUnit": "подд."
     },
     {
       "id": "gb-300",
@@ -102,7 +105,8 @@
       "tags": [],
       "btnText": "В заявку",
       "btnHref": "#form",
-      "promoPrice": "37 500 ₸"
+      "promoPrice": "37 500 ₸",
+      "qtyUnit": "подд."
     },
     {
       "id": "gb-400",
@@ -128,7 +132,8 @@
       ],
       "btnText": "В заявку",
       "btnHref": "#form",
-      "promoPrice": "37 500 ₸"
+      "promoPrice": "37 500 ₸",
+      "qtyUnit": "подд."
     },
     {
       "id": "klej",
@@ -158,7 +163,8 @@
       ],
       "btnText": "В заявку",
       "btnHref": "#form",
-      "promoPrice": ""
+      "promoPrice": "",
+      "qtyUnit": "мешки"
     }
   ]
 }

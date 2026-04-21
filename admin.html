@@ -315,6 +315,10 @@
             <input type="text" id="cardPromoPrice" placeholder="37 500 ₸ (оставьте пустым, если товар не участвует в акции)">
             <div class="help-text">Если указана — клиент увидит обе цены и сможет выбрать в корзине. Условия акции берутся из таба «🔥 Акция».</div>
 
+            <label>Единица количества (в корзине)</label>
+            <input type="text" id="cardQtyUnit" placeholder="подд., мешки, шт, кг">
+            <div class="help-text">Подпись рядом с количеством в корзине (например: «1 подд.», «5 мешков», «200 шт»).</div>
+
             <label>Характеристики (по одной строке, можно &lt;b&gt;…&lt;/b&gt;)</label>
             <textarea id="cardSpecs" rows="5" placeholder="Прочность <b>B3.5 МПа</b>
 Морозостойкость <b>F75</b>"></textarea>
@@ -1153,7 +1157,7 @@
     S.catalog.editingIndex = idx;
     var isNew = (idx === -1);
     var c = isNew
-      ? { id:'', img:'', alt:'', title:'', size:'', specs:[], palletInfo:'', depositInfo:'', price:'', priceUnit:'/м³', tags:[], btnText:'В заявку', btnHref:'#form' }
+      ? { id:'', img:'', alt:'', title:'', size:'', specs:[], palletInfo:'', depositInfo:'', price:'', priceUnit:'/м³', promoPrice:'', qtyUnit:'подд.', tags:[], btnText:'В заявку', btnHref:'#form' }
       : S.catalog.data.cards[idx];
     $('editorTitle').textContent = isNew ? 'Новая карточка' : 'Редактирование: ' + (c.title || '');
     $('cardImg').value = c.img || '';
@@ -1163,6 +1167,7 @@
     $('cardPrice').value = c.price || '';
     $('cardPriceUnit').value = c.priceUnit || '';
     $('cardPromoPrice').value = c.promoPrice || '';
+    $('cardQtyUnit').value = c.qtyUnit || 'подд.';
     $('cardSpecs').value = (c.specs || []).join('\n');
     $('cardPalletInfo').value = c.palletInfo || '';
     $('cardDepositInfo').value = c.depositInfo || '';
@@ -1228,6 +1233,7 @@
       price: $('cardPrice').value.trim(),
       priceUnit: $('cardPriceUnit').value.trim(),
       promoPrice: $('cardPromoPrice').value.trim(),
+      qtyUnit: $('cardQtyUnit').value.trim() || 'подд.',
       tags: tags,
       btnText: $('cardBtnText').value.trim() || 'В заявку',
       btnHref: $('cardBtnHref').value.trim() || '#form'
@@ -1273,8 +1279,9 @@
     var palletHtml = palletParts.length
       ? '<div class="card__pallet">'+palletParts.join(' · ')+'</div>'
       : '';
+    var qtyUnitAttr = c.qtyUnit ? ' data-qty-unit="'+escapeAttr(c.qtyUnit)+'"' : '';
     return '' +
-      '      <article class="card reveal">\n' +
+      '      <article class="card reveal"'+qtyUnitAttr+'>\n' +
       '        <div class="card__img"><img src="'+escapeAttr(c.img)+'" alt="'+imgAlt+'" loading="lazy" width="600" height="400"></div>\n' +
       '        <div class="card__body">\n' +
       (tagsHtml ? '          '+tagsHtml+'\n' : '') +
