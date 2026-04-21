@@ -1,0 +1,12 @@
+{
+  "cards": [
+    { "id": "g1", "img": "assets/img/g-gazoblok-astana_5.webp", "alt": "Склад газоблока D600 в Астане — поддоны под крышей", "wide": true },
+    { "id": "g2", "img": "assets/img/g-gazoblok-astana.webp",  "alt": "Поддоны газоблока D600 на складе" },
+    { "id": "g3", "img": "assets/img/g-gazoblok-astana_2.webp","alt": "Газоблок автоклавный D600 — отгрузка" },
+    { "id": "g4", "img": "assets/img/g-gazoblok-astana_3.webp","alt": "Кладка газоблока D600" },
+    { "id": "g5", "img": "assets/img/g-gazoblok-astana_4.png", "alt": "Газоблок на строительном объекте" },
+    { "id": "g6", "img": "assets/img/g-foamcrete.jpg",          "alt": "Заливка пенобетоном" },
+    { "id": "g7", "img": "assets/img/g-kirpich-zabutovka-2.jpg","alt": "Кирпич забутовочный — поддоны на складе" },
+    { "id": "g8", "img": "assets/img/g-gazoblok-astana_6.jpg",  "alt": "Газоблок автоклавный D600 Астана" }
+  ]
+}

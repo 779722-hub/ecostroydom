@@ -275,6 +275,8 @@
           <button class="subtab" data-sub="delivery" type="button">Доставка</button>
           <button class="subtab" data-sub="features" type="button">Преимущества</button>
           <button class="subtab" data-sub="steps" type="button">Шаги</button>
+          <button class="subtab" data-sub="faq" type="button">FAQ</button>
+          <button class="subtab" data-sub="gallery" type="button">Галерея</button>
         </div>
 
         <div class="subpanel subpanel--active" id="subpanel-catalog">
@@ -452,6 +454,59 @@
           <div class="status" id="saveFeaturesStatus"></div>
         </div>
 
+        <!-- FAQ SUBPANEL -->
+        <div class="subpanel" id="subpanel-faq">
+          <div class="card-list" id="faqList"></div>
+          <button class="add-card-btn" id="addFaqBtn" type="button">+ Добавить вопрос</button>
+
+          <div class="card-editor" id="faqEditor">
+            <button class="close" data-closesimple="faq" type="button">×</button>
+            <h3 id="faqEditorTitle">Редактирование</h3>
+            <label>Вопрос</label>
+            <input type="text" id="faqTitle" placeholder="Чем D600 отличается от D500?">
+            <label>Ответ</label>
+            <textarea id="faqDesc" rows="3"></textarea>
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" data-applysimple="faq" type="button">Применить</button>
+              <button class="btn btn--ghost" data-closesimple="faq" type="button">Отмена</button>
+            </div>
+          </div>
+          <div class="save-bar">
+            <button class="btn" data-savesimple="faq" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="faqDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveFaqStatus"></div>
+        </div>
+
+        <!-- GALLERY SUBPANEL -->
+        <div class="subpanel" id="subpanel-gallery">
+          <div class="card-list" id="galleryList"></div>
+          <button class="add-card-btn" id="addGalleryBtn" type="button">+ Добавить фото</button>
+
+          <div class="card-editor" id="galleryEditor">
+            <button class="close" data-closesimple="gallery" type="button">×</button>
+            <h3 id="galleryEditorTitle">Редактирование</h3>
+            <label>Изображение (путь от корня сайта)</label>
+            <input type="text" id="galImg" placeholder="assets/img/g-gazoblok-astana.webp">
+            <label>Alt-текст (для SEO)</label>
+            <input type="text" id="galAlt" placeholder="Короткое описание фото">
+            <label style="display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer">
+              <input type="checkbox" id="galWide" style="width:auto;accent-color:var(--mint)">
+              <span>Широкий (занимает 2 колонки в первой строке)</span>
+            </label>
+            <div class="help-text">Рекомендуем отмечать «широкий» только для первого фото в списке.</div>
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" data-applysimple="gallery" type="button">Применить</button>
+              <button class="btn btn--ghost" data-closesimple="gallery" type="button">Отмена</button>
+            </div>
+          </div>
+          <div class="save-bar">
+            <button class="btn" data-savesimple="gallery" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="galleryDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveGalleryStatus"></div>
+        </div>
+
         <!-- STEPS SUBPANEL -->
         <div class="subpanel" id="subpanel-steps">
           <div class="card-list" id="stepsList"></div>
@@ -546,6 +601,8 @@
   var DELIVERY_PATH = 'data/delivery.json';
   var FEATURES_PATH = 'data/features.json';
   var STEPS_PATH = 'data/steps.json';
+  var FAQ_PATH = 'data/faq.json';
+  var GALLERY_PATH = 'data/gallery.json';
 
   /* ---------- state ---------- */
   var S = {
@@ -557,7 +614,9 @@
     upsell: { sha:null, data:null, editingIndex:null, dirty:false },
     delivery: { sha:null, data:null, editingIndex:null, dirty:false },
     features: { sha:null, data:null, editingIndex:null, dirty:false },
-    steps: { sha:null, data:null, editingIndex:null, dirty:false }
+    steps: { sha:null, data:null, editingIndex:null, dirty:false },
+    faq: { sha:null, data:null, editingIndex:null, dirty:false },
+    gallery: { sha:null, data:null, editingIndex:null, dirty:false }
   };
 
   /* ---------- DOM refs ---------- */
@@ -700,6 +759,8 @@
       .then(function(){ return loadSimpleSection('delivery'); })
       .then(function(){ return loadSimpleSection('features'); })
       .then(function(){ return loadSimpleSection('steps'); })
+      .then(function(){ return loadSimpleSection('faq'); })
+      .then(function(){ return loadSimpleSection('gallery'); })
       .then(function(){
         localStorage.setItem(PAT_KEY, token);
         gateCard.classList.add('hidden');
@@ -712,6 +773,8 @@
         renderSimpleList('delivery');
         renderSimpleList('features');
         renderSimpleList('steps');
+        renderSimpleList('faq');
+        renderSimpleList('gallery');
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -1566,6 +1629,38 @@
       meta: 'Шаги',
       fields: ['Title','Desc'],
       defaults: {}
+    },
+    faq: {
+      path: FAQ_PATH,
+      marker: 'faq',
+      prefix: 'faq',
+      listId: 'faqList',
+      editorId: 'faqEditor',
+      editorTitleId: 'faqEditorTitle',
+      dirtyId: 'faqDirty',
+      statusId: 'saveFaqStatus',
+      addBtnId: 'addFaqBtn',
+      addLabel: 'Новый вопрос',
+      editLabel: 'Редактирование',
+      meta: 'FAQ',
+      fields: ['Title','Desc'],
+      defaults: {}
+    },
+    gallery: {
+      path: GALLERY_PATH,
+      marker: 'gallery',
+      prefix: 'gal',
+      listId: 'galleryList',
+      editorId: 'galleryEditor',
+      editorTitleId: 'galleryEditorTitle',
+      dirtyId: 'galleryDirty',
+      statusId: 'saveGalleryStatus',
+      addBtnId: 'addGalleryBtn',
+      addLabel: 'Новое фото',
+      editLabel: 'Редактирование',
+      meta: 'Галерея',
+      fields: ['Img','Alt','Wide'],
+      defaults: {}
     }
   };
 
@@ -1600,6 +1695,7 @@
       var thumbHtml;
       if (type === 'features') thumbHtml = '<div class="card-row__img" style="display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);font-weight:700">'+escapeHtml(c.icon||'')+'</div>';
       else if (type === 'steps') thumbHtml = '<div class="card-row__img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--mint);font-weight:800">'+(i+1)+'</div>';
+      else if (type === 'faq') thumbHtml = '<div class="card-row__img" style="display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--mint);font-weight:800">?</div>';
       else thumbHtml = '<div class="card-row__img" style="background-image:url(\''+escapeAttr(imgUrl)+'\')"></div>';
       row.innerHTML =
         thumbHtml +
@@ -1658,7 +1754,9 @@
       var id = cfg.prefix + f;
       var key = f.charAt(0).toLowerCase() + f.slice(1);
       var el = document.getElementById(id);
-      if (el) el.value = c[key] || '';
+      if (!el) return;
+      if (el.type === 'checkbox') el.checked = !!c[key];
+      else el.value = c[key] || '';
     });
     document.getElementById(cfg.editorId).classList.add('is-visible');
     document.getElementById(cfg.editorId).scrollIntoView({behavior:'smooth',block:'start'});
@@ -1674,15 +1772,19 @@
     var cfg = SIMPLE_CONFIGS[type];
     var idx = S[type].editingIndex;
     var isNew = (idx === -1);
-    var idPrefix = { upsell:'ups', delivery:'del', features:'feat', steps:'step' }[type] || type;
+    var idPrefix = { upsell:'ups', delivery:'del', features:'feat', steps:'step', faq:'q', gallery:'g' }[type] || type;
     var card = { id: isNew ? (idPrefix+'-'+Date.now().toString(36)) : (S[type].data.cards[idx].id || idPrefix+'-'+Date.now().toString(36)) };
     cfg.fields.forEach(function(f){
       var id = cfg.prefix + f;
       var key = f.charAt(0).toLowerCase() + f.slice(1);
       var el = document.getElementById(id);
-      card[key] = el ? el.value.trim() : '';
+      if (!el){ card[key] = ''; return; }
+      if (el.type === 'checkbox') card[key] = !!el.checked;
+      else card[key] = el.value.trim();
     });
-    if (!card.title){ alert('Заполните заголовок'); return; }
+    // Title required except for gallery (images have no title)
+    if (type !== 'gallery' && !card.title){ alert('Заполните заголовок'); return; }
+    if (type === 'gallery' && !card.img){ alert('Укажите путь к изображению'); return; }
     if (isNew) S[type].data.cards.push(card);
     else S[type].data.cards[idx] = card;
     markSimpleDirty(type); renderSimpleList(type); closeSimpleEditor(type);
@@ -1745,6 +1847,16 @@
       (c.desc ? '<p>'+c.desc+'</p>' : '') +
       '</li>';
   }
+  /* Render HTML fragment for one FAQ item */
+  function buildFaqCardHtml(c){
+    return '<details class="reveal"><summary>'+(c.title||'')+'</summary>' +
+      (c.desc ? '<p>'+c.desc+'</p>' : '') + '</details>';
+  }
+  /* Render HTML fragment for one gallery photo */
+  function buildGalleryCardHtml(c){
+    var cls = 'gallery__item' + (c.wide ? ' gallery__item--wide' : '') + ' reveal';
+    return '<div class="'+cls+'"><img src="'+escapeAttr(c.img||'')+'" alt="'+escapeAttr(c.alt||'')+'" loading="lazy"></div>';
+  }
 
   function buildSimpleContainerHtml(type){
     var cards = (S[type].data.cards || []);
@@ -1759,6 +1871,12 @@
     }
     if (type === 'steps'){
       return '<ol class="steps">\n      ' + cards.map(function(c, i){ return buildStepCardHtml(c, i); }).join('\n      ') + '\n    </ol>';
+    }
+    if (type === 'faq'){
+      return '<div class="faq">\n      ' + cards.map(buildFaqCardHtml).join('\n      ') + '\n    </div>';
+    }
+    if (type === 'gallery'){
+      return '<div class="gallery__grid">\n      ' + cards.map(buildGalleryCardHtml).join('\n      ') + '\n    </div>';
     }
     return '';
   }
@@ -1810,6 +1928,8 @@
   document.getElementById('addDeliveryBtn').addEventListener('click', function(){ openSimpleEditor('delivery', -1); });
   document.getElementById('addFeaturesBtn').addEventListener('click', function(){ openSimpleEditor('features', -1); });
   document.getElementById('addStepsBtn').addEventListener('click', function(){ openSimpleEditor('steps', -1); });
+  document.getElementById('addFaqBtn').addEventListener('click', function(){ openSimpleEditor('faq', -1); });
+  document.getElementById('addGalleryBtn').addEventListener('click', function(){ openSimpleEditor('gallery', -1); });
 
   document.body.addEventListener('click', function(e){
     var t = e.target;
