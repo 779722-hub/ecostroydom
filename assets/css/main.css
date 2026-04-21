@@ -83,9 +83,9 @@ body{
 /* Dark theme — applied by default and when luminance of bg < .5 */
 body.theme-dark h1,body.theme-dark h2,body.theme-dark h3,body.theme-dark h4,body.theme-dark h5{color:#FFFFFF!important}
 body.theme-dark .section__head h2,body .section__head h2 em,body .section__head h2 i{color:#FFFFFF!important}
-body.theme-dark .section__head h2 em,body .section__head h2 i,body.theme-dark .section__head h2 .accent,body.theme-light .section__head h2 .accent{color:#2563EB!important}
+body.theme-dark .section__head h2 em,body .section__head h2 i,body.theme-dark .section__head h2 .accent,body.theme-light .section__head h2 .accent{color:var(--mint)!important}
 body.theme-dark .hero__title{color:#FFFFFF!important}
-body.theme-dark .hero__title .accent{color:#2563EB!important}
+body.theme-dark .hero__title .accent{color:var(--mint)!important}
 body.theme-dark .hero__sub{color:rgba(255,255,255,.72)!important}
 body.theme-dark .hero__sub b{color:#FFFFFF!important}
 body.theme-dark .hero__hooks li{color:rgba(255,255,255,.85)!important}
@@ -101,21 +101,21 @@ body.theme-dark .card__price b{color:#FFFFFF!important}
 body.theme-dark .card__price small,body .card__size,body .card__old-price,body .card__pallet{color:rgba(255,255,255,.55)!important}
 body.theme-dark .card__pallet b{color:#FFFFFF!important}
 body.theme-dark .delivery__price{color:rgba(255,255,255,.5)!important}
-body.theme-dark .delivery__price b{color:#2563EB!important}
+body.theme-dark .delivery__price b{color:var(--mint)!important}
 body.theme-dark .delivery__price small{color:rgba(255,255,255,.5)!important}
 body.theme-dark .upsell__price{color:rgba(255,255,255,.55)!important}
-body.theme-dark .upsell__price b{color:#2563EB!important}
+body.theme-dark .upsell__price b{color:var(--mint)!important}
 body.theme-dark .review__head span,body .blog-card__date{color:rgba(255,255,255,.5)!important}
 body.theme-dark .stat b{color:#FFFFFF!important}
 body.theme-dark .stat span{color:rgba(255,255,255,.55)!important}
-body.theme-dark .stat:hover b{color:#2563EB!important}
+body.theme-dark .stat:hover b{color:var(--mint)!important}
 
 body.theme-dark .calc__form label{color:rgba(255,255,255,.72)!important}
 body.theme-dark .calc__form input,body.theme-dark .calc__form select{background:#0B0F12!important;color:#FFFFFF!important;border-color:rgba(255,255,255,.1)!important}
 body.theme-dark .calc__result{background:#0B0F12!important;border-color:rgba(255,255,255,.08)!important;color:#FFFFFF!important}
 body.theme-dark .calc__result>div{color:rgba(255,255,255,.65)!important}
 body.theme-dark .calc__result b{color:#FFFFFF!important}
-body.theme-dark .calc__total b{color:#2563EB!important}
+body.theme-dark .calc__total b{color:var(--mint)!important}
 
 body.theme-dark .form{background:#1A2125!important;color:#FFFFFF!important;border:1px solid rgba(255,255,255,.08)!important}
 body.theme-dark .form label{color:rgba(255,255,255,.72)!important}
@@ -137,7 +137,7 @@ body.theme-dark .seo-block__text h2,body .seo-block__text h3{color:#FFFFFF!impor
 body.theme-dark .seo-block__text p{color:rgba(255,255,255,.72)!important}
 body.theme-dark .seo-block__text p b{color:#FFFFFF!important}
 body.theme-dark .seo-block__specs li{color:rgba(255,255,255,.65)!important;background:#1A2125!important;border-color:rgba(255,255,255,.08)!important}
-body.theme-dark .seo-block__specs b{color:#2563EB!important}
+body.theme-dark .seo-block__specs b{color:var(--mint)!important}
 body.theme-dark .seo-block__list li{color:rgba(255,255,255,.72)!important}
 
 body.theme-dark .faq summary{color:#FFFFFF!important}
@@ -145,7 +145,7 @@ body.theme-dark .faq details{background:#1A2125!important;border-color:rgba(255,
 
 body.theme-dark .footer p,body .footer a{color:rgba(255,255,255,.6)!important}
 body.theme-dark .footer h5{color:#FFFFFF!important}
-body.theme-dark .footer a:hover{color:#2563EB!important}
+body.theme-dark .footer a:hover{color:var(--mint)!important}
 body.theme-dark .footer__bottom{color:rgba(255,255,255,.35)!important}
 
 body.theme-dark .cart-panel{background:#1A2125!important}
@@ -308,8 +308,8 @@ a,button,img,.card,.upsell,.feature,.blog-card,.review,.delivery__card,.stat{
 .btn--ghost .btn__inner{background:var(--surface);color:var(--text);border:1px solid var(--line)}
 .btn--ghost:hover .btn__inner{background:var(--surface-2);border-color:var(--mint)}
 
-.btn--whatsapp .btn__inner{background:#2563EB;color:var(--bg);box-shadow:0 6px 20px rgba(37,99,235,.3)}
-.btn--whatsapp:hover .btn__inner{background:#1D4ED8}
+.btn--whatsapp .btn__inner{background:var(--mint);color:var(--bg);box-shadow:0 6px 20px rgba(37,99,235,.3)}
+.btn--whatsapp:hover .btn__inner{background:var(--mint-hover)}
 
 .btn--lg .btn__inner{padding:22px 42px;font-size:16px}
 .btn--sm .btn__inner{padding:12px 26px;font-size:13px}
@@ -500,7 +500,7 @@ body.theme-light section[data-block="about"] .about__text p{color:var(--text,#1A
 .hero__slide--youtube-horizontal iframe{aspect-ratio:16/9;width:100%;height:auto;max-height:100%}
 .hero__dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5}
 .hero__dots button{width:8px;height:8px;border-radius:50%;border:0;background:rgba(255,255,255,.35);cursor:pointer;padding:0;transition:.3s}
-.hero__dots button.active{background:#2563EB;width:24px;border-radius:4px}
+.hero__dots button.active{background:var(--mint);width:24px;border-radius:4px}
 .hero__arrows button{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.5);border:0;color:#fff;cursor:pointer;font-size:20px;backdrop-filter:blur(8px);transition:.25s}
 .hero__arrows button:hover{background:rgba(37,99,235,.8)}
 .hero__arrows .prev{left:12px}
@@ -680,7 +680,7 @@ body.theme-dark .card__tag--promo,body.theme-light .card__tag--promo{color:#fff!
 }
 .promo--split .promo__card::before{display:none}
 .promo--split .promo__left{
-  background:linear-gradient(135deg,#2563EB 0%,#1D4ED8 100%);
+  background:linear-gradient(135deg,var(--mint) 0%,var(--mint-hover) 100%);
   padding:56px 40px;display:flex;flex-direction:column;justify-content:space-between;
   position:relative;overflow:hidden;
 }
@@ -690,7 +690,7 @@ body.theme-dark .card__tag--promo,body.theme-light .card__tag--promo{color:#fff!
   color:rgba(11,15,18,.08);line-height:.7;pointer-events:none;
 }
 .promo--split .promo__tag{
-  display:inline-block;background:#0B0F12;color:#2563EB;padding:8px 18px;
+  display:inline-block;background:#0B0F12;color:var(--mint);padding:8px 18px;
   border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase;
   letter-spacing:.12em;border:0;margin-bottom:20px;align-self:flex-start;
 }
