@@ -146,6 +146,30 @@
   .dirty-badge{font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(245,179,1,.18);color:var(--warn);font-weight:800;letter-spacing:.04em;text-transform:uppercase;display:none}
   .dirty-badge.is-visible{display:inline-block}
 
+  /* Image upload buttons (inline in editors) */
+  .img-input-row{display:flex;gap:6px;align-items:stretch}
+  .img-input-row input{flex:1}
+  .img-upload-btn{padding:8px 12px;font-size:13px;background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:8px;cursor:pointer;white-space:nowrap;font:inherit;font-weight:700}
+  .img-upload-btn:hover{border-color:var(--mint);color:var(--mint)}
+  .img-upload-btn:disabled{opacity:.5;cursor:wait}
+
+  /* Photos tab */
+  .drop-zone{border:2px dashed var(--line);border-radius:12px;padding:36px 20px;text-align:center;transition:border-color .2s,background .2s;cursor:pointer;background:var(--bg)}
+  .drop-zone:hover{border-color:var(--mint);background:rgba(37,99,235,.04)}
+  .drop-zone.is-drag{border-color:var(--mint);background:rgba(37,99,235,.08)}
+  .drop-zone__icon{font-size:32px;margin-bottom:8px}
+  .drop-zone__text{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .drop-zone__hint{font-size:12px;color:var(--muted)}
+  .upload-progress{margin-top:14px;display:none}
+  .upload-progress.is-visible{display:block}
+  .upload-progress__item{padding:8px 10px;background:var(--bg);border:1px solid var(--line);border-radius:6px;margin-bottom:6px;font-size:12px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .upload-progress__status{font-weight:700;font-size:11px;padding:2px 6px;border-radius:4px}
+  .upload-progress__status--wait{background:rgba(245,179,1,.18);color:var(--warn)}
+  .upload-progress__status--ok{background:rgba(63,207,127,.18);color:var(--ok)}
+  .upload-progress__status--err{background:rgba(255,90,79,.18);color:var(--err)}
+  .upload-path{font-family:ui-monospace,monospace;font-size:11px;background:var(--surface-2);padding:3px 6px;border-radius:4px;cursor:pointer;color:var(--text)}
+  .upload-path:hover{color:var(--mint)}
+
   /* Prices tab */
   .price-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mint);margin:18px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
   .price-section-title:first-child{margin-top:0}
@@ -194,6 +218,7 @@
       <button class="tab" data-panel="texts" type="button">📝 Тексты</button>
       <button class="tab" data-panel="cards" type="button">📦 Карточки</button>
       <button class="tab" data-panel="prices" type="button">💰 Цены</button>
+      <button class="tab" data-panel="photos" type="button">📸 Фото</button>
     </div>
 
     <!-- ========== PROMO PANEL ========== -->
@@ -278,6 +303,27 @@
       </div>
     </div>
 
+    <!-- ========== PHOTOS PANEL ========== -->
+    <div class="panel" id="panel-photos">
+      <div class="card">
+        <h2>Загрузка фотографий</h2>
+        <p class="lead">Перетащите файлы или выберите вручную. Картинки сжимаются до 1600px и качеством 0.85 (JPEG), потом коммитятся в <b>assets/img/uploads/</b>. Ссылку на загруженный файл можно вставить в поле «Изображение» в любом редакторе карточек.</p>
+
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone__icon">📸</div>
+          <div class="drop-zone__text">Перетащите фото сюда или нажмите</div>
+          <div class="drop-zone__hint">JPG, PNG, WEBP · автоматически сожмётся</div>
+          <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none">
+        </div>
+
+        <div class="upload-progress" id="uploadProgress"></div>
+
+        <div style="margin-top:18px">
+          <div class="muted" style="font-size:11px;margin-bottom:6px">💡 Совет: в редакторах карточек рядом с полем «Изображение» есть кнопка <b>📎 Загрузить</b> — она делает то же самое, но сразу подставляет путь.</div>
+        </div>
+      </div>
+    </div>
+
     <!-- ========== PRICES PANEL ========== -->
     <div class="panel" id="panel-prices">
       <div class="card">
@@ -318,8 +364,11 @@
             <h3 id="editorTitle">Редактирование карточки</h3>
 
             <label>Изображение (путь от корня сайта)</label>
-            <input type="text" id="cardImg" placeholder="assets/img/block-100.png">
-            <div class="help-text">Пока вручную (в этапе 6 будет загрузка файла). Пример: <code>assets/img/my-image.jpg</code></div>
+            <div class="img-input-row">
+              <input type="text" id="cardImg" placeholder="assets/img/block-100.png">
+              <button type="button" class="img-upload-btn" data-img-target="cardImg">📎 Загрузить</button>
+            </div>
+            <div class="help-text">Или введите путь вручную. Пример: <code>assets/img/my-image.jpg</code></div>
 
             <label>Alt-текст (для SEO)</label>
             <input type="text" id="cardAlt" placeholder="Газоблок D600 600x300x100">
@@ -407,7 +456,10 @@
             <button class="close" data-closesimple="upsell" type="button">×</button>
             <h3 id="upsellEditorTitle">Редактирование</h3>
             <label>Изображение (путь от корня)</label>
-            <input type="text" id="upsImg" placeholder="assets/img/kirpich-zabutovka.jpg">
+            <div class="img-input-row">
+              <input type="text" id="upsImg" placeholder="assets/img/kirpich-zabutovka.jpg">
+              <button type="button" class="img-upload-btn" data-img-target="upsImg">📎 Загрузить</button>
+            </div>
             <label>Alt-текст</label>
             <input type="text" id="upsAlt" placeholder="Кирпич забутовочный">
             <label>Заголовок</label>
@@ -517,7 +569,10 @@
             <button class="close" data-closesimple="gallery" type="button">×</button>
             <h3 id="galleryEditorTitle">Редактирование</h3>
             <label>Изображение (путь от корня сайта)</label>
-            <input type="text" id="galImg" placeholder="assets/img/g-gazoblok-astana.webp">
+            <div class="img-input-row">
+              <input type="text" id="galImg" placeholder="assets/img/g-gazoblok-astana.webp">
+              <button type="button" class="img-upload-btn" data-img-target="galImg">📎 Загрузить</button>
+            </div>
             <label>Alt-текст (для SEO)</label>
             <input type="text" id="galAlt" placeholder="Короткое описание фото">
             <label style="display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer">
@@ -593,7 +648,10 @@
             <label>Текст отзыва</label>
             <textarea id="tstText" rows="4" placeholder="Менеджеры отзывчивые, ответили в WhatsApp за 10 минут..."></textarea>
             <label>Аватар (путь от корня)</label>
-            <input type="text" id="tstAvatar" placeholder="assets/img/avatars/artem.jpg">
+            <div class="img-input-row">
+              <input type="text" id="tstAvatar" placeholder="assets/img/avatars/artem.jpg">
+              <button type="button" class="img-upload-btn" data-img-target="tstAvatar">📎 Загрузить</button>
+            </div>
             <div style="display:flex;gap:10px;margin-top:18px">
               <button class="btn" id="applyTstBtn" type="button">Применить</button>
               <button class="btn btn--ghost" data-closetst="1" type="button">Отмена</button>
@@ -627,7 +685,10 @@
             <button class="close" data-closesimple="delivery" type="button">×</button>
             <h3 id="deliveryEditorTitle">Редактирование</h3>
             <label>Изображение (путь от корня)</label>
-            <input type="text" id="delImg" placeholder="assets/img/manip-11.webp">
+            <div class="img-input-row">
+              <input type="text" id="delImg" placeholder="assets/img/manip-11.webp">
+              <button type="button" class="img-upload-btn" data-img-target="delImg">📎 Загрузить</button>
+            </div>
             <label>Alt-текст</label>
             <input type="text" id="delAlt" placeholder="Манипулятор 11 м³">
             <label>Заголовок</label>
@@ -868,6 +929,7 @@
         renderTestimonialsList();
         renderTstDurations();
         renderPricesPanel();
+        wireAllImgUploadBtns();
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -2014,6 +2076,174 @@
         renderSimpleList(type);
       })
       .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); });
+  }
+
+  /* ============================================================
+     PHOTOS TAB + inline image upload for editors
+     ============================================================ */
+  function compressImage(file, maxDim, quality){
+    maxDim = maxDim || 1600;
+    quality = quality || 0.85;
+    return new Promise(function(resolve, reject){
+      if (!/^image\//.test(file.type)){ reject(new Error('Не изображение')); return; }
+      var img = new Image();
+      img.onload = function(){
+        var scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        var w = Math.round(img.naturalWidth * scale);
+        var h = Math.round(img.naturalHeight * scale);
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        // Preserve PNG for transparent/small images, else JPEG
+        var mime = (file.type === 'image/png' && file.size < 400*1024) ? 'image/png' : 'image/jpeg';
+        var ext = mime === 'image/png' ? 'png' : 'jpg';
+        canvas.toBlob(function(blob){
+          if (!blob) return reject(new Error('Сжатие не удалось'));
+          resolve({ blob: blob, mime: mime, ext: ext, width: w, height: h });
+        }, mime, quality);
+      };
+      img.onerror = function(){ reject(new Error('Не могу прочитать изображение')); };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function blobToBase64(blob){
+    return new Promise(function(resolve, reject){
+      var r = new FileReader();
+      r.onload = function(){ resolve(r.result.split(',')[1]); };
+      r.onerror = reject;
+      r.readAsDataURL(blob);
+    });
+  }
+
+  function sanitizeFilename(name){
+    // Remove ext, transliterate-ish, replace non-ascii to dashes
+    return String(name)
+      .replace(/\.[a-zA-Z0-9]+$/, '')
+      .replace(/[^\w.-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .toLowerCase() || ('photo-' + Date.now().toString(36));
+  }
+
+  // Upload an image File to uploads/ folder. Returns { path } of committed file.
+  function uploadImageToRepo(file, customName){
+    var targetNameBase, targetExt;
+    return compressImage(file).then(function(res){
+      targetNameBase = sanitizeFilename(customName || file.name);
+      targetExt = res.ext;
+      return blobToBase64(res.blob).then(function(b64){
+        return { b64:b64, ext: res.ext };
+      });
+    }).then(function(data){
+      var path = 'assets/img/uploads/' + targetNameBase + '.' + data.ext;
+      var url = 'https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+path;
+      // Check if exists
+      return fetch(url+'?ref='+BRANCH, {
+        headers: { 'Accept':'application/vnd.github+json', 'Authorization':'Bearer '+S.token }
+      }).then(function(r){ return r.ok ? r.json() : null; }).then(function(existing){
+        var body = { message:'Admin: upload '+path, content:data.b64, branch:BRANCH };
+        if (existing && existing.sha) body.sha = existing.sha;
+        return fetch(url, {
+          method:'PUT',
+          headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+S.token,'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        }).then(function(r){
+          return r.json().then(function(d){
+            if (!r.ok) throw new Error((d && d.message) || 'HTTP '+r.status);
+            return { path: path };
+          });
+        });
+      });
+    });
+  }
+
+  // Drop zone and file input
+  var dropZone = document.getElementById('dropZone');
+  var photoFileInput = document.getElementById('photoFileInput');
+  var uploadProgress = document.getElementById('uploadProgress');
+  if (dropZone){
+    dropZone.addEventListener('click', function(){ photoFileInput.click(); });
+    ['dragenter','dragover'].forEach(function(ev){
+      dropZone.addEventListener(ev, function(e){ e.preventDefault(); dropZone.classList.add('is-drag'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+      dropZone.addEventListener(ev, function(e){ e.preventDefault(); dropZone.classList.remove('is-drag'); });
+    });
+    dropZone.addEventListener('drop', function(e){
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length) handleUploadFiles(files);
+    });
+    photoFileInput.addEventListener('change', function(){
+      if (photoFileInput.files && photoFileInput.files.length) handleUploadFiles(photoFileInput.files);
+      photoFileInput.value = '';
+    });
+  }
+
+  function handleUploadFiles(fileList){
+    uploadProgress.classList.add('is-visible');
+    Array.prototype.forEach.call(fileList, function(file){
+      var row = document.createElement('div');
+      row.className = 'upload-progress__item';
+      row.innerHTML = '<span>'+escapeHtml(file.name)+'</span>' +
+        '<span class="upload-progress__status upload-progress__status--wait">Загружаем…</span>';
+      uploadProgress.insertBefore(row, uploadProgress.firstChild);
+      uploadImageToRepo(file).then(function(res){
+        row.innerHTML = '<span>'+escapeHtml(file.name)+'</span>' +
+          '<span class="upload-path" title="Кликните чтобы скопировать">'+res.path+'</span>' +
+          '<span class="upload-progress__status upload-progress__status--ok">✓</span>';
+        row.querySelector('.upload-path').addEventListener('click', function(){
+          var tmp = document.createElement('textarea');
+          tmp.value = res.path;
+          document.body.appendChild(tmp); tmp.select();
+          try { document.execCommand('copy'); } catch(_){}
+          document.body.removeChild(tmp);
+          var el = row.querySelector('.upload-path');
+          el.textContent = '✓ скопировано';
+          setTimeout(function(){ el.textContent = res.path; }, 1200);
+        });
+      }).catch(function(err){
+        row.innerHTML = '<span>'+escapeHtml(file.name)+'</span>' +
+          '<span class="upload-progress__status upload-progress__status--err">'+escapeHtml(err.message||'err')+'</span>';
+      });
+    });
+  }
+
+  // Inline upload buttons: for every wrapped input, attach a file picker
+  function wireImgUploadBtn(btn){
+    var targetId = btn.dataset.imgTarget;
+    btn.addEventListener('click', function(){
+      var fi = document.createElement('input');
+      fi.type = 'file'; fi.accept = 'image/*';
+      fi.onchange = function(){
+        var file = fi.files[0]; if (!file) return;
+        var suggested = sanitizeFilename(file.name);
+        var name = prompt('Имя файла (без расширения):', suggested);
+        if (!name) return;
+        btn.disabled = true;
+        var origText = btn.textContent;
+        btn.textContent = '⏳';
+        uploadImageToRepo(file, name).then(function(res){
+          var inp = document.getElementById(targetId);
+          if (inp){
+            inp.value = res.path;
+            inp.dispatchEvent(new Event('input', {bubbles:true}));
+          }
+          btn.textContent = '✓';
+          setTimeout(function(){ btn.textContent = origText; btn.disabled = false; }, 1500);
+        }).catch(function(err){
+          alert('Ошибка: '+err.message);
+          btn.textContent = origText; btn.disabled = false;
+        });
+      };
+      fi.click();
+    });
+  }
+
+  // Wire all inline upload buttons (they will be present in DOM after login)
+  function wireAllImgUploadBtns(){
+    document.querySelectorAll('[data-img-target]').forEach(wireImgUploadBtn);
   }
 
   /* ============================================================
