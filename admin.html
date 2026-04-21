@@ -624,8 +624,8 @@
             Карточки блога: заголовок, категория, дата, превью-фото. Флажок «Показывать на главной» решает, появится ли карточка в блоке «Полезные статьи». Все карточки видны в разделе <a href="/blog/" target="_blank" style="color:var(--mint)">/blog/</a>.
           </div>
           <div class="card-list" id="blogList"></div>
-          <button class="add-card-btn" id="addBlogBtn" type="button">+ Добавить запись в список (без создания HTML)</button>
-          <div class="help-text" style="margin-top:6px">Создание новой статьи со своим HTML-файлом — в следующем обновлении.</div>
+          <button class="add-card-btn" id="addBlogBtn" type="button">+ Новая статья</button>
+          <div class="help-text" style="margin-top:6px">Новая статья создаст HTML-файл <code>blog/&lt;slug&gt;.html</code> из шаблона. Если в поле «Содержимое» оставить всё как есть — получится базовая статья со стартовым текстом.</div>
 
           <div class="card-editor" id="blogEditor">
             <button class="close" data-closeblog="1" type="button">×</button>
@@ -832,6 +832,7 @@
   var TST_PATH = 'data/testimonials.json';
   var BLOG_POSTS_PATH = 'data/blog-posts.json';
   var BLOG_INDEX_PATH = 'blog/index.html';
+  var BLOG_TEMPLATE_PATH = 'blog/_template.html';
 
   /* ---------- state ---------- */
   var S = {
@@ -848,7 +849,7 @@
     gallery: { sha:null, data:null, editingIndex:null, dirty:false },
     tst: { sha:null, data:null, editingCol:null, editingIndex:null, dirty:false },
     prices: { dirty: false },
-    blog: { sha:null, data:null, editingIndex:null, dirty:false, blogIndexSha:null, blogIndexText:null, editingBody:null, editingBodySha:null, editingBodyDirty:false, pendingBodyPatches:{} }
+    blog: { sha:null, data:null, editingIndex:null, dirty:false, blogIndexSha:null, blogIndexText:null, editingBody:null, editingBodySha:null, editingBodyDirty:false, pendingBodyPatches:{}, templateText:null }
   };
 
   /* ---------- DOM refs ---------- */
@@ -2692,9 +2693,10 @@
   function loadBlog(){
     return Promise.all([
       ghGetFile(BLOG_POSTS_PATH),
-      ghGetFile(BLOG_INDEX_PATH)
+      ghGetFile(BLOG_INDEX_PATH),
+      ghGetFile(BLOG_TEMPLATE_PATH)
     ]).then(function(res){
-      var f = res[0], bi = res[1];
+      var f = res[0], bi = res[1], tpl = res[2];
       if (!f) throw new Error('data/blog-posts.json не найден');
       if (!bi) throw new Error('blog/index.html не найден');
       S.blog.sha = f.sha;
@@ -2702,8 +2704,37 @@
       if (!Array.isArray(S.blog.data.posts)) S.blog.data.posts = [];
       S.blog.blogIndexSha = bi.sha;
       S.blog.blogIndexText = bi.text;
+      S.blog.templateText = tpl ? tpl.text : null;
       S.blog.dirty = false;
     });
+  }
+
+  var BLOG_STARTER_BODY = '<!-- Breadcrumb -->\n<nav class="article__breadcrumb">\n  <a href="../index.html">Главная</a> <span>/</span>\n  <a href="../index.html#blog">Блог</a> <span>/</span>\n  <span>{{TITLE}}</span>\n</nav>\n\n<span class="article__cat">{{CATEGORY}}</span>\n<h1>{{TITLE}}</h1>\n<div class="article__date">{{DATE_DISPLAY}} · 5 мин чтения</div>\n\n<img src="../{{IMG}}" alt="{{IMG_ALT}}" class="article__hero">\n\n<p class="article__lead">\n  {{EXCERPT}}\n</p>\n\n<h2>Первый подзаголовок</h2>\n<p>\n  Введение в тему. Напишите, что читатель узнает из статьи и почему это важно.\n</p>\n\n<h2>Второй подзаголовок</h2>\n<p>\n  Раскрытие темы. Используйте <b>жирный</b> для акцентов.\n</p>\n<ul>\n  <li>Пункт первый</li>\n  <li>Пункт второй</li>\n  <li>Пункт третий</li>\n</ul>\n\n<h2>Заключение</h2>\n<p>\n  Вывод и призыв к действию.\n</p>\n\n<div class="article__cta">\n  <h3>Нужен газоблок?</h3>\n  <p>Закажите у нас напрямую с завода в Астане — лучшие цены, быстрая доставка.</p>\n  <a href="../index.html#form" class="btn btn--primary">Оставить заявку</a>\n</div>\n\n<a href="index.html" class="article__back">← Все статьи</a>';
+
+  function renderStarterBody(post){
+    return BLOG_STARTER_BODY
+      .replace(/\{\{TITLE\}\}/g, post.title || 'Заголовок статьи')
+      .replace(/\{\{CATEGORY\}\}/g, post.category || 'Категория')
+      .replace(/\{\{DATE_DISPLAY\}\}/g, post.dateDisplay || post.date || '')
+      .replace(/\{\{IMG\}\}/g, post.img || 'assets/img/og-cover.jpg')
+      .replace(/\{\{IMG_ALT\}\}/g, post.imgAlt || post.title || '')
+      .replace(/\{\{EXCERPT\}\}/g, post.excerpt || '');
+  }
+
+  function renderTemplateWithMeta(tpl, post, bodyHtml){
+    var keywords = (post.title||'') + ', ' + (post.category||'') + ', газоблок, EcoStroyDom';
+    var description = post.excerpt || post.title || '';
+    var datePub = post.date || new Date().toISOString().slice(0,10);
+    return tpl
+      .replace(/\{\{title\}\}/g, post.title || '')
+      .replace(/\{\{description\}\}/g, description)
+      .replace(/\{\{keywords\}\}/g, keywords)
+      .replace(/\{\{slug\}\}/g, post.slug || '')
+      .replace(/\{\{category\}\}/g, post.category || '')
+      .replace(/\{\{dateDisplay\}\}/g, post.dateDisplay || post.date || '')
+      .replace(/\{\{datePublished\}\}/g, datePub)
+      .replace(/\{\{ogImage\}\}/g, post.img || 'assets/img/og-cover.jpg')
+      .replace(/\{\{body\}\}/g, bodyHtml || '');
   }
 
   function markBlgDirty(){
@@ -2803,11 +2834,23 @@
     document.getElementById('blgShowOnMain').checked = !!p.showOnMain;
     // Reset body editor state
     var body = document.getElementById('blgBody');
-    body.value = '';
     S.blog.editingBody = null;
     S.blog.editingBodySha = null;
     S.blog.editingBodyDirty = false;
-    document.getElementById('blgBodyStatus').textContent = isNew ? 'Новая статья — HTML-файл создаётся при сохранении' : 'Нажмите «Загрузить текущее содержимое» чтобы отредактировать';
+    var loadBtn = document.getElementById('blgLoadBodyBtn');
+    var st = document.getElementById('blgBodyStatus');
+    if (isNew){
+      body.value = renderStarterBody(p);
+      S.blog.editingBodyDirty = true;
+      loadBtn.style.display = 'none';
+      st.textContent = 'Новая статья — файл blog/<slug>.html будет создан из шаблона при сохранении';
+      st.style.color = 'var(--mint)';
+    } else {
+      body.value = '';
+      loadBtn.style.display = '';
+      st.textContent = 'Нажмите «Загрузить текущее содержимое» чтобы отредактировать';
+      st.style.color = 'var(--muted)';
+    }
     document.getElementById('blgPreview').style.display = 'none';
     var ed = document.getElementById('blogEditor');
     ed.classList.add('is-visible');
@@ -2854,12 +2897,19 @@
     if (isNew) S.blog.data.posts.push(post);
     else S.blog.data.posts[idx] = post;
 
-    // If body was edited — stash the patched file content for save time
-    if (S.blog.editingBodyDirty && S.blog.editingBody){
-      var bodyText = document.getElementById('blgBody').value;
+    // Handle body content: for NEW posts render full template; for existing patch between markers
+    var bodyText = document.getElementById('blgBody').value;
+    if (isNew && bodyText.trim()){
+      if (!S.blog.templateText){
+        alert('Шаблон blog/_template.html не загружен. Перелогиньтесь в админке.');
+        return;
+      }
+      var newFile = renderTemplateWithMeta(S.blog.templateText, post, bodyText);
+      S.blog.pendingBodyPatches[post.slug] = { path: 'blog/'+post.slug+'.html', content: newFile, isNew: true };
+    } else if (S.blog.editingBodyDirty && S.blog.editingBody){
       try {
         var newHtml = patchArticleBody(S.blog.editingBody, bodyText);
-        S.blog.pendingBodyPatches[post.slug] = { path: 'blog/'+post.slug+'.html', content: newHtml, sha: S.blog.editingBodySha };
+        S.blog.pendingBodyPatches[post.slug] = { path: 'blog/'+post.slug+'.html', content: newHtml };
       } catch(err){
         alert('Не удалось применить содержимое статьи: ' + err.message);
         return;
