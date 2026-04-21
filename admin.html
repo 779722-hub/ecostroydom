@@ -82,13 +82,16 @@
   <div class="card hidden" id="editorCard">
     <h2>Параметры акции</h2>
 
-    <label for="f_tag">Тег (плашка сверху)</label>
+    <label for="f_tag">Тег (плашка сверху карточки)</label>
     <input id="f_tag" type="text" placeholder="Акция месяца">
 
-    <label for="f_title">Заголовок</label>
+    <label for="f_subtitle">Подзаголовок секции (под «Акция»)</label>
+    <input id="f_subtitle" type="text" placeholder="Лучшие цены на газоблок в Астане — экономьте по предзаказу.">
+
+    <label for="f_title">Заголовок (в карточке акции)</label>
     <input id="f_title" type="text" placeholder="−10% на газоблок D600 по предзаказу">
 
-    <label for="f_desc">Подзаголовок (можно HTML: &lt;b&gt;…&lt;/b&gt;)</label>
+    <label for="f_desc">Описание (можно HTML: &lt;b&gt;…&lt;/b&gt;)</label>
     <textarea id="f_desc" placeholder="Забронируйте партию &lt;b&gt;за месяц вперёд&lt;/b&gt; и получите скидку 10%."></textarea>
 
     <div class="row">
@@ -133,6 +136,7 @@
   var gateStatus = document.getElementById('gateStatus');
   var saveStatus = document.getElementById('saveStatus');
   var fTag = document.getElementById('f_tag');
+  var fSubtitle = document.getElementById('f_subtitle');
   var fTitle = document.getElementById('f_title');
   var fDesc = document.getElementById('f_desc');
   var fDate = document.getElementById('f_date');
@@ -158,7 +162,7 @@
   document.getElementById('loginBtn').addEventListener('click', login);
   document.getElementById('saveBtn').addEventListener('click', save);
 
-  [fTag, fTitle, fDesc, fDate, fTime].forEach(function(el){
+  [fTag, fSubtitle, fTitle, fDesc, fDate, fTime].forEach(function(el){
     el.addEventListener('input', updatePreview);
   });
 
@@ -225,6 +229,7 @@
       '  endsAt: '+JSON.stringify(cfg.endsAt)+',\n'+
       '  durationDays: '+(cfg.durationDays || 3)+',\n'+
       '  tag: '+JSON.stringify(cfg.tag)+',\n'+
+      '  subtitle: '+JSON.stringify(cfg.subtitle || '')+',\n'+
       '  title: '+JSON.stringify(cfg.title)+',\n'+
       '  desc: '+JSON.stringify(cfg.desc)+',\n'+
       '  discount: '+JSON.stringify(cfg.discount || '−10%')+',\n'+
@@ -253,6 +258,7 @@
 
   function fillForm(cfg){
     fTag.value = cfg.tag || 'Акция месяца';
+    fSubtitle.value = cfg.subtitle || '';
     fTitle.value = cfg.title || '';
     fDesc.value = cfg.desc || '';
     // endsAt like "2026-04-23T20:00:00+05:00" — split into date + time (local)
@@ -273,8 +279,9 @@
     var endsAt = buildEndsAt();
     preview.innerHTML =
       '<b>Тег:</b> '+escapeHtml(fTag.value)+'<br>'+
+      '<b>Подзаголовок секции:</b> '+escapeHtml(fSubtitle.value)+'<br>'+
       '<b>Заголовок:</b> '+escapeHtml(fTitle.value)+'<br>'+
-      '<b>Подзаголовок:</b> '+fDesc.value+'<br>'+
+      '<b>Описание:</b> '+fDesc.value+'<br>'+
       '<b>Заканчивается:</b> '+escapeHtml(endsAt);
   }
   function escapeHtml(s){
@@ -297,6 +304,7 @@
 
     var newCfg = Object.assign({}, currentConfig || {}, {
       tag: fTag.value.trim() || 'Акция месяца',
+      subtitle: fSubtitle.value.trim(),
       title: fTitle.value.trim(),
       desc: fDesc.value.trim(),
       endsAt: buildEndsAt(),

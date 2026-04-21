@@ -5,9 +5,11 @@
   function renderPromoTexts(){
     var cfg = window.PROMO_CONFIG || {};
     var tag = document.getElementById('promoTag');
+    var subtitle = document.getElementById('promoSubtitle');
     var title = document.getElementById('promoTitle');
     var desc = document.getElementById('promoDesc');
     if(tag && cfg.tag) tag.textContent = cfg.tag;
+    if(subtitle && cfg.subtitle) subtitle.textContent = cfg.subtitle;
     if(title && cfg.title) title.textContent = cfg.title;
     if(desc && cfg.desc) desc.innerHTML = cfg.desc;
   }
