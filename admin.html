@@ -98,6 +98,18 @@
   details{margin-top:14px}
   summary{cursor:pointer;color:var(--muted);font-size:12px;padding:4px 0}
   summary:hover{color:var(--text)}
+
+  /* Texts tab */
+  .group-title{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--mint);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .group-title:first-child{margin-top:0}
+  .field{margin-bottom:12px}
+  .field label{margin:0 0 4px;text-transform:none;font-size:12px;color:var(--muted);letter-spacing:0}
+  .field .help{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .field input[type=text],.field textarea{font-size:13px;padding:9px 11px}
+  .field textarea{min-height:60px}
+  .save-bar{position:sticky;bottom:0;background:linear-gradient(180deg,transparent 0,var(--surface) 30%);padding:14px 0 2px;margin-top:18px;display:flex;gap:10px;align-items:center}
+  .dirty-badge{font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(245,179,1,.18);color:var(--warn);font-weight:800;letter-spacing:.04em;text-transform:uppercase;display:none}
+  .dirty-badge.is-visible{display:inline-block}
 </style>
 </head>
 <body>
@@ -130,6 +142,7 @@
     <div class="tabs" id="tabs">
       <button class="tab tab--active" data-panel="promo" type="button">🔥 Акция</button>
       <button class="tab" data-panel="themes" type="button">🎨 Темы</button>
+      <button class="tab" data-panel="texts" type="button">📝 Тексты</button>
     </div>
 
     <!-- ========== PROMO PANEL ========== -->
@@ -200,6 +213,20 @@
       </div>
     </div>
 
+    <!-- ========== TEXTS PANEL ========== -->
+    <div class="panel" id="panel-texts">
+      <div class="card">
+        <h2>Тексты сайта</h2>
+        <p class="lead">Редактирование уникальных текстов главной страницы (hero, заголовки секций, подвал). Акция и карточки — в других табах.</p>
+        <div id="textsForm"></div>
+        <div class="save-bar">
+          <button class="btn" id="saveTextsBtn" type="button">Сохранить и опубликовать</button>
+          <span class="dirty-badge" id="textsDirty">Есть изменения</span>
+        </div>
+        <div class="status" id="saveTextsStatus"></div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -219,12 +246,15 @@
 
   var PROMO_PATH = 'assets/js/config.js';
   var THEMES_PATH = 'data/themes.json';
+  var CONTENT_PATH = 'data/content.json';
+  var INDEX_PATH = 'index.html';
 
   /* ---------- state ---------- */
   var S = {
     token: '',
     promo: { sha:null, config:null },
-    themes: { sha:null, data:null, editingSlot:null, editingVariant:'dark' }
+    themes: { sha:null, data:null, editingSlot:null, editingVariant:'dark' },
+    texts: { contentSha:null, content:null, indexSha:null, indexText:null, dirtyKeys:{} }
   };
 
   /* ---------- DOM refs ---------- */
@@ -361,12 +391,14 @@
     // Test by loading promo config
     loadPromoConfig()
       .then(function(){ return loadThemes(); })
+      .then(function(){ return loadContent(); })
       .then(function(){
         localStorage.setItem(PAT_KEY, token);
         gateCard.classList.add('hidden');
         appRoot.classList.remove('hidden');
         renderPromo();
         renderThemeSlots();
+        renderTextsForm();
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -693,6 +725,206 @@
         setStatus(status,'Ошибка: '+err.message,'err');
       })
       .finally(function(){ btn.disabled = false; });
+  }
+
+  /* ============================================================
+     TEXTS TAB
+     ============================================================ */
+  var SECTION_LABELS = {
+    catalog: 'Каталог',
+    upsell: 'Сопутствующие товары',
+    delivery: 'Доставка',
+    features: 'Преимущества',
+    calc: 'Калькулятор',
+    steps: 'Шаги заказа',
+    reviews: 'Отзывы',
+    seoBlock: 'О товаре (SEO-блок)',
+    faq: 'FAQ',
+    about: 'О компании',
+    gallery: 'Галерея',
+    blog: 'Блог'
+  };
+
+  // Flat definition of all editable fields
+  function buildTextFields(){
+    var fields = [
+      { group:'Главный экран (Hero)',
+        items: [
+          { key:'hero.badge',       label:'Плашка статуса (Работаем сейчас · Астана)' },
+          { key:'hero.titleHtml',   label:'Главный заголовок (HTML)', ml:true, note:'Можно &lt;br&gt;, &lt;span class="accent"&gt;…&lt;/span&gt; для цветного акцента' },
+          { key:'hero.subHtml',     label:'Подзаголовок (HTML)', ml:true },
+          { key:'hero.ctaCalc',     label:'Кнопка «Рассчитать»' },
+          { key:'hero.ctaPromo',    label:'Кнопка «Акции»' },
+          { key:'hero.hooks.0',     label:'Преимущество 1 (с иконкой)' },
+          { key:'hero.hooks.1',     label:'Преимущество 2' },
+          { key:'hero.hooks.2',     label:'Преимущество 3' },
+          { key:'hero.hooks.3',     label:'Преимущество 4' },
+          { key:'hero.priceLabel',  label:'Подпись над ценой (Цены от)' },
+          { key:'hero.priceValue',  label:'Значение цены (число)' },
+          { key:'hero.priceUnit',   label:'Единица цены (₸/м³)' },
+          { key:'hero.priceNote',   label:'Примечание под ценой' }
+        ]
+      }
+    ];
+    var sectionItems = [];
+    Object.keys(SECTION_LABELS).forEach(function(k){
+      sectionItems.push({ key:'sections.'+k+'.headingHtml', label:SECTION_LABELS[k]+' — заголовок (HTML)', note:'Выделить слово: &lt;span class="accent"&gt;слово&lt;/span&gt;' });
+      sectionItems.push({ key:'sections.'+k+'.subtitleHtml', label:SECTION_LABELS[k]+' — подзаголовок (HTML)', ml:true });
+    });
+    fields.push({ group:'Заголовки секций', items: sectionItems });
+    fields.push({ group:'Подвал',
+      items: [
+        { key:'footer.tagline',   label:'Слоган в подвале' },
+        { key:'footer.address',   label:'Адрес' },
+        { key:'footer.hours1',    label:'Часы — пн-пт' },
+        { key:'footer.hours2',    label:'Часы — сб' },
+        { key:'footer.hours3',    label:'Часы — вс' },
+        { key:'footer.copyright', label:'Копирайт' }
+      ]
+    });
+    return fields;
+  }
+
+  function loadContent(){
+    return Promise.all([
+      ghGetFile(CONTENT_PATH),
+      ghGetFile(INDEX_PATH)
+    ]).then(function(res){
+      var c = res[0], idx = res[1];
+      if (!c) throw new Error('data/content.json не найден');
+      if (!idx) throw new Error('index.html не найден');
+      S.texts.contentSha = c.sha;
+      S.texts.content = JSON.parse(c.text);
+      S.texts.indexSha = idx.sha;
+      S.texts.indexText = idx.text;
+      S.texts.dirtyKeys = {};
+    });
+  }
+
+  function getTextByKey(key){
+    var val = key.split('.').reduce(function(acc, p){
+      if (acc == null) return undefined;
+      if (/^\d+$/.test(p)) return acc[parseInt(p,10)];
+      return acc[p];
+    }, S.texts.content);
+    return val == null ? '' : String(val);
+  }
+  function setTextByKey(key, newVal){
+    var parts = key.split('.');
+    var cur = S.texts.content;
+    for (var i=0; i<parts.length-1; i++){
+      var p = parts[i];
+      if (/^\d+$/.test(p)){ var n = parseInt(p,10); if (!cur[n]) cur[n] = {}; cur = cur[n]; }
+      else { if (!cur[p]) cur[p] = {}; cur = cur[p]; }
+    }
+    var last = parts[parts.length-1];
+    if (/^\d+$/.test(last)) cur[parseInt(last,10)] = newVal;
+    else cur[last] = newVal;
+  }
+
+  function renderTextsForm(){
+    var container = $('textsForm');
+    container.innerHTML = '';
+    var groups = buildTextFields();
+    groups.forEach(function(g){
+      var h = document.createElement('div');
+      h.className = 'group-title';
+      h.textContent = g.group;
+      container.appendChild(h);
+      g.items.forEach(function(it){
+        var val = getTextByKey(it.key);
+        var field = document.createElement('div');
+        field.className = 'field';
+        var inp = it.ml
+          ? '<textarea data-texts-key="'+escapeAttr(it.key)+'">'+escapeHtml(val)+'</textarea>'
+          : '<input type="text" data-texts-key="'+escapeAttr(it.key)+'" value="'+escapeAttr(val)+'">';
+        field.innerHTML =
+          '<label>'+escapeHtml(it.label)+'</label>' + inp +
+          (it.note ? '<div class="help">'+it.note+'</div>' : '');
+        container.appendChild(field);
+      });
+    });
+    // Wire inputs
+    container.querySelectorAll('[data-texts-key]').forEach(function(el){
+      el.addEventListener('input', function(){
+        var key = el.dataset.textsKey;
+        setTextByKey(key, el.value);
+        S.texts.dirtyKeys[key] = true;
+        $('textsDirty').classList.add('is-visible');
+      });
+    });
+  }
+
+  // Escape a string for use inside a regex.
+  function escRegex(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  // Patch HTML by replacing innerContent of elements marked with data-content-key
+  // between <!-- CONTENT:key START --> and <!-- CONTENT:key END --> markers.
+  function patchIndexHtml(html, changedKeys){
+    for (var i=0; i<changedKeys.length; i++){
+      var key = changedKeys[i];
+      var val = getTextByKey(key);
+      var startMark = '<!-- CONTENT:' + key + ' START -->';
+      var endMark = '<!-- CONTENT:' + key + ' END -->';
+      var si = html.indexOf(startMark);
+      var ei = html.indexOf(endMark);
+      if (si < 0 || ei < 0){
+        console.warn('Markers not found for key', key);
+        continue;
+      }
+      var segStart = si + startMark.length;
+      var segment = html.substring(segStart, ei);
+      // Find <tag ... data-content-key="key" ...>content</tag>
+      var pattern = new RegExp(
+        '(<([a-zA-Z][a-zA-Z0-9]*)\\b[^>]*?data-content-key="' + escRegex(key) + '"[^>]*>)([\\s\\S]*?)(</\\2>)'
+      );
+      var m = pattern.exec(segment);
+      if (!m){
+        console.warn('Tag with data-content-key not found for', key);
+        continue;
+      }
+      var newSegment =
+        segment.substring(0, m.index) +
+        m[1] + val + m[4] +
+        segment.substring(m.index + m[0].length);
+      html = html.substring(0, segStart) + newSegment + html.substring(ei);
+    }
+    return html;
+  }
+
+  $('saveTextsBtn').addEventListener('click', saveTexts);
+
+  function saveTexts(){
+    var status = $('saveTextsStatus');
+    clearStatus(status);
+    var changed = Object.keys(S.texts.dirtyKeys);
+    if (changed.length === 0){
+      setStatus(status,'Нет изменений для сохранения.','warn');
+      return;
+    }
+    var btn = $('saveTextsBtn');
+    btn.disabled = true; btn.textContent = 'Сохраняем…';
+    setStatus(status,'Обновляем JSON и HTML…','warn');
+
+    var newIndex = patchIndexHtml(S.texts.indexText, changed);
+    var newJson = JSON.stringify(S.texts.content, null, 2) + '\n';
+
+    ghCommitMultiple([
+      { path: CONTENT_PATH, content: newJson },
+      { path: INDEX_PATH,   content: newIndex }
+    ], 'Admin: update texts ('+changed.length+' fields)')
+      .then(function(){ return loadContent(); })
+      .then(function(){
+        setStatus(status,'✓ Опубликовано ('+changed.length+' полей). Сайт обновится через ~1 мин.','ok');
+        $('textsDirty').classList.remove('is-visible');
+        renderTextsForm();
+      })
+      .catch(function(err){
+        setStatus(status,'Ошибка: '+err.message,'err');
+      })
+      .finally(function(){
+        btn.disabled = false; btn.textContent = 'Сохранить и опубликовать';
+      });
   }
 
 })();
