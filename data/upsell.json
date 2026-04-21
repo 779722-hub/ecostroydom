@@ -1,0 +1,48 @@
+{
+  "cards": [
+    {
+      "id": "kirpich",
+      "img": "assets/img/kirpich-zabutovka.jpg",
+      "alt": "Кирпич забутовочный — поддоны на складе в Астане",
+      "title": "Кирпич забутовочный",
+      "desc": "Рядовой полнотелый и щелевой кирпич для фундаментов, цоколя и забутовки.",
+      "pricePrefix": "от ",
+      "price": "130 ₸",
+      "priceSuffix": " / шт",
+      "btnText": "Заказать"
+    },
+    {
+      "id": "penobeton",
+      "img": "assets/img/foamcrete.jpg",
+      "alt": "Заливка пенобетоном и неопорбетоном",
+      "title": "Пенобетон",
+      "desc": "Заливка полов и крыш жидким пенобетоном. Тёплый, лёгкий слой.",
+      "pricePrefix": "от ",
+      "price": "50 000 ₸",
+      "priceSuffix": " / м³",
+      "btnText": "Заказать"
+    },
+    {
+      "id": "beton",
+      "img": "assets/img/concrete-plant.jpg",
+      "alt": "Товарный бетон с доставкой",
+      "title": "Бетон",
+      "desc": "Товарный бетон всех марок с доставкой автобетоносмесителями (от 100 м³).",
+      "pricePrefix": "от ",
+      "price": "40 000 ₸",
+      "priceSuffix": " / м³",
+      "btnText": "Заказать"
+    },
+    {
+      "id": "thermopanel",
+      "img": "assets/img/thermopanel.jpg",
+      "alt": "Стеновые термопанели",
+      "title": "Термопанели",
+      "desc": "Фасадный декор из пеноплекса с покрытием под травертин.",
+      "pricePrefix": "от ",
+      "price": "15 000 ₸",
+      "priceSuffix": "/м² (комплект)",
+      "btnText": "Заказать"
+    }
+  ]
+}
