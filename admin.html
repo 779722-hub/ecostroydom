@@ -145,6 +145,20 @@
   .save-bar{position:sticky;bottom:0;background:linear-gradient(180deg,transparent 0,var(--surface) 30%);padding:14px 0 2px;margin-top:18px;display:flex;gap:10px;align-items:center}
   .dirty-badge{font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(245,179,1,.18);color:var(--warn);font-weight:800;letter-spacing:.04em;text-transform:uppercase;display:none}
   .dirty-badge.is-visible{display:inline-block}
+
+  /* Prices tab */
+  .price-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mint);margin:18px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .price-section-title:first-child{margin-top:0}
+  .price-row{display:grid;grid-template-columns:40px 1fr 130px 130px;gap:10px;align-items:center;padding:7px 8px;background:var(--bg);border:1px solid var(--line);border-radius:6px;margin-bottom:5px}
+  .price-row__img{width:32px;height:32px;border-radius:5px;background:var(--surface-2);background-size:cover;background-position:center}
+  .price-row__name{font-size:13px;font-weight:600;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .price-row__name small{display:block;color:var(--muted);font-weight:400;font-size:11px;margin-top:1px}
+  .price-row input{padding:7px 9px;font-size:13px;text-align:right}
+  .price-row input::placeholder{color:var(--muted);font-style:italic;font-size:12px}
+  @media(max-width:620px){
+    .price-row{grid-template-columns:40px 1fr;grid-row-gap:6px}
+    .price-row input{grid-column:1/-1}
+  }
 </style>
 </head>
 <body>
@@ -179,6 +193,7 @@
       <button class="tab" data-panel="themes" type="button">🎨 Темы</button>
       <button class="tab" data-panel="texts" type="button">📝 Тексты</button>
       <button class="tab" data-panel="cards" type="button">📦 Карточки</button>
+      <button class="tab" data-panel="prices" type="button">💰 Цены</button>
     </div>
 
     <!-- ========== PROMO PANEL ========== -->
@@ -260,6 +275,20 @@
           <span class="dirty-badge" id="textsDirty">Есть изменения</span>
         </div>
         <div class="status" id="saveTextsStatus"></div>
+      </div>
+    </div>
+
+    <!-- ========== PRICES PANEL ========== -->
+    <div class="panel" id="panel-prices">
+      <div class="card">
+        <h2>Цены — массовое редактирование</h2>
+        <p class="lead">Все цены из каталога, сопутствующих товаров и доставки в одном месте. При сохранении обновятся соответствующие JSON и HTML.</p>
+        <div id="pricesList"></div>
+        <div class="save-bar">
+          <button class="btn" id="savePricesBtn" type="button">Сохранить и опубликовать</button>
+          <span class="dirty-badge" id="pricesDirty">Есть изменения</span>
+        </div>
+        <div class="status" id="savePricesStatus"></div>
       </div>
     </div>
 
@@ -675,7 +704,8 @@
     steps: { sha:null, data:null, editingIndex:null, dirty:false },
     faq: { sha:null, data:null, editingIndex:null, dirty:false },
     gallery: { sha:null, data:null, editingIndex:null, dirty:false },
-    tst: { sha:null, data:null, editingCol:null, editingIndex:null, dirty:false }
+    tst: { sha:null, data:null, editingCol:null, editingIndex:null, dirty:false },
+    prices: { dirty: false }
   };
 
   /* ---------- DOM refs ---------- */
@@ -837,6 +867,7 @@
         renderSimpleList('gallery');
         renderTestimonialsList();
         renderTstDurations();
+        renderPricesPanel();
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -1984,6 +2015,123 @@
       })
       .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); });
   }
+
+  /* ============================================================
+     PRICES TAB (aggregated from catalog + upsell + delivery)
+     ============================================================ */
+  function markPricesDirty(){
+    S.prices.dirty = true;
+    document.getElementById('pricesDirty').classList.add('is-visible');
+  }
+
+  function renderPricesPanel(){
+    var root = document.getElementById('pricesList');
+    root.innerHTML = '';
+
+    var sections = [
+      { title:'Каталог (регулярная цена · акционная)', type:'catalog', cards:(S.catalog.data && S.catalog.data.cards)||[], hasPromo:true },
+      { title:'Сопутствующие товары', type:'upsell', cards:(S.upsell.data && S.upsell.data.cards)||[], hasPromo:false },
+      { title:'Доставка', type:'delivery', cards:(S.delivery.data && S.delivery.data.cards)||[], hasPromo:false }
+    ];
+
+    sections.forEach(function(sec){
+      if (!sec.cards.length) return;
+      var h = document.createElement('div');
+      h.className = 'price-section-title';
+      h.textContent = sec.title;
+      root.appendChild(h);
+
+      sec.cards.forEach(function(c, i){
+        var row = document.createElement('div');
+        row.className = 'price-row';
+        var imgUrl = c.img ? '/' + c.img : '';
+        var subtitle = c.size || c.priceUnit || '';
+        row.innerHTML =
+          '<div class="price-row__img" style="background-image:url(\''+escapeAttr(imgUrl)+'\')"></div>' +
+          '<div class="price-row__name">'+escapeHtml(c.title||'')+
+            (subtitle ? '<small>'+escapeHtml(subtitle)+'</small>' : '')+'</div>' +
+          '<input type="text" data-price="'+sec.type+':'+i+':price" value="'+escapeAttr(c.price||'')+'" placeholder="Цена">' +
+          (sec.hasPromo
+            ? '<input type="text" data-price="'+sec.type+':'+i+':promoPrice" value="'+escapeAttr(c.promoPrice||'')+'" placeholder="По акции (опц.)">'
+            : '<span></span>');
+        root.appendChild(row);
+      });
+    });
+
+    // Wire inputs
+    root.querySelectorAll('input[data-price]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        var parts = inp.dataset.price.split(':');
+        var type = parts[0], idx = parseInt(parts[1],10), field = parts[2];
+        S[type].data.cards[idx][field] = inp.value;
+        S[type].dirty = true;
+        markPricesDirty();
+      });
+    });
+  }
+
+  document.getElementById('savePricesBtn').addEventListener('click', function(){
+    var status = document.getElementById('savePricesStatus');
+    clearStatus(status);
+    if (!S.prices.dirty){ setStatus(status,'Нет изменений.','warn'); return; }
+
+    var btn = document.getElementById('savePricesBtn');
+    btn.disabled = true; btn.textContent = 'Сохраняем…';
+    setStatus(status,'Собираем изменения…','warn');
+
+    var getIdx = S.texts.indexText
+      ? Promise.resolve({ text: S.texts.indexText, sha: S.texts.indexSha })
+      : ghGetFile(INDEX_PATH);
+
+    getIdx.then(function(idx){
+      if (!idx) throw new Error('index.html не найден');
+
+      // Patch each affected section
+      var html = idx.text;
+      var files = [];
+      var sectionsChanged = [];
+
+      if (S.catalog.dirty){
+        html = patchCatalogInHtml(html);
+        files.push({ path: CATALOG_PATH, content: JSON.stringify(S.catalog.data, null, 2) + '\n' });
+        sectionsChanged.push('каталог');
+      }
+      if (S.upsell.dirty){
+        html = patchSimpleInHtml(html, 'upsell');
+        files.push({ path: UPSELL_PATH, content: JSON.stringify(S.upsell.data, null, 2) + '\n' });
+        sectionsChanged.push('сопутствующие');
+      }
+      if (S.delivery.dirty){
+        html = patchSimpleInHtml(html, 'delivery');
+        files.push({ path: DELIVERY_PATH, content: JSON.stringify(S.delivery.data, null, 2) + '\n' });
+        sectionsChanged.push('доставка');
+      }
+      files.push({ path: INDEX_PATH, content: html });
+
+      setStatus(status, 'Публикуем: ' + sectionsChanged.join(', ') + '…', 'warn');
+
+      return ghCommitMultiple(files, 'Admin: bulk prices update ('+sectionsChanged.join(', ')+')');
+    })
+      .then(function(){
+        return Promise.all([
+          S.catalog.dirty ? loadCatalog() : Promise.resolve(),
+          S.upsell.dirty ? loadSimpleSection('upsell') : Promise.resolve(),
+          S.delivery.dirty ? loadSimpleSection('delivery') : Promise.resolve(),
+          loadContent()
+        ]);
+      })
+      .then(function(){
+        setStatus(status,'✓ Опубликовано. Сайт обновится через ~1 мин.','ok');
+        S.prices.dirty = false;
+        document.getElementById('pricesDirty').classList.remove('is-visible');
+        // Clear dirty flags on sub-sections (since changes saved)
+        S.catalog.dirty = false; S.upsell.dirty = false; S.delivery.dirty = false;
+        renderPricesPanel();
+        renderCatalogList(); renderSimpleList('upsell'); renderSimpleList('delivery');
+      })
+      .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); })
+      .finally(function(){ btn.disabled = false; btn.textContent = 'Сохранить и опубликовать'; });
+  });
 
   /* ============================================================
      TESTIMONIALS TAB (3 columns × N items each)
