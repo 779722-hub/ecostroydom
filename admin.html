@@ -277,6 +277,7 @@
           <button class="subtab" data-sub="steps" type="button">Шаги</button>
           <button class="subtab" data-sub="faq" type="button">FAQ</button>
           <button class="subtab" data-sub="gallery" type="button">Галерея</button>
+          <button class="subtab" data-sub="testimonials" type="button">Отзывы</button>
         </div>
 
         <div class="subpanel subpanel--active" id="subpanel-catalog">
@@ -532,6 +533,62 @@
           <div class="status" id="saveStepsStatus"></div>
         </div>
 
+        <!-- TESTIMONIALS SUBPANEL -->
+        <div class="subpanel" id="subpanel-testimonials">
+          <div class="help-text" style="margin-bottom:10px">Отзывы распределены по 3 колонкам. Каждая колонка движется с бесконечным скроллом снизу вверх. При редактировании можно выбрать, в какую колонку поместить отзыв.</div>
+
+          <div class="card-list" id="testimonialsList"></div>
+          <button class="add-card-btn" id="addTestimonialBtn" type="button">+ Добавить отзыв</button>
+
+          <div class="card-editor" id="testimonialsEditor">
+            <button class="close" data-closetst="1" type="button">×</button>
+            <h3 id="testimonialsEditorTitle">Редактирование отзыва</h3>
+            <div class="row">
+              <div>
+                <label>Колонка</label>
+                <select id="tstCol" style="width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;font-size:14px">
+                  <option value="0">Колонка 1</option>
+                  <option value="1">Колонка 2</option>
+                  <option value="2">Колонка 3</option>
+                </select>
+              </div>
+              <div>
+                <label>Рейтинг (4.0–5.0)</label>
+                <input type="number" id="tstRate" min="1" max="5" step="0.1" placeholder="4.9">
+              </div>
+            </div>
+            <label>Имя клиента</label>
+            <input type="text" id="tstName" placeholder="Артём Л.">
+            <label>Город / локация</label>
+            <input type="text" id="tstLocation" placeholder="Астана">
+            <label>Текст отзыва</label>
+            <textarea id="tstText" rows="4" placeholder="Менеджеры отзывчивые, ответили в WhatsApp за 10 минут..."></textarea>
+            <label>Аватар (путь от корня)</label>
+            <input type="text" id="tstAvatar" placeholder="assets/img/avatars/artem.jpg">
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" id="applyTstBtn" type="button">Применить</button>
+              <button class="btn btn--ghost" data-closetst="1" type="button">Отмена</button>
+            </div>
+          </div>
+
+          <details style="margin-top:16px">
+            <summary>Настройки колонок (скорость скролла)</summary>
+            <div class="row" style="margin-top:10px">
+              <div><label>Колонка 1 (секунды)</label><input type="text" id="tstDur0" placeholder="38s"></div>
+              <div><label>Колонка 2 (секунды)</label><input type="text" id="tstDur1" placeholder="46s"></div>
+            </div>
+            <label>Колонка 3 (секунды)</label>
+            <input type="text" id="tstDur2" placeholder="32s">
+            <div class="help-text">Чем больше секунд — тем медленнее крутится колонка. По умолчанию разные значения дают «живость».</div>
+          </details>
+
+          <div class="save-bar">
+            <button class="btn" id="saveTstBtn" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="tstDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveTstStatus"></div>
+        </div>
+
         <!-- DELIVERY SUBPANEL -->
         <div class="subpanel" id="subpanel-delivery">
           <div class="card-list" id="deliveryList"></div>
@@ -603,6 +660,7 @@
   var STEPS_PATH = 'data/steps.json';
   var FAQ_PATH = 'data/faq.json';
   var GALLERY_PATH = 'data/gallery.json';
+  var TST_PATH = 'data/testimonials.json';
 
   /* ---------- state ---------- */
   var S = {
@@ -616,7 +674,8 @@
     features: { sha:null, data:null, editingIndex:null, dirty:false },
     steps: { sha:null, data:null, editingIndex:null, dirty:false },
     faq: { sha:null, data:null, editingIndex:null, dirty:false },
-    gallery: { sha:null, data:null, editingIndex:null, dirty:false }
+    gallery: { sha:null, data:null, editingIndex:null, dirty:false },
+    tst: { sha:null, data:null, editingCol:null, editingIndex:null, dirty:false }
   };
 
   /* ---------- DOM refs ---------- */
@@ -761,6 +820,7 @@
       .then(function(){ return loadSimpleSection('steps'); })
       .then(function(){ return loadSimpleSection('faq'); })
       .then(function(){ return loadSimpleSection('gallery'); })
+      .then(function(){ return loadTestimonials(); })
       .then(function(){
         localStorage.setItem(PAT_KEY, token);
         gateCard.classList.add('hidden');
@@ -775,6 +835,8 @@
         renderSimpleList('steps');
         renderSimpleList('faq');
         renderSimpleList('gallery');
+        renderTestimonialsList();
+        renderTstDurations();
       })
       .catch(function(err){
         setStatus(gateStatus, 'Ошибка: ' + err.message, 'err');
@@ -1922,6 +1984,230 @@
       })
       .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); });
   }
+
+  /* ============================================================
+     TESTIMONIALS TAB (3 columns × N items each)
+     ============================================================ */
+  function loadTestimonials(){
+    return ghGetFile(TST_PATH).then(function(f){
+      if (!f) throw new Error('data/testimonials.json не найден');
+      S.tst.sha = f.sha;
+      S.tst.data = JSON.parse(f.text);
+      if (!S.tst.data.columns) S.tst.data.columns = [];
+      while (S.tst.data.columns.length < 3){
+        S.tst.data.columns.push({ duration: '40s', items: [] });
+      }
+      S.tst.dirty = false;
+    });
+  }
+
+  function renderTstDurations(){
+    ['tstDur0','tstDur1','tstDur2'].forEach(function(id, i){
+      var el = document.getElementById(id);
+      if (el){
+        el.value = (S.tst.data.columns[i] && S.tst.data.columns[i].duration) || '';
+        el.oninput = function(){
+          S.tst.data.columns[i].duration = el.value;
+          markTstDirty();
+        };
+      }
+    });
+  }
+
+  function renderTestimonialsList(){
+    var list = document.getElementById('testimonialsList');
+    list.innerHTML = '';
+    // Flatten: each entry knows its column
+    var allItems = [];
+    S.tst.data.columns.forEach(function(col, ci){
+      (col.items || []).forEach(function(it, ii){
+        allItems.push({ col: ci, idx: ii, item: it });
+      });
+    });
+    if (!allItems.length){
+      list.innerHTML = '<div class="muted" style="text-align:center;padding:20px">Нет отзывов</div>';
+      return;
+    }
+    allItems.forEach(function(e){
+      var row = document.createElement('div');
+      row.className = 'card-row';
+      var avatarUrl = e.item.avatar ? '/' + e.item.avatar : '';
+      var preview = (e.item.text || '').substring(0, 70) + ((e.item.text||'').length>70?'…':'');
+      row.innerHTML =
+        '<div class="card-row__img" style="background-image:url(\''+escapeAttr(avatarUrl)+'\');border-radius:50%"></div>' +
+        '<div class="card-row__main">' +
+          '<div class="card-row__title">'+escapeHtml(e.item.name || '(без имени)')+' · '+escapeHtml(e.item.location||'')+' <small style="color:var(--muted);font-weight:normal">· Колонка '+(e.col+1)+' · '+(e.item.rate||'5.0')+'★</small></div>' +
+          '<div class="card-row__meta">'+escapeHtml(preview)+'</div>' +
+        '</div>' +
+        '<div class="card-row__actions">' +
+          '<button type="button" data-tst-act="edit" data-col="'+e.col+'" data-idx="'+e.idx+'">Редакт.</button>' +
+          '<button type="button" data-tst-act="up"   data-col="'+e.col+'" data-idx="'+e.idx+'">↑</button>' +
+          '<button type="button" data-tst-act="down" data-col="'+e.col+'" data-idx="'+e.idx+'">↓</button>' +
+          '<button type="button" class="del" data-tst-act="del" data-col="'+e.col+'" data-idx="'+e.idx+'">Удалить</button>' +
+        '</div>';
+      row.querySelectorAll('[data-tst-act]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var ci = +b.dataset.col, ii = +b.dataset.idx, act = b.dataset.tstAct;
+          if (act === 'edit') openTestimonialEditor(ci, ii);
+          else if (act === 'del') deleteTestimonial(ci, ii);
+          else if (act === 'up')   moveTestimonial(ci, ii, -1);
+          else if (act === 'down') moveTestimonial(ci, ii, +1);
+        });
+      });
+      list.appendChild(row);
+    });
+  }
+
+  function markTstDirty(){
+    S.tst.dirty = true;
+    document.getElementById('tstDirty').classList.add('is-visible');
+  }
+
+  function moveTestimonial(ci, ii, delta){
+    var items = S.tst.data.columns[ci].items;
+    var j = ii + delta;
+    if (j < 0 || j >= items.length) return;
+    var tmp = items[ii]; items[ii] = items[j]; items[j] = tmp;
+    markTstDirty(); renderTestimonialsList();
+  }
+  function deleteTestimonial(ci, ii){
+    var it = S.tst.data.columns[ci].items[ii];
+    if (!confirm('Удалить отзыв «'+(it.name||'?')+'»?')) return;
+    S.tst.data.columns[ci].items.splice(ii, 1);
+    markTstDirty(); renderTestimonialsList();
+  }
+
+  function openTestimonialEditor(ci, ii){
+    S.tst.editingCol = ci;
+    S.tst.editingIndex = ii;
+    var isNew = (ii === -1);
+    var it = isNew ? { id:'', text:'', rate:5.0, name:'', location:'', avatar:'' } : S.tst.data.columns[ci].items[ii];
+    document.getElementById('testimonialsEditorTitle').textContent = isNew ? 'Новый отзыв' : 'Редактирование: ' + (it.name||'');
+    document.getElementById('tstCol').value = String(ci);
+    document.getElementById('tstRate').value = it.rate || 5.0;
+    document.getElementById('tstName').value = it.name || '';
+    document.getElementById('tstLocation').value = it.location || '';
+    document.getElementById('tstText').value = it.text || '';
+    document.getElementById('tstAvatar').value = it.avatar || '';
+    var ed = document.getElementById('testimonialsEditor');
+    ed.classList.add('is-visible');
+    ed.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function closeTestimonialEditor(){
+    S.tst.editingCol = null;
+    S.tst.editingIndex = null;
+    document.getElementById('testimonialsEditor').classList.remove('is-visible');
+  }
+
+  document.getElementById('addTestimonialBtn').addEventListener('click', function(){
+    openTestimonialEditor(0, -1);
+  });
+  document.body.addEventListener('click', function(e){
+    if (e.target.dataset.closetst) closeTestimonialEditor();
+  });
+  document.getElementById('applyTstBtn').addEventListener('click', function(){
+    var origCol = S.tst.editingCol;
+    var idx = S.tst.editingIndex;
+    var isNew = (idx === -1);
+    var newCol = parseInt(document.getElementById('tstCol').value, 10);
+    var it = {
+      id: isNew ? ('tst-'+Date.now().toString(36)) : (S.tst.data.columns[origCol].items[idx].id || 'tst-'+Date.now().toString(36)),
+      text: document.getElementById('tstText').value.trim(),
+      rate: parseFloat(document.getElementById('tstRate').value) || 5.0,
+      name: document.getElementById('tstName').value.trim(),
+      location: document.getElementById('tstLocation').value.trim(),
+      avatar: document.getElementById('tstAvatar').value.trim()
+    };
+    if (!it.name || !it.text){ alert('Заполните имя и текст отзыва'); return; }
+    if (isNew){
+      S.tst.data.columns[newCol].items.push(it);
+    } else {
+      if (newCol === origCol) {
+        S.tst.data.columns[origCol].items[idx] = it;
+      } else {
+        S.tst.data.columns[origCol].items.splice(idx, 1);
+        S.tst.data.columns[newCol].items.push(it);
+      }
+    }
+    markTstDirty(); renderTestimonialsList(); closeTestimonialEditor();
+  });
+
+  function buildStars(rate){
+    var full = Math.floor(rate);
+    var half = (rate - full) >= 0.5;
+    return '★'.repeat(Math.min(5, full)) + (half ? '½' : '');
+  }
+
+  function buildTestimonialArticleHtml(it, isDup){
+    var stars = buildStars(it.rate || 5);
+    var rateStr = (Math.round((it.rate||5)*10)/10).toFixed(1);
+    return '<article class="testimonial"' + (isDup?' aria-hidden="true"':'') + '>' +
+      '<p class="testimonial__text">«'+it.text+'»</p>' +
+      '<div class="testimonial__rate"><span class="testimonial__stars">'+stars+'</span><span class="testimonial__rate-num">'+rateStr+'</span></div>' +
+      '<div class="testimonial__author">' +
+        '<img src="'+escapeAttr(it.avatar||'')+'"'+(isDup?'':' alt="'+escapeAttr(it.name||'')+'"')+' width="40" height="40" class="testimonial__avatar" loading="lazy">' +
+        '<div class="testimonial__meta"><b>'+(it.name||'')+'</b><span>'+(it.location||'')+'</span></div>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function buildTestimonialsContainerHtml(){
+    var cols = S.tst.data.columns;
+    var colModifiers = ['', ' testimonials__col--md', ' testimonials__col--lg'];
+    var parts = cols.map(function(col, i){
+      var original = (col.items||[]).map(function(it){ return '          ' + buildTestimonialArticleHtml(it, false); }).join('\n');
+      var duplicated = (col.items||[]).map(function(it){ return '          ' + buildTestimonialArticleHtml(it, true); }).join('\n');
+      return '      <div class="testimonials__col'+colModifiers[i]+'">\n' +
+        '        <div class="testimonials__track" style="--tt-duration:'+(col.duration||'40s')+'">\n' +
+        original + '\n' + duplicated + '\n' +
+        '        </div>\n' +
+        '      </div>';
+    }).join('\n');
+    return '<div class="testimonials reveal">\n' + parts + '\n    </div>';
+  }
+
+  function patchTestimonialsInHtml(html){
+    var startMark = '<!-- CARDS:testimonials START -->';
+    var endMark = '<!-- CARDS:testimonials END -->';
+    var si = html.indexOf(startMark);
+    var ei = html.indexOf(endMark);
+    if (si < 0 || ei < 0) throw new Error('Маркеры CARDS:testimonials не найдены');
+    var before = html.substring(0, si + startMark.length);
+    var after = html.substring(ei);
+    return before + '\n    ' + buildTestimonialsContainerHtml() + '\n    ' + after;
+  }
+
+  document.getElementById('saveTstBtn').addEventListener('click', function(){
+    var status = document.getElementById('saveTstStatus');
+    clearStatus(status);
+    if (!S.tst.dirty){ setStatus(status,'Нет изменений.','warn'); return; }
+    var btn = document.getElementById('saveTstBtn');
+    btn.disabled = true; btn.textContent = 'Сохраняем…';
+    setStatus(status,'Обновляем JSON и HTML…','warn');
+
+    var getIdx = S.texts.indexText
+      ? Promise.resolve({ text: S.texts.indexText, sha: S.texts.indexSha })
+      : ghGetFile(INDEX_PATH);
+
+    getIdx.then(function(idx){
+      if (!idx) throw new Error('index.html не найден');
+      var newIndex = patchTestimonialsInHtml(idx.text);
+      var newJson = JSON.stringify(S.tst.data, null, 2) + '\n';
+      return ghCommitMultiple([
+        { path: TST_PATH, content: newJson },
+        { path: INDEX_PATH, content: newIndex }
+      ], 'Admin: update testimonials');
+    })
+      .then(function(){ return Promise.all([loadTestimonials(), loadContent()]); })
+      .then(function(){
+        setStatus(status,'✓ Опубликовано. Сайт обновится через ~1 мин.','ok');
+        document.getElementById('tstDirty').classList.remove('is-visible');
+        renderTestimonialsList(); renderTstDurations();
+      })
+      .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); })
+      .finally(function(){ btn.disabled = false; btn.textContent = 'Сохранить и опубликовать'; });
+  });
 
   // Wire add buttons for all simple sections
   document.getElementById('addUpsellBtn').addEventListener('click', function(){ openSimpleEditor('upsell', -1); });
