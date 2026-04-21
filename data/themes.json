@@ -1,5 +1,5 @@
 {
-  "active": "slot2",
+  "active": "slot1",
   "slots": {
     "slot1": {
       "name": "Синий (текущий)",
@@ -51,7 +51,7 @@
         "textMuted": "rgba(255,255,255,0.5)",
         "line": "rgba(255,255,255,0.08)",
         "lineSoft": "rgba(255,255,255,0.05)",
-        "accentLight": "rgba(37,99,235,0.12)",
+        "accentLight": "#e37878",
         "accentGlow": "#d27474"
       },
       "light": {
