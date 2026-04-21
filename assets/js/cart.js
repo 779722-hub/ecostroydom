@@ -62,7 +62,6 @@ function getPromoConditions(){
   var parts=[];
   if(cfg.title)parts.push(cfg.title);
   if(cfg.desc)parts.push(cfg.desc);
-  if(cfg.bonus)parts.push('🎁 '+cfg.bonus);
   return parts.join(' · ');
 }
 
@@ -170,9 +169,7 @@ function renderCart(){
     var withGlue=gc&&gc.checked;
     msg+='%0A💰 Итого блок: '+fmt(totalCost)+' ₸';
     if(promoFlag){
-      var cfg=window.PROMO_CONFIG||{};
       msg+='%0A⚡ Применена акция';
-      if(cfg.bonus)msg+=': '+encodeURIComponent(cfg.bonus);
     }
     if(withGlue) msg+='%0A🧱 Клей: ~'+totalGlue+' мешков (~'+fmt(totalGlue*1800)+' ₸)';
     msg+='%0A📦 Залог поддоны (возвр.): '+fmt(totalDep)+' ₸';
