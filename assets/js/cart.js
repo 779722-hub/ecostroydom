@@ -98,33 +98,48 @@ function renderCart(){
   var body=document.getElementById('cartBody'),footer=document.getElementById('cartFooter');if(!body)return;
   if(!cart.length){body.innerHTML='<p style="text-align:center;color:var(--muted);padding:40px 0">Корзина пуста</p>';footer.innerHTML='';return;}
 
-  var html='',totalCost=0,totalDep=0,totalGlue=0,anyPromo=false;
+  var html='',totalCost=0,totalDep=0,totalGlue=0,totalBlockVol=0,anyPromo=false;
   cart.forEach(function(item,i){
+    var unit=item.qtyUnit||'подд.';
+    var isPalletized=(unit==='подд.');
     var p=PALLETS[item.thick]||PALLETS['300'];
-    var vol=item.pallets*p.vol;var blocks=item.pallets*p.blocks;
     var effPrice=item.usePromo&&item.promoPrice?item.promoPrice:item.price;
-    var cost=Math.round(vol*effPrice);
-    var dep=item.pallets*DEPOSIT;var glue=Math.ceil(vol*GLUE);
-    totalCost+=cost;totalDep+=dep;totalGlue+=glue;
+    var vol=0,blocks=0,cost=0,glueHint=0,regCost=0;
+    if(isPalletized){
+      vol=item.pallets*p.vol;
+      blocks=item.pallets*p.blocks;
+      cost=Math.round(vol*effPrice);
+      regCost=Math.round(vol*item.price);
+      glueHint=Math.ceil(vol*GLUE);
+      totalDep+=item.pallets*DEPOSIT;
+      totalGlue+=glueHint;
+      totalBlockVol+=vol;
+    } else {
+      // Unit-priced item (мешки, шт, кг): cost = qty × price
+      cost=Math.round(item.pallets*effPrice);
+      regCost=Math.round(item.pallets*item.price);
+    }
+    totalCost+=cost;
     if(item.usePromo)anyPromo=true;
 
     var promoLine='';
     if(item.promoPrice){
-      var regLine=item.usePromo?('<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(vol*item.price)+' ₸</small>'):'';
       promoLine='<label class="cart-item__promo">'+
         '<input type="checkbox" data-promo-toggle="'+i+'"'+(item.usePromo?' checked':'')+'>'+
-        '<span>По акции — '+fmt(item.promoPrice)+' ₸'+(item.size?'/м³':'')+'</span>'+
-        '<b>'+(item.usePromo?'−'+fmt((item.price-item.promoPrice)*vol)+' ₸':'')+'</b>'+
+        '<span>По акции — '+fmt(item.promoPrice)+' ₸'+(isPalletized?'/м³':'')+'</span>'+
+        '<b>'+(item.usePromo?'−'+fmt(regCost-cost)+' ₸':'')+'</b>'+
         '</label>';
     }
 
-    var unit=item.qtyUnit||'подд.';
+    var volLine=isPalletized
+      ? '<p>'+item.pallets+' '+esc(unit)+' × '+p.vol+' м³ = '+vol.toFixed(2)+' м³ ('+blocks+' шт)</p><p>Клей: ~'+glueHint+' мешков</p>'
+      : '<p>'+item.pallets+' '+esc(unit)+'</p>';
+
     html+='<div class="cart-item"><img src="'+esc(item.img)+'" alt="">'+
       '<div class="cart-item__info"><h4>'+esc(item.title)+'</h4>'+
       '<p>'+esc(item.size)+'</p>'+
-      '<p>'+item.pallets+' '+esc(unit)+' × '+p.vol+' м³ = '+vol.toFixed(2)+' м³ ('+blocks+' шт)</p>'+
-      '<p>Клей: ~'+glue+' мешков</p>'+
-      '<p style="color:var(--accent);font-weight:600">'+(item.usePromo?'<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(vol*item.price)+' ₸</small>':'')+fmt(cost)+' ₸</p>'+
+      volLine+
+      '<p style="color:var(--accent);font-weight:600">'+(item.usePromo?'<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(regCost)+' ₸</small>':'')+fmt(cost)+' ₸</p>'+
       promoLine+
       '<div class="cart-item__qty">'+
         '<button data-minus="'+i+'">−</button>'+
@@ -203,13 +218,22 @@ function renderCart(){
     var msg='Заказ с ecostroydom.kz%0A%0A👤 '+encodeURIComponent(name)+'%0A📞 '+encodeURIComponent(phone)+'%0A📍 '+encodeURIComponent(addr)+'%0A%0A📦 Товары:%0A';
     var promoFlag=false;
     cart.forEach(function(item){
+      var unit=item.qtyUnit||'подд.';
+      var isPalletized=(unit==='подд.');
       var p=PALLETS[item.thick]||PALLETS['300'];
-      var vol=item.pallets*p.vol;
       var effPrice=item.usePromo&&item.promoPrice?item.promoPrice:item.price;
       var promoMark=item.usePromo?' ⚡АКЦИЯ':'';
-      var unit=item.qtyUnit||'подд.';
       if(item.usePromo)promoFlag=true;
-      msg+='• '+encodeURIComponent(item.title)+' '+encodeURIComponent(item.size)+': '+item.pallets+' '+encodeURIComponent(unit)+' ('+vol.toFixed(2)+' м³) = '+fmt(Math.round(vol*effPrice))+' ₸'+encodeURIComponent(promoMark)+'%0A';
+      var lineCost, metaStr;
+      if(isPalletized){
+        var vol=item.pallets*p.vol;
+        lineCost=Math.round(vol*effPrice);
+        metaStr=item.pallets+' '+unit+' ('+vol.toFixed(2)+' м³)';
+      } else {
+        lineCost=Math.round(item.pallets*effPrice);
+        metaStr=item.pallets+' '+unit;
+      }
+      msg+='• '+encodeURIComponent(item.title)+' '+encodeURIComponent(item.size)+': '+encodeURIComponent(metaStr)+' = '+fmt(lineCost)+' ₸'+encodeURIComponent(promoMark)+'%0A';
     });
     var gc=document.getElementById('cartGlueCheck');
     var withGlue=gc&&gc.checked;
