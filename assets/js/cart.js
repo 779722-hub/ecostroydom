@@ -58,6 +58,34 @@ function showBadge(){
 }
 
 function stripTags(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();}
+
+// Read клей card pricing from DOM (so admin price changes are picked up).
+function getGlueData(){
+  var out={price:1900,promoPrice:0};
+  var cards=document.querySelectorAll('#catalog .card');
+  for(var i=0;i<cards.length;i++){
+    var h=cards[i].querySelector('h3');
+    if(!h)continue;
+    if(!/клей/i.test(h.textContent))continue;
+    var pb=cards[i].querySelector('.card__price b');
+    if(pb)out.price=parsePriceNum(pb.textContent)||out.price;
+    var pwrap=cards[i].querySelector('.card__price');
+    if(pwrap){
+      var pp=pwrap.getAttribute('data-promo-price');
+      if(pp)out.promoPrice=parsePriceNum(pp);
+    }
+    if(!out.promoPrice){
+      var pp2=cards[i].querySelector('.card__price-promo b');
+      if(pp2)out.promoPrice=parsePriceNum(pp2.textContent);
+    }
+    break;
+  }
+  return out;
+}
+function cartHasGlue(){
+  return cart.some(function(it){ return /клей/i.test(it.title||''); });
+}
+
 function getPromoConditions(){
   var cfg=window.PROMO_CONFIG||{};
   var parts=[];
@@ -108,13 +136,30 @@ function renderCart(){
   body.innerHTML=html;
 
   var glueChecked=footer.querySelector('#cartGlueCheck');
-  var includeGlue=glueChecked?glueChecked.checked:false;
-  var glueCost=includeGlue?totalGlue*1800:0;
+  var glueData=getGlueData();
+  var hasGlueCard=cartHasGlue();
+  // "клей по акции" unlocked only if any блок usePromo AND klej has a promoPrice set in admin
+  var gluePromoUnlocked=anyPromo && !!glueData.promoPrice;
+  var glueUnitPrice=gluePromoUnlocked?glueData.promoPrice:glueData.price;
+  var includeGlue=(!hasGlueCard) && (glueChecked?glueChecked.checked:false);
+  var glueCost=includeGlue?totalGlue*glueUnitPrice:0;
 
   var conditionsBlock='';
   if(anyPromo){
     var cond=getPromoConditions();
     if(cond)conditionsBlock='<div class="cart-promo-conditions"><b>⚡ Условия акции</b>'+esc(cond)+'</div>';
+  }
+
+  // Glue checkbox only if клей NOT already manually added
+  var glueCheckboxHtml='';
+  if(!hasGlueCard){
+    var glueLabel=gluePromoUnlocked
+      ? 'Добавить клей по акции (~'+totalGlue+' мешков)'
+      : 'Добавить клей (~'+totalGlue+' мешков)';
+    var glueCostHtml=gluePromoUnlocked
+      ? '<small style="text-decoration:line-through;color:var(--muted);margin-right:4px">'+fmt(totalGlue*glueData.price)+' ₸</small><b>~'+fmt(totalGlue*glueUnitPrice)+' ₸</b>'
+      : '<b>~'+fmt(totalGlue*glueUnitPrice)+' ₸</b>';
+    glueCheckboxHtml='<label style="display:flex;align-items:center;gap:8px;padding:8px 0;cursor:pointer"><input type="checkbox" id="cartGlueCheck" '+(includeGlue?'checked':'')+' style="width:auto;accent-color:var(--accent)"> <span>'+esc(glueLabel)+'</span>'+glueCostHtml+'</label>';
   }
 
   footer.innerHTML=
@@ -123,7 +168,7 @@ function renderCart(){
     '<div style="font-size:13px;display:flex;flex-direction:column;gap:6px;margin-bottom:12px">'+
     '<div style="display:flex;justify-content:space-between"><span>Блок:</span><b>'+fmt(totalCost)+' ₸</b></div>'+
     '<div style="display:flex;justify-content:space-between"><span>Залог поддоны (возвр.):</span><b>'+fmt(totalDep)+' ₸</b></div>'+
-    '<label style="display:flex;align-items:center;gap:8px;padding:8px 0;cursor:pointer"><input type="checkbox" id="cartGlueCheck" '+(includeGlue?'checked':'')+' style="width:auto;accent-color:var(--accent)"> <span>Добавить клей (~'+totalGlue+' мешков)</span><b>~'+fmt(totalGlue*1800)+' ₸</b></label>'+
+    glueCheckboxHtml+
     '<div style="display:flex;justify-content:space-between;font-size:16px;padding-top:8px;border-top:1px solid var(--border)"><span>Итого:</span><b style="color:var(--accent)">'+fmt(totalCost+glueCost)+' ₸</b></div></div>'+
     '<div class="cart-checkout" id="cartCheckout">'+
     '<input id="cartName" placeholder="Ваше имя *">'+
@@ -172,7 +217,11 @@ function renderCart(){
     if(promoFlag){
       msg+='%0A⚡ Применена акция';
     }
-    if(withGlue) msg+='%0A🧱 Клей: ~'+totalGlue+' мешков (~'+fmt(totalGlue*1800)+' ₸)';
+    if(withGlue){
+      var gd=getGlueData();
+      var gUnit=(promoFlag && gd.promoPrice)?gd.promoPrice:gd.price;
+      msg+='%0A🧱 Клей: ~'+totalGlue+' мешков (~'+fmt(totalGlue*gUnit)+' ₸)';
+    }
     msg+='%0A📦 Залог поддоны (возвр.): '+fmt(totalDep)+' ₸';
     window.open('https://wa.me/'+WA+'?text='+msg,'_blank');
   });
