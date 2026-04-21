@@ -353,6 +353,7 @@
           <button class="subtab" data-sub="faq" type="button">FAQ</button>
           <button class="subtab" data-sub="gallery" type="button">Галерея</button>
           <button class="subtab" data-sub="testimonials" type="button">Отзывы</button>
+          <button class="subtab" data-sub="blog" type="button">Блог</button>
         </div>
 
         <div class="subpanel subpanel--active" id="subpanel-catalog">
@@ -617,6 +618,71 @@
           <div class="status" id="saveStepsStatus"></div>
         </div>
 
+        <!-- BLOG SUBPANEL -->
+        <div class="subpanel" id="subpanel-blog">
+          <div class="help-text" style="margin-bottom:10px">
+            Карточки блога: заголовок, категория, дата, превью-фото. Флажок «Показывать на главной» решает, появится ли карточка в блоке «Полезные статьи». Все карточки видны в разделе <a href="/blog/" target="_blank" style="color:var(--mint)">/blog/</a>.
+          </div>
+          <div class="card-list" id="blogList"></div>
+          <button class="add-card-btn" id="addBlogBtn" type="button">+ Добавить запись в список (без создания HTML)</button>
+          <div class="help-text" style="margin-top:6px">Создание новой статьи со своим HTML-файлом — в следующем обновлении.</div>
+
+          <div class="card-editor" id="blogEditor">
+            <button class="close" data-closeblog="1" type="button">×</button>
+            <h3 id="blogEditorTitle">Редактирование записи</h3>
+
+            <label>Slug (имя файла, без расширения)</label>
+            <input type="text" id="blgSlug" placeholder="d500-vs-d600" readonly>
+            <div class="help-text">Slug задаётся при создании статьи и привязан к файлу <code>blog/&lt;slug&gt;.html</code>. Менять нельзя.</div>
+
+            <label>Заголовок</label>
+            <input type="text" id="blgTitle" placeholder="Как выбрать газоблок: D500 vs D600...">
+
+            <div class="row">
+              <div>
+                <label>Дата (ISO)</label>
+                <input type="date" id="blgDate">
+              </div>
+              <div>
+                <label>Категория</label>
+                <input type="text" id="blgCategory" placeholder="Материалы / Советы / Расчёты / Сравнение / Технология">
+              </div>
+            </div>
+
+            <label>Дата на карточке (отображаемая)</label>
+            <input type="text" id="blgDateDisplay" placeholder="12 апреля 2026">
+            <div class="help-text">Можно ввести произвольно. При сохранении заполнится автоматически из даты ISO, если пусто.</div>
+
+            <label>Изображение карточки</label>
+            <div class="img-input-row">
+              <input type="text" id="blgImg" placeholder="assets/img/g-gazoblok-astana_2.webp">
+              <button type="button" class="img-upload-btn" data-img-target="blgImg">📎 Загрузить</button>
+            </div>
+
+            <label>Alt-текст</label>
+            <input type="text" id="blgImgAlt" placeholder="Короткое описание фото">
+
+            <label>Описание (excerpt)</label>
+            <textarea id="blgExcerpt" rows="3" placeholder="Короткое превью статьи (~1-2 предложения)"></textarea>
+
+            <label style="display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer">
+              <input type="checkbox" id="blgShowOnMain" style="width:auto;accent-color:var(--mint)">
+              <span>Показывать на главной (в блоке «Полезные статьи», макс. 8)</span>
+            </label>
+
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn" id="applyBlgBtn" type="button">Применить</button>
+              <button class="btn btn--ghost" data-closeblog="1" type="button">Отмена</button>
+            </div>
+          </div>
+
+          <div class="save-bar">
+            <button class="btn" id="saveBlgBtn" type="button">Сохранить и опубликовать</button>
+            <span class="dirty-badge" id="blgDirty">Есть изменения</span>
+          </div>
+          <div class="status" id="saveBlgStatus"></div>
+        </div>
+
         <!-- TESTIMONIALS SUBPANEL -->
         <div class="subpanel" id="subpanel-testimonials">
           <div class="help-text" style="margin-bottom:10px">Отзывы распределены по 3 колонкам. Каждая колонка движется с бесконечным скроллом снизу вверх. При редактировании можно выбрать, в какую колонку поместить отзыв.</div>
@@ -751,6 +817,8 @@
   var FAQ_PATH = 'data/faq.json';
   var GALLERY_PATH = 'data/gallery.json';
   var TST_PATH = 'data/testimonials.json';
+  var BLOG_POSTS_PATH = 'data/blog-posts.json';
+  var BLOG_INDEX_PATH = 'blog/index.html';
 
   /* ---------- state ---------- */
   var S = {
@@ -766,7 +834,8 @@
     faq: { sha:null, data:null, editingIndex:null, dirty:false },
     gallery: { sha:null, data:null, editingIndex:null, dirty:false },
     tst: { sha:null, data:null, editingCol:null, editingIndex:null, dirty:false },
-    prices: { dirty: false }
+    prices: { dirty: false },
+    blog: { sha:null, data:null, editingIndex:null, dirty:false, blogIndexSha:null, blogIndexText:null }
   };
 
   /* ---------- DOM refs ---------- */
@@ -912,6 +981,7 @@
       .then(function(){ return loadSimpleSection('faq'); })
       .then(function(){ return loadSimpleSection('gallery'); })
       .then(function(){ return loadTestimonials(); })
+      .then(function(){ return loadBlog(); })
       .then(function(){
         localStorage.setItem(PAT_KEY, token);
         gateCard.classList.add('hidden');
@@ -928,6 +998,7 @@
         renderSimpleList('gallery');
         renderTestimonialsList();
         renderTstDurations();
+        renderBlogList();
         renderPricesPanel();
         wireAllImgUploadBtns();
       })
@@ -2600,6 +2671,277 @@
     if (t.dataset.applysimple){ e.preventDefault(); applySimpleEdits(t.dataset.applysimple); }
     if (t.dataset.closesimple){ e.preventDefault(); closeSimpleEditor(t.dataset.closesimple); }
     if (t.dataset.savesimple){ e.preventDefault(); saveSimple(t.dataset.savesimple); }
+  });
+
+  /* ============================================================
+     BLOG CRUD
+     ============================================================ */
+  function loadBlog(){
+    return Promise.all([
+      ghGetFile(BLOG_POSTS_PATH),
+      ghGetFile(BLOG_INDEX_PATH)
+    ]).then(function(res){
+      var f = res[0], bi = res[1];
+      if (!f) throw new Error('data/blog-posts.json не найден');
+      if (!bi) throw new Error('blog/index.html не найден');
+      S.blog.sha = f.sha;
+      S.blog.data = JSON.parse(f.text);
+      if (!Array.isArray(S.blog.data.posts)) S.blog.data.posts = [];
+      S.blog.blogIndexSha = bi.sha;
+      S.blog.blogIndexText = bi.text;
+      S.blog.dirty = false;
+    });
+  }
+
+  function markBlgDirty(){
+    S.blog.dirty = true;
+    document.getElementById('blgDirty').classList.add('is-visible');
+  }
+
+  function renderBlogList(){
+    var list = document.getElementById('blogList');
+    list.innerHTML = '';
+    var posts = S.blog.data.posts;
+    if (!posts.length){
+      list.innerHTML = '<div class="muted" style="text-align:center;padding:20px">Нет записей</div>';
+      return;
+    }
+    var countOnMain = posts.filter(function(p){ return p.showOnMain; }).length;
+    var info = document.createElement('div');
+    info.className = 'help-text';
+    info.style.marginBottom = '8px';
+    info.innerHTML = 'Всего: <b>'+posts.length+'</b>. На главной: <b>'+countOnMain+'</b>.';
+    list.appendChild(info);
+
+    posts.forEach(function(p, i){
+      var row = document.createElement('div');
+      row.className = 'card-row';
+      var imgUrl = p.img ? '/' + p.img : '';
+      var starOnMain = p.showOnMain ? '★ На главной' : '— Только в /blog/';
+      var starColor = p.showOnMain ? 'var(--mint)' : 'var(--muted)';
+      row.innerHTML =
+        '<div class="card-row__img" style="background-image:url(\''+escapeAttr(imgUrl)+'\')"></div>' +
+        '<div class="card-row__main">' +
+          '<div class="card-row__title">'+escapeHtml(p.title||'(без заголовка)')+'</div>' +
+          '<div class="card-row__meta">'+escapeHtml(p.category||'')+' · '+escapeHtml(p.dateDisplay||p.date||'')+' · <span style="color:'+starColor+'">'+starOnMain+'</span></div>' +
+        '</div>' +
+        '<div class="card-row__actions">' +
+          '<button type="button" data-blg-act="edit" data-idx="'+i+'">Редакт.</button>' +
+          '<button type="button" data-blg-act="up"   data-idx="'+i+'">↑</button>' +
+          '<button type="button" data-blg-act="down" data-idx="'+i+'">↓</button>' +
+          '<button type="button" class="del" data-blg-act="del" data-idx="'+i+'">Удалить</button>' +
+        '</div>';
+      row.querySelectorAll('[data-blg-act]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var ii = +b.dataset.idx, act = b.dataset.blgAct;
+          if (act === 'edit') openBlogEditor(ii);
+          else if (act === 'del') deleteBlog(ii);
+          else if (act === 'up')   moveBlog(ii, -1);
+          else if (act === 'down') moveBlog(ii, +1);
+        });
+      });
+      list.appendChild(row);
+    });
+  }
+
+  function moveBlog(i, delta){
+    var posts = S.blog.data.posts;
+    var j = i + delta;
+    if (j < 0 || j >= posts.length) return;
+    var tmp = posts[i]; posts[i] = posts[j]; posts[j] = tmp;
+    markBlgDirty(); renderBlogList();
+  }
+
+  function deleteBlog(i){
+    var p = S.blog.data.posts[i];
+    if (!confirm('Удалить запись «'+(p.title||'?')+'» из списка?\n\nВнимание: сам HTML-файл blog/'+p.slug+'.html НЕ удаляется. Удаляется только карточка из списка и главной.')) return;
+    S.blog.data.posts.splice(i, 1);
+    markBlgDirty(); renderBlogList();
+  }
+
+  function slugify(s){
+    return (s||'').toLowerCase()
+      .replace(/[ё]/g,'e').replace(/[а]/g,'a').replace(/[б]/g,'b').replace(/[в]/g,'v')
+      .replace(/[г]/g,'g').replace(/[д]/g,'d').replace(/[е]/g,'e').replace(/[ж]/g,'zh')
+      .replace(/[з]/g,'z').replace(/[и]/g,'i').replace(/[й]/g,'j').replace(/[к]/g,'k')
+      .replace(/[л]/g,'l').replace(/[м]/g,'m').replace(/[н]/g,'n').replace(/[о]/g,'o')
+      .replace(/[п]/g,'p').replace(/[р]/g,'r').replace(/[с]/g,'s').replace(/[т]/g,'t')
+      .replace(/[у]/g,'u').replace(/[ф]/g,'f').replace(/[х]/g,'h').replace(/[ц]/g,'c')
+      .replace(/[ч]/g,'ch').replace(/[ш]/g,'sh').replace(/[щ]/g,'sch').replace(/[ъь]/g,'')
+      .replace(/[ы]/g,'y').replace(/[э]/g,'e').replace(/[ю]/g,'yu').replace(/[я]/g,'ya')
+      .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  }
+
+  function openBlogEditor(i){
+    S.blog.editingIndex = i;
+    var isNew = (i === -1);
+    var p = isNew ? { id:'', slug:'', title:'', date:'', dateDisplay:'', category:'', img:'', imgAlt:'', excerpt:'', showOnMain:true } : S.blog.data.posts[i];
+    document.getElementById('blogEditorTitle').textContent = isNew ? 'Новая запись в списке' : 'Редактирование: ' + (p.title||'');
+    var slugInput = document.getElementById('blgSlug');
+    slugInput.value = p.slug || '';
+    slugInput.readOnly = !isNew;
+    document.getElementById('blgTitle').value = p.title || '';
+    document.getElementById('blgDate').value = p.date || '';
+    document.getElementById('blgDateDisplay').value = p.dateDisplay || '';
+    document.getElementById('blgCategory').value = p.category || '';
+    document.getElementById('blgImg').value = p.img || '';
+    document.getElementById('blgImgAlt').value = p.imgAlt || '';
+    document.getElementById('blgExcerpt').value = p.excerpt || '';
+    document.getElementById('blgShowOnMain').checked = !!p.showOnMain;
+    var ed = document.getElementById('blogEditor');
+    ed.classList.add('is-visible');
+    ed.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function closeBlogEditor(){
+    S.blog.editingIndex = null;
+    document.getElementById('blogEditor').classList.remove('is-visible');
+  }
+
+  function applyBlgEdits(){
+    var idx = S.blog.editingIndex;
+    var isNew = (idx === -1);
+    var slug = document.getElementById('blgSlug').value.trim();
+    var title = document.getElementById('blgTitle').value.trim();
+    if (!title){ alert('Заголовок обязателен'); return; }
+    if (isNew){
+      if (!slug) slug = slugify(title);
+      if (!slug){ alert('Не удалось сгенерировать slug — укажите заголовок латиницей или задайте slug вручную'); return; }
+      if (S.blog.data.posts.some(function(x){ return x.slug === slug; })){
+        alert('Запись со slug «'+slug+'» уже существует'); return;
+      }
+    }
+    var dt = document.getElementById('blgDate').value.trim();
+    var dtDisp = document.getElementById('blgDateDisplay').value.trim();
+    if (!dtDisp && dt){
+      var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+      var parts = dt.split('-');
+      if (parts.length === 3) dtDisp = parseInt(parts[2],10) + ' ' + months[parseInt(parts[1],10)-1] + ' ' + parts[0];
+    }
+    var post = {
+      id: slug,
+      slug: slug,
+      title: title,
+      date: dt,
+      dateDisplay: dtDisp,
+      category: document.getElementById('blgCategory').value.trim(),
+      img: document.getElementById('blgImg').value.trim(),
+      imgAlt: document.getElementById('blgImgAlt').value.trim(),
+      excerpt: document.getElementById('blgExcerpt').value.trim(),
+      showOnMain: document.getElementById('blgShowOnMain').checked
+    };
+    if (isNew) S.blog.data.posts.push(post);
+    else S.blog.data.posts[idx] = post;
+    markBlgDirty(); renderBlogList(); closeBlogEditor();
+  }
+
+  function buildBlogCardMainHtml(p){
+    var img = p.img || '';
+    var href = 'blog/' + p.slug + '.html';
+    return '      <article class="blog-card reveal">\n' +
+           '        <div class="blog-card__img">\n' +
+           '          <img src="'+escapeAttr(img)+'" alt="'+escapeAttr(p.imgAlt||p.title||'')+'" loading="lazy" width="600" height="375">\n' +
+           '          <span class="blog-card__cat">'+escapeHtml(p.category||'')+'</span>\n' +
+           '        </div>\n' +
+           '        <div class="blog-card__body">\n' +
+           '          <div class="blog-card__date">'+escapeHtml(p.dateDisplay||p.date||'')+'</div>\n' +
+           '          <h3 class="blog-card__title">'+escapeHtml(p.title||'')+'</h3>\n' +
+           '          <p class="blog-card__excerpt">'+escapeHtml(p.excerpt||'')+'</p>\n' +
+           '          <a href="'+escapeAttr(href)+'" target="_blank" rel="noopener" class="blog-card__link">Читать статью</a>\n' +
+           '        </div>\n' +
+           '      </article>';
+  }
+
+  function buildBlogCardIndexHtml(p){
+    var img = p.img ? '../' + p.img : '';
+    var href = p.slug + '.html';
+    return '    <article class="blog-card">\n' +
+           '      <div class="blog-card__img">\n' +
+           '        <img src="'+escapeAttr(img)+'" alt="'+escapeAttr(p.imgAlt||p.title||'')+'" loading="lazy">\n' +
+           '        <span class="blog-card__cat">'+escapeHtml(p.category||'')+'</span>\n' +
+           '      </div>\n' +
+           '      <div class="blog-card__body">\n' +
+           '        <div class="blog-card__date">'+escapeHtml(p.dateDisplay||p.date||'')+'</div>\n' +
+           '        <h3 class="blog-card__title">'+escapeHtml(p.title||'')+'</h3>\n' +
+           '        <p class="blog-card__excerpt">'+escapeHtml(p.excerpt||'')+'</p>\n' +
+           '        <a href="'+escapeAttr(href)+'" class="blog-card__link">Читать статью</a>\n' +
+           '      </div>\n' +
+           '    </article>';
+  }
+
+  function buildBlogMainContainerHtml(){
+    var posts = S.blog.data.posts.filter(function(p){ return p.showOnMain; }).slice(0, 8);
+    var cards = posts.map(buildBlogCardMainHtml).join('\n');
+    return '<div class="blog__grid">\n' + cards + '\n    </div>';
+  }
+
+  function buildBlogIndexContainerHtml(){
+    var posts = S.blog.data.posts.slice().sort(function(a,b){
+      return (b.date||'').localeCompare(a.date||'');
+    });
+    var cards = posts.map(buildBlogCardIndexHtml).join('\n');
+    return '<div class="blog-grid" id="blogGrid">\n' + cards + '\n  </div>';
+  }
+
+  function patchBlogInMainHtml(html){
+    var startMark = '<!-- CARDS:blog-main START -->';
+    var endMark = '<!-- CARDS:blog-main END -->';
+    var si = html.indexOf(startMark);
+    var ei = html.indexOf(endMark);
+    if (si < 0 || ei < 0) throw new Error('Маркеры CARDS:blog-main не найдены в index.html');
+    var before = html.substring(0, si + startMark.length);
+    var after = html.substring(ei);
+    return before + '\n    ' + buildBlogMainContainerHtml() + '\n    ' + after;
+  }
+
+  function patchBlogInBlogIndexHtml(html){
+    var startMark = '<!-- CARDS:blog-index START -->';
+    var endMark = '<!-- CARDS:blog-index END -->';
+    var si = html.indexOf(startMark);
+    var ei = html.indexOf(endMark);
+    if (si < 0 || ei < 0) throw new Error('Маркеры CARDS:blog-index не найдены в blog/index.html');
+    var before = html.substring(0, si + startMark.length);
+    var after = html.substring(ei);
+    return before + '\n  ' + buildBlogIndexContainerHtml() + '\n  ' + after;
+  }
+
+  document.getElementById('addBlogBtn').addEventListener('click', function(){ openBlogEditor(-1); });
+  document.body.addEventListener('click', function(e){
+    if (e.target.dataset.closeblog){ e.preventDefault(); closeBlogEditor(); }
+  });
+  document.getElementById('applyBlgBtn').addEventListener('click', applyBlgEdits);
+
+  document.getElementById('saveBlgBtn').addEventListener('click', function(){
+    var status = document.getElementById('saveBlgStatus');
+    clearStatus(status);
+    if (!S.blog.dirty){ setStatus(status,'Нет изменений.','warn'); return; }
+    var btn = document.getElementById('saveBlgBtn');
+    btn.disabled = true; btn.textContent = 'Сохраняем…';
+    setStatus(status,'Обновляем JSON и HTML…','warn');
+
+    var getIdx = S.texts.indexText
+      ? Promise.resolve({ text: S.texts.indexText, sha: S.texts.indexSha })
+      : ghGetFile(INDEX_PATH);
+
+    getIdx.then(function(idx){
+      if (!idx) throw new Error('index.html не найден');
+      var newIndex = patchBlogInMainHtml(idx.text);
+      var newBlogIndex = patchBlogInBlogIndexHtml(S.blog.blogIndexText);
+      var newJson = JSON.stringify(S.blog.data, null, 2) + '\n';
+      return ghCommitMultiple([
+        { path: BLOG_POSTS_PATH, content: newJson },
+        { path: INDEX_PATH,      content: newIndex },
+        { path: BLOG_INDEX_PATH, content: newBlogIndex }
+      ], 'Admin: update blog ('+S.blog.data.posts.length+' posts)');
+    })
+      .then(function(){ return Promise.all([loadBlog(), loadContent()]); })
+      .then(function(){
+        setStatus(status,'✓ Опубликовано. Сайт обновится через ~1 мин.','ok');
+        document.getElementById('blgDirty').classList.remove('is-visible');
+        renderBlogList();
+      })
+      .catch(function(err){ setStatus(status,'Ошибка: '+err.message,'err'); })
+      .finally(function(){ btn.disabled = false; btn.textContent = 'Сохранить и опубликовать'; });
   });
 
   function saveCatalog(){

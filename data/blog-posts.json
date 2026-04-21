@@ -1,0 +1,112 @@
+{
+  "posts": [
+    {
+      "id": "d500-vs-d600",
+      "slug": "d500-vs-d600",
+      "title": "Как выбрать газоблок: D500 vs D600 — полное сравнение",
+      "date": "2026-04-12",
+      "dateDisplay": "12 апреля 2026",
+      "category": "Материалы",
+      "img": "assets/img/g-gazoblok-astana_2.webp",
+      "imgAlt": "Как выбрать газоблок — D500 vs D600",
+      "excerpt": "Разбираем ключевые отличия двух самых популярных марок газобетона: прочность, теплопроводность, применение.",
+      "showOnMain": true
+    },
+    {
+      "id": "skolko-gazobloka-na-dom-100m2",
+      "slug": "skolko-gazobloka-na-dom-100m2",
+      "title": "Сколько газоблока нужно на дом 100 м²: пошаговый расчёт",
+      "date": "2026-04-08",
+      "dateDisplay": "8 апреля 2026",
+      "category": "Расчёты",
+      "img": "assets/img/og-cover.jpg",
+      "imgAlt": "Сколько газоблока нужно на дом",
+      "excerpt": "Считаем кубатуру стен и перегородок, количество блоков, расход клея и итоговый бюджет на примере реального проекта.",
+      "showOnMain": true
+    },
+    {
+      "id": "gazoblok-ili-kirpich",
+      "slug": "gazoblok-ili-kirpich",
+      "title": "Газоблок или кирпич — что лучше для дома в 2026",
+      "date": "2026-04-05",
+      "dateDisplay": "5 апреля 2026",
+      "category": "Сравнение",
+      "img": "assets/img/g-kirpich-zabutovka-2.jpg",
+      "imgAlt": "Газоблок или кирпич — что лучше",
+      "excerpt": "Сравнение по цене, теплу, скорости и прочности. Разница на доме 100 м² — до 5 млн тенге.",
+      "showOnMain": true
+    },
+    {
+      "id": "klej-dlya-gazobloka-obzor",
+      "slug": "klej-dlya-gazobloka-obzor",
+      "title": "Какой клей для газоблока лучше: обзор 5 марок в Казахстане",
+      "date": "2026-04-02",
+      "dateDisplay": "2 апреля 2026",
+      "category": "Советы",
+      "img": "assets/img/kley-dlya-gazobloka.png",
+      "imgAlt": "Какой клей для газоблока лучше",
+      "excerpt": "Сравниваем клеи Expert, Гарант, Ceresit, Knauf и USTA — расход, прочность сцепления, цена за м².",
+      "showOnMain": true
+    },
+    {
+      "id": "tolschina-steny-gazoblok",
+      "slug": "tolschina-steny-gazoblok",
+      "title": "Какой толщины должна быть стена из газоблока — 200, 300 или 400 мм",
+      "date": "2026-03-28",
+      "dateDisplay": "28 марта 2026",
+      "category": "Советы",
+      "img": "assets/img/o-tovare.webp",
+      "imgAlt": "Толщина стены из газоблока",
+      "excerpt": "Оптимальная толщина для Казахстана: расчёты теплопроводности, СНиП, рекомендации для Астаны и Алматы.",
+      "showOnMain": true
+    },
+    {
+      "id": "marki-gazobloka-d400-d500-d600-d700",
+      "slug": "marki-gazobloka-d400-d500-d600-d700",
+      "title": "Марки газоблока D400, D500, D600, D700 — полное сравнение",
+      "date": "2026-03-22",
+      "dateDisplay": "22 марта 2026",
+      "category": "Материалы",
+      "img": "assets/img/hero-pallets.webp",
+      "imgAlt": "Марки газоблока D400 D500 D600 D700 на поддонах",
+      "excerpt": "Какую марку выбрать для стен, перегородок и утепления. Таблица по плотности, прочности, теплу и цене.",
+      "showOnMain": true
+    },
+    {
+      "id": "plyusy-i-minusy-gazobloka",
+      "slug": "plyusy-i-minusy-gazobloka",
+      "title": "Плюсы и минусы газоблока — честный обзор газобетона",
+      "date": "2026-03-20",
+      "dateDisplay": "20 марта 2026",
+      "category": "Материалы",
+      "img": "assets/img/hero-bricklayer.jpg",
+      "imgAlt": "Плюсы и минусы газоблока",
+      "excerpt": "Все достоинства и недостатки газобетонных блоков, сравнение с кирпичом, деревом и керамзитом. Ответы на частые вопросы.",
+      "showOnMain": true
+    },
+    {
+      "id": "stroitelstvo-gazobloka-zimoj",
+      "slug": "stroitelstvo-gazobloka-zimoj",
+      "title": "Можно ли строить из газоблока зимой в Казахстане",
+      "date": "2026-03-15",
+      "dateDisplay": "15 марта 2026",
+      "category": "Советы",
+      "img": "assets/img/manip-23.jpg",
+      "imgAlt": "Зимняя доставка газоблока в Казахстане",
+      "excerpt": "До какой температуры безопасно класть, морозостойкий клей, защита кладки. Правила зимней кладки.",
+      "showOnMain": true
+    },
+    {
+      "id": "armirovanie-gazobloka",
+      "slug": "armirovanie-gazobloka",
+      "title": "Армирование газоблока — правила, схема, арматура",
+      "date": "2026-03-10",
+      "dateDisplay": "10 марта 2026",
+      "category": "Технология",
+      "img": "assets/img/hero-bricklayer.jpg",
+      "imgAlt": "Армирование газоблока",
+      "excerpt": "Где, чем и как армировать стены из газобетона. Штроба, арматура, армопояс. Пошаговая инструкция.",
+      "showOnMain": false
+    }
+  ]
+}
