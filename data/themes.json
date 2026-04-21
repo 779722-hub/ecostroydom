@@ -67,7 +67,7 @@
         "textMuted": "rgba(0,0,0,0.5)",
         "line": "rgba(0,0,0,0.08)",
         "lineSoft": "rgba(0,0,0,0.04)",
-        "accentLight": "rgba(37,99,235,0.08)",
+        "accentLight": "#ee7777",
         "accentGlow": "#ea8080"
       }
     },
