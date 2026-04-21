@@ -4,7 +4,7 @@
   Подробности — в README.md рядом.
 */
 window.PROMO_CONFIG = {
-  endsAt: "2026-04-20T20:00:00+05:00",
+  endsAt: "2026-04-23T20:00:00+05:00",
   durationDays: 3,
   discount: "−10%",
   bonus: "Клей USTA в подарок"
