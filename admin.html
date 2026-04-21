@@ -2715,25 +2715,43 @@
     return BLOG_STARTER_BODY
       .replace(/\{\{TITLE\}\}/g, post.title || 'Заголовок статьи')
       .replace(/\{\{CATEGORY\}\}/g, post.category || 'Категория')
-      .replace(/\{\{DATE_DISPLAY\}\}/g, post.dateDisplay || post.date || '')
+      .replace(/\{\{DATE_DISPLAY\}\}/g, post.dateDisplay || post.date || 'Дата публикации')
       .replace(/\{\{IMG\}\}/g, post.img || 'assets/img/og-cover.jpg')
-      .replace(/\{\{IMG_ALT\}\}/g, post.imgAlt || post.title || '')
-      .replace(/\{\{EXCERPT\}\}/g, post.excerpt || '');
+      .replace(/\{\{IMG_ALT\}\}/g, post.imgAlt || post.title || 'Обложка статьи')
+      .replace(/\{\{EXCERPT\}\}/g, post.excerpt || 'Короткое превью статьи — заменит этот текст.');
   }
 
+  function jsonEscape(s){
+    // Escape for inside double-quoted JSON strings (strip JSON.stringify's enclosing quotes).
+    // Also escape < and > as unicode so a closing-tag sequence in a title cannot break out of the JSON-LD block.
+    return JSON.stringify(String(s || ''))
+      .slice(1, -1)
+      .replace(/</g, '\\u003c')
+      .replace(/>/g, '\\u003e');
+  }
+  function attrEscape(s){
+    // For HTML attributes (inside double quotes)
+    return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
   function renderTemplateWithMeta(tpl, post, bodyHtml){
     var keywords = (post.title||'') + ', ' + (post.category||'') + ', газоблок, EcoStroyDom';
     var description = post.excerpt || post.title || '';
     var datePub = post.date || new Date().toISOString().slice(0,10);
     return tpl
-      .replace(/\{\{title\}\}/g, post.title || '')
-      .replace(/\{\{description\}\}/g, description)
-      .replace(/\{\{keywords\}\}/g, keywords)
+      // JSON-safe variants (must go first — they have distinct names)
+      .replace(/\{\{titleJson\}\}/g, jsonEscape(post.title))
+      .replace(/\{\{descriptionJson\}\}/g, jsonEscape(description))
+      // HTML-attribute-safe variants (used in meta tags, og tags, title)
+      .replace(/\{\{title\}\}/g, attrEscape(post.title))
+      .replace(/\{\{description\}\}/g, attrEscape(description))
+      .replace(/\{\{keywords\}\}/g, attrEscape(keywords))
+      .replace(/\{\{category\}\}/g, attrEscape(post.category))
+      .replace(/\{\{dateDisplay\}\}/g, attrEscape(post.dateDisplay || post.date || ''))
+      // URL-safe pieces (slug validated to [a-z0-9-], datePub ISO date)
       .replace(/\{\{slug\}\}/g, post.slug || '')
-      .replace(/\{\{category\}\}/g, post.category || '')
-      .replace(/\{\{dateDisplay\}\}/g, post.dateDisplay || post.date || '')
       .replace(/\{\{datePublished\}\}/g, datePub)
       .replace(/\{\{ogImage\}\}/g, post.img || 'assets/img/og-cover.jpg')
+      // Body is raw HTML — user-controlled, goes in as-is
       .replace(/\{\{body\}\}/g, bodyHtml || '');
   }
 
@@ -2871,6 +2889,10 @@
     if (isNew){
       if (!slug) slug = slugify(title);
       if (!slug){ alert('Не удалось сгенерировать slug — укажите заголовок латиницей или задайте slug вручную'); return; }
+      if (!/^[a-z0-9][a-z0-9-]{1,60}$/.test(slug)){
+        alert('Slug должен состоять только из латинских букв, цифр и дефисов (2–61 символ). Сейчас: «'+slug+'»');
+        return;
+      }
       if (S.blog.data.posts.some(function(x){ return x.slug === slug; })){
         alert('Запись со slug «'+slug+'» уже существует'); return;
       }
@@ -2899,14 +2921,22 @@
 
     // Handle body content: for NEW posts render full template; for existing patch between markers
     var bodyText = document.getElementById('blgBody').value;
-    if (isNew && bodyText.trim()){
+    if (isNew){
+      if (!bodyText.trim()){
+        alert('Содержимое статьи не может быть пустым — иначе карточка приведёт на несуществующую страницу.');
+        return;
+      }
       if (!S.blog.templateText){
         alert('Шаблон blog/_template.html не загружен. Перелогиньтесь в админке.');
         return;
       }
       var newFile = renderTemplateWithMeta(S.blog.templateText, post, bodyText);
       S.blog.pendingBodyPatches[post.slug] = { path: 'blog/'+post.slug+'.html', content: newFile, isNew: true };
-    } else if (S.blog.editingBodyDirty && S.blog.editingBody){
+    } else if (S.blog.editingBodyDirty){
+      if (!S.blog.editingBody){
+        alert('Вы изменили поле «Содержимое», но не загрузили текущий HTML статьи.\n\nНажмите «📥 Загрузить текущее содержимое», затем редактируйте. Иначе существующая статья будет перезаписана пустым шаблоном.');
+        return;
+      }
       try {
         var newHtml = patchArticleBody(S.blog.editingBody, bodyText);
         S.blog.pendingBodyPatches[post.slug] = { path: 'blog/'+post.slug+'.html', content: newHtml };
